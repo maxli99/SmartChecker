@@ -1,0 +1,6 @@
+## below check modules will be executed.
+path: 'modules\flexing'
+modules:
+    - ngversion.py
+    - memory_leak.py
+    - leap_second.py
