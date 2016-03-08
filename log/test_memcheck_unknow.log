@@ -1,0 +1,44 @@
+Nokia Siemens Networks - Flexi NG3.2 
+
+USAGE OF THE ROOT ACCOUNT AND THE FULL BASH IS RECOMMENDED ONLY FOR LIMITED USE. PLEASE USE A NON-ROOT ACCOUNT AND THE SCLI SHELL (fsclish) AND/OR LIMITED BASH SHELL.
+
+Read /opt/nokiasiemens/etc/readme_root.txt for more details.
+
+# 
+[root@CLA-0(HIZGGSN303BNk) /root]
+# 
+[root@CLA-0(HIZGGSN303BNk) /root]
+# fsclish -c "show config fsClusterId=ClusterRoot fsFragmentId=FlexiNG fsFragmentId=Internal" | grep Hicut
+fngDpiHicut: 1
+[root@CLA-0(HIZGGSN303BNk) /root]
+# 
+[root@CLA-0(HIZGGSN303BNk) /root]
+# ssh as4-0 showstat | grep shm_gwup_proxy.gwup.sa.sa_rule.filter.interr.mem_alloc_failed_for_linear_filters
+shm_gwup_proxy.gwup.sa.sa_rule.filter.interr.mem_alloc_failed_for_linear_filters = 0
+[root@CLA-0(HIZGGSN303BNk) /root]
+# ssh as5-0 showstat | grep shm_gwup_proxy.gwup.sa.sa_rule.filter.interr.mem_alloc_failed_for_linear_filters
+shm_gwup_proxy.gwup.sa.sa_rule.filter.interr.mem_alloc_failed_for_linear_filters = 0
+[root@CLA-0(HIZGGSN303BNk) /root]
+# ssh as12-0 showstat | grep shm_gwup_proxy.gwup.sa.sa_rule.filter.interr.mem_alloc_failed_for_linear_filters
+shm_gwup_proxy.gwup.sa.sa_rule.filter.interr.mem_alloc_failed_for_linear_filters = 0
+[root@CLA-0(HIZGGSN303BNk) /root]
+# ssh as13-0 showstat | grep shm_gwup_proxy.gwup.sa.sa_rule.filter.interr.mem_alloc_failed_for_linear_filters
+shm_gwup_proxy.gwup.sa.sa_rule.filter.interr.mem_alloc_failed_for_linear_filters = 0
+[root@CLA-0(HIZGGSN303BNk) /root]
+# ssh sab2-0 showstat | grep shm_gwup_proxy.gwup.sa.sa_rule.filter.interr.mem_alloc_failed_for_linear_filters
+shm_gwup_proxy.gwup.sa.sa_rule.filter.interr.mem_alloc_failed_for_linear_filters = 0
+[root@CLA-0(HIZGGSN303BNk) /root]
+# ssh sab3-0 showstat | grep shm_gwup_proxy.gwup.sa.sa_rule.filter.interr.mem_alloc_failed_for_linear_filters
+shm_gwup_proxy.gwup.sa.sa_rule.filter.interr.mem_alloc_failed_for_linear_filters = 0
+[root@CLA-0(HIZGGSN303BNk) /root]
+# ssh sab6-0 showstat | grep shm_gwup_proxy.gwup.sa.sa_rule.filter.interr.mem_alloc_failed_for_linear_filters
+shm_gwup_proxy.gwup.sa.sa_rule.filter.interr.mem_alloc_failed_for_linear_filters = 0
+[root@CLA-0(HIZGGSN303BNk) /root]
+# ssh sab14-0 showstat | grep shm_gwup_proxy.gwup.sa.sa_rule.filter.interr.mem_alloc_failed_for_linear_filters
+shm_gwup_proxy.gwup.sa.sa_rule.filter.interr.mem_alloc_failed_for_linear_filters = 0
+[root@CLA-0(HIZGGSN303BNk) /root]
+# ssh sab15-0 showstat | grep shm_gwup_proxy.gwup.sa.sa_rule.filter.interr.mem_alloc_failed_for_linear_filters
+shm_gwup_proxy.gwup.sa.sa_rule.filter.interr.mem_alloc_failed_for_linear_filters = 0
+[root@CLA-0(HIZGGSN303BNk) /root]
+# 
+[root@CLA-0(HIZGGSN303BNk) /root]
