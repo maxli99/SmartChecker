@@ -13,7 +13,7 @@ def get_ng_version(configlog):
     try:
         log = ''.join(file(configlog).readlines())
     except IOError,e:
-        print "IOError:", e
+        print("IOError: %s" % e)
         exit(1)
     check = version_pat.search(log)
 

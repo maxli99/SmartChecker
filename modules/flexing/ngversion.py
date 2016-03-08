@@ -33,12 +33,12 @@ def run(logfile):
 
     if version and version[0] in target_versions:
         result.status = CheckStatus.PASSED
-        info.append("NG%s_r%s_AB%s" % version)
+        info.append("    - NG%s_r%s_AB%s" % version)
     elif version and version[0] not in target_versions:
         result.status = CheckStatus.FAILED
-        info.append("NG%s_r%s_AB%s" % version)
+        info.append("    - NG%s_r%s_AB%s" % version)
     else:
         result.status = CheckStatus.UNKNOWN
     
-    result.load(info=info,error=errmsg)
+    result.update(info=info,error=errmsg)
     return result

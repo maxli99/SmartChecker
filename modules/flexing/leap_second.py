@@ -6,7 +6,7 @@ the system will restart itself (via watchdog functionality) thus causing a servi
 import re
 from libs.checker import ResultInfo,CheckStatus
 
-## Mandatory variables
+## Mandatory variables 
 ##--------------------------------------------
 module_id = '20150518.01'
 tag  = ['flexing','china']
@@ -22,7 +22,7 @@ error = ''
 
 ##--------------------------------------------
 ## Optional variables
-target_version = 3.2
+target_version = ['3.2']    
 pats_ntp = {'cluster': re.compile(r"ClusterNTP:\nadministrative\((\w+)\)\noperational\((\w+)\)"),
         'node'   : re.compile(r"NodeNTP:\nadministrative\((\w+)\)\noperational\((\w+)\)"),
        }
@@ -31,15 +31,15 @@ ntpstatus_str = "ClusterNTP:%(cluster)s,NodeNTP: %(node)s"
 
 def read_block(logfile,blkname):
     loglines = file(logfile).readlines()
-
+    
     return ''.join(loglines)
 
 def hardwareinfo():
     hwinfo = {}
     return hwinfo
-
+    
 def get_card(caretype):
-    return
+    return 
 ##--------------------------------------------
 ## Mandatory function: log_collection
 ##--------------------------------------------
@@ -49,26 +49,27 @@ def log_collection():
             ]
     for cmd in cmds:
         print cmd
-
+        
 ##--------------------------------------------
 ## Mandatory function: run
-##--------------------------------------------
+##--------------------------------------------    
 def run(logfile):
     logtxt = read_block(logfile,'ntp_stat')
-
+    
     ntpstatus={name:'' for name in pats_ntp}
     status = CheckStatus.UNCHECKED
-
+    
     for name,pat in pats_ntp.items():
         r=pat.search(logtxt)
         if r:
             ntpstatus[name] = r.groups()
             if r.groups()[0] == 'UNLOCKED':
                 status = CheckStatus.FAILED
-
+    
     #print ntpstatus_str, ntpstatus
     if status == CheckStatus.UNCHECKED:
         status = CheckStatus.UNKNOWN
     result.load(status=status,info=[ntpstatus_str % ntpstatus],error=error)
-
+    
     return result
+    

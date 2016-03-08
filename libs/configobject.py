@@ -1,11 +1,21 @@
 ### Another config file handling. the file name could be arbitrary.
 class ConfigObject(object):
-    """usage: conf = ConfigObject('alarm.conf')
-    conf.oss_trap_ip
+    """usage: 
+        conf = ConfigObject('alarm.conf')
+        conf = ConfigObject(dict)
+        
+        #get the config values:
+        conf.oss_trap_ip
+        conf.get('oss_trap_ip')
+        
     """
-    def __init__(self,cfile=''):
-        if cfile:
-            self.read(cfile)
+    def __init__(self,parameters=None):
+        """parameters can be a filename or a dict include parameters.
+        """
+        if isinstance(parameters,str):
+            self.read(parameters)
+        elif isinstance(parameters,dict):
+            self.update(parameters)
     
     def read(self,confile):
         try:
@@ -13,7 +23,9 @@ class ConfigObject(object):
         except IOError,e:
             print "Config File not found:%s" % e
             exit(1)
-            
+    def update(self,dictpara):
+        self.__dict__.update(dictpara)
+
     def getall(self):
         """return a dict include all configuration"""
         return self.__dict__

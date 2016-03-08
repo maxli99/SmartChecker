@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os,yaml,re,json
 from subprocess import check_output, STDOUT,PIPE,CalledProcessError    
 from collections import Counter
@@ -50,6 +51,8 @@ class ShellModule(object):
         return result
 
 def dict2csv(dictdata,columnnames):
+    """Transfer the dict data to csv string.
+    """
     values =[]
     for name in columnnames:
         if isinstance(dictdata[name],list):
@@ -69,12 +72,13 @@ def ignore_files(filename):
             return False
     return True
 
-def ImportCheckModules(moduleslist, path=MODULE_PATH):
-
+def ImportCheckModules(moduleslist, modulepath=MODULE_PATH):
+    """import the 
+    """
     if moduleslist:     
-        #read the script filename from file which specified in command parameter "-m".
+        #read the script filename from files .
         modules_info = yaml.load(file(moduleslist))
-        path = modules_info.get('path',MODULE_PATH)
+        path = modules_info.get('path',modulepath)
         #print "path,mname:",path,modules_info.get('modules')
         modulefilenames = filter(ignore_files,modules_info.get('modules',None))
         #print "modulefilenames:",modulefilenames
@@ -126,7 +130,7 @@ class ResultInfo(object):
     info,    information.
     error,   error information.
     """
-    strformat = " Status: %(status)s\n   Info: %(info)s\n  error:%(error)s"
+    strformat = " Status: %(status)s\n   Info:\n%(info)s\n  error:%(error)s"
     keys = ['status','info','error']
     def __init__(self,name):
         self.name = name
@@ -165,22 +169,26 @@ class ResultInfo(object):
     def error(self,value):
         self.data['error']
     
-    def load(self,**kwargs):
+    def update(self,**kwargs):
         self.data.update(kwargs)
-
+        
+    def load(self,**kwargs):
+        "obslated function, please use the update instead."
+        self.update(**kwargs)
+        
     def dump(self,oformat='reading'):
         if oformat == 'reading':
             data = self.data.copy()
             data['info'] = "\n".join(data['info'])
-            print ResultInfo.strformat % data
+            print(ResultInfo.strformat % data)
 
         elif oformat == 'json':
-            print json.dumps(self.data)
+            print(json.dumps(self.data))
         elif oformat == 'csv':
-            print dict2csv(self.data, ResultInfo.keys)
+            print(dict2csv(self.data, ResultInfo.keys))
         else:
             #status_str = "\n[%s] %s, " % (idx+1,m.name)
-            print ResultInfo.strformat  % self.dat       
+            print(ResultInfo.strformat  % self.data)
 
 
 class ResultList(object):
