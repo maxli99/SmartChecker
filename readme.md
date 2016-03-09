@@ -1,7 +1,8 @@
-FlexiNG TN Checker
+SmartChecker
 ========================
 
-This script can be used to check the health status of FlexiNG according to the office Technical Notes.
+SmartChecker is a tool for network elements health check. it can analysis the configuration 
+and log of networkc elements and generate a report for the check result.
 
 
 # 检查模块开发指引

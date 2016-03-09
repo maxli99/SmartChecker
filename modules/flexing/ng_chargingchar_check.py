@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """Check the Charging character config for Huawei PCRF and CC=0 issue
 When enable gx function, subscriber with CC=0 's GX CCR message will set th online and 
-offline as disable and the charging mode decide by PCRF . But Huawei PCRF will return disable , so these subsciber(CC=0) will not generate CDR.
+offline as disable and the charging mode decide by PCRF . But Huawei PCRF will return 
+disable , so these subsciber(CC=0) will not generate CDR.
 You can add the followed config to resolve the problem:
 charchar-index = 0
 charging-profile = charging-profile-1
@@ -22,7 +23,7 @@ result = ResultInfo(name)
 error = ''
 ##--------------------------------------------
 
-##--------------------------------------------
+
 
 ##--------------------------------------------
 ## Optional variables
@@ -35,6 +36,10 @@ pats_charchar = {'session-profile-block': re.compile(r"show ng session-profile (
 				 'charchar-index': re.compile(r"charchar-index = 0"),
 }
 #charchar_str = "charchar-index = 0:%(charchar0)s
+
+check_commands = [
+    ('show ng session-profile {{apn_name}}-session-profile','## show the {{apn_name}} session profiles'),
+]
 ##
 
 def read_block(logfile,blkname):
@@ -42,16 +47,7 @@ def read_block(logfile,blkname):
 
 	return ''.join(loglines)
 
-
     
-##--------------------------------------------
-## Mandatory function: log_collection
-##--------------------------------------------
-def log_collection():
-	cmds = ['show ng session-profile xxxxx-session-profile',
-           ]
-	for cmd in cmds:
-		print cmd
         
 ##--------------------------------------------
 ## Mandatory function: run
