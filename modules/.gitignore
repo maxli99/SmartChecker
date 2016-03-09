@@ -1,1 +1,3 @@
 #put the re pattern here to ignore the file
+*.pyc
+*/*/pyc

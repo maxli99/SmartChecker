@@ -8,7 +8,7 @@ from libs.tools import read_cmdblock_from_log
 
 ## Mandatory variables 
 ##--------------------------------------------
-module_id = 'fnsbase.01'
+module_id = 'fnsbase.20160305.01'
 tag       = ['flexins','base']
 priority  = 'normal'
 name      = "Check the FNS software version"

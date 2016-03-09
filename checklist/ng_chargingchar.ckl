@@ -1,4 +1,5 @@
 ## below check modules will be executed.
 path: 'modules\flexing'
+template: 'chargingchar.md'
 modules:
     - ng_chargingchar_check.py

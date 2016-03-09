@@ -8,7 +8,7 @@ from libs.checker import ResultInfo,CheckStatus
 
 ## Mandatory variables 
 ##-----------------------------------------------------
-check_id = '20150101.01'
+check_id = 'ngbase.20150101.01'
 tags = ['flexing','minor']
 name = "ngversion"
 desc = __doc__
@@ -19,6 +19,9 @@ criteria = "Check if version number in ['3.1_1.0','3.2']"
 ##-----------------------------------------------------
 # available target versions:
 target_versions = ['3.1_1.0','3.2']
+check_commands = [
+    ('fsclish -c "show ng version" ',"show the FNG version information"),
+]
 ##-----------------------------------------------------
 
     
