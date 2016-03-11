@@ -109,8 +109,8 @@ def run_modules(modules,logfile):
     #print "-"*50    
     for idx,m in enumerate(modules):
         _result = m.run(logfile)
-        status_str = "\n[%s] %s: " % (idx+1,m.name)
-        criteria_str = "Criteria: %s" % m.criteria
+        status_str = "\n[%s] %s: " % (idx+1, m.name if isinstance(m.name, unicode) else unicode(m.name, "utf-8"))
+        criteria_str = "Criteria: %s" % (m.criteria if isinstance(m.criteria, unicode) else unicode(m.criteria, "utf-8"))
         print(status_str)
         print(criteria_str)
         _result.dump(output_format)        

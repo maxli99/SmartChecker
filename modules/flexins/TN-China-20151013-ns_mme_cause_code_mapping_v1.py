@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """FlexiNS/MME Cause code mapping Checking
-     -  NS/MMEÈí¼ş°æ±¾ÎªNS15»òÕß¸ü¸ß°æ±¾
-     -  ÒÑ¿ªÆô¹¦ÄÜ¿ª¹ØPRFILE002:2244-MME_CC_MAPPING_ENABLED
-     -  ÓĞĞÂ½¨CAUSE CODE SETS,Èç:EPCEMMºÍEPCESM(¸÷ÏîÄ¿Ãû³Æ¿ÉÄÜ²»ÏàÍ¬).
+     -  NS/MMEè½¯ä»¶ç‰ˆæœ¬ä¸ºNS15æˆ–è€…æ›´é«˜ç‰ˆæœ¬
+     -  å·²å¼€å¯åŠŸèƒ½å¼€å…³PRFILE002:2244-MME_CC_MAPPING_ENABLED
+     -  æœ‰æ–°å»ºCAUSE CODE SETS,å¦‚:EPCEMMå’ŒEPCESM(å„é¡¹ç›®åç§°å¯èƒ½ä¸ç›¸åŒ).
      -  EPCEMM,TYPE=EMM,PROC=ATTREJ,INTCAUSE=142 To EXTERNAL CAUSE=15
      -  EPCEMM,TYPE=EMM,PROC=ATTREJ,INTCAUSE=96 To EXTERNAL CAUSE=7
      -  EPCESM,TYPE=ESM,PROC=PDNCR,INTCAUSE=165 To EXTERNAL CAUSE=33
@@ -19,9 +19,9 @@ tag = ['flexins','china']
 priority = 'intermediate'
 name = "TN-China-20151013-ns_mme_cause_code_mapping"
 desc = __doc__
-criteria = "(1)¼ì²éNS/MMEÈí¼ş°æ±¾Îª ['N5 1.19-3','N5 1.17-5'] »òÕß¸ü¸ß°æ±¾.\n\
-          (2)¿ªÆô¹¦ÄÜ¿ª¹ØPRFILE002:2244-MME_CC_MAPPING_ENABLED.\n\
-          (3)ĞÂ½¨CAUSE CODE SETS Âú×ãÏÂÃæÌõ¼ş,Èç:EPCEMMºÍEPCESM£º\n\
+criteria = "(1)æ£€æŸ¥NS/MMEè½¯ä»¶ç‰ˆæœ¬ä¸º ['N5 1.19-3','N5 1.17-5'] æˆ–è€…æ›´é«˜ç‰ˆæœ¬.\n\
+          (2)å¼€å¯åŠŸèƒ½å¼€å…³PRFILE002:2244-MME_CC_MAPPING_ENABLED.\n\
+          (3)æ–°å»ºCAUSE CODE SETS æ»¡è¶³ä¸‹é¢æ¡ä»¶,å¦‚:EPCEMMå’ŒEPCESMï¼š\n\
              -EPCEMM,TYPE=EMM,PROC=ATTREJ,INTCAUSE=142 To EXTERNAL CAUSE=15\n\
              -EPCEMM,TYPE=EMM,PROC=ATTREJ,INTCAUSE=96 To EXTERNAL CAUSE=7\n\
              -EPCESM,TYPE=ESM,PROC=PDNCR,INTCAUSE=165 To EXTERNAL CAUSE=33\n\
@@ -87,10 +87,9 @@ def Find_NS_MME_Patt_Return_Info_List(LogFile,CommandStr,InfoPatt,ReturnInfoLen)
 			if m1:
 ##				print "line =",line
 				for infoId in range(1,return_Len):
-##					print "m1.group(%s) =" % (infoId), m1.group(infoId)
-					if m1.group(infoId):
+					try:
 						return_info_list.append(m1.group(infoId))
-					else:
+					except IndexError:
 						return_info_list.append('Not_Find_Infomation')
 				continue
 		else:
@@ -111,37 +110,43 @@ def run(logfile):
 	info   = []
 	errmsg = ''
 	Ns_version_Patt=r"\s*\S+\s+BU\s+\S+\s+(\w+\d+\s*\S+)\s+Y\s+Y\s*$"
-	version = Find_NS_MME_Patt_Return_Info_List(logfile,'WQO:CR;',Ns_version_Patt,1)[0]
+	try :
+		version = Find_NS_MME_Patt_Return_Info_List(logfile,'WQO:CR;',Ns_version_Patt,1)[0]
+	except IndexError:
+		version = ''
 ##	print "\n****Find version id is : ",version
 	if is_NS15_version_id(version,target_versions)>0 or version_up_NS15_id(version)>0:
 		result.status = CheckStatus.PASSED
-		info.append("    - ¼ì²éµ½ NS/MME Èí¼ş°æ±¾Îª£º'%s' ,ËüÊôÓÚ»òÕß¸ßÓÚNS15°æ±¾." % version)
+		info.append("    - æ£€æŸ¥åˆ° NS/MME è½¯ä»¶ç‰ˆæœ¬ä¸ºï¼š'%s' ,å®ƒå±äºæˆ–è€…é«˜äºNS15ç‰ˆæœ¬." % version)
 	else:
 		m=re.search(know_version_identify_Patt,version)
 		if m:
 			result.status = CheckStatus.FAILED
-			info.append("    - ¼ì²éµ½ NS/MME Èí¼ş°æ±¾Îª£º'%s' ,Ëü²»ÊôÓÚ»òÕßµÍÓÚNS15°æ±¾." % version)
+			info.append("    - æ£€æŸ¥åˆ° NS/MME è½¯ä»¶ç‰ˆæœ¬ä¸ºï¼š'%s' ,å®ƒä¸å±äºæˆ–è€…ä½äºNS15ç‰ˆæœ¬." % version)
 		else:
 			result.status = CheckStatus.UNKNOWN
-			info.append("    - ¼ì²éµ½ NS/MME Èí¼ş°æ±¾Îª£º'%s' ,Ëü²»ÊôÓÚNS/MMEÖ÷Á÷°æ±¾,ÇëÊÖ¶¯È·ÈÏ°æ±¾ĞÅÏ¢." % version)
+			info.append("    - æ£€æŸ¥åˆ° NS/MME è½¯ä»¶ç‰ˆæœ¬ä¸ºï¼š'%s' ,å®ƒä¸å±äºNS/MMEä¸»æµç‰ˆæœ¬,è¯·æ‰‹åŠ¨ç¡®è®¤ç‰ˆæœ¬ä¿¡æ¯." % version)
 			if version == '':
 				errmsg = ' Have not find NS Version release identification !!'
 		result.update(info=info,error=errmsg)
 		return result
 	
 	InfoPatt_mapping=r"\s*02244\s+MME_CC_MAPPING_ENABLED\s+(\S+)\s+YESs*$"
-	MME_CC_MAPPING_ENABLED_Value = Find_NS_MME_Patt_Return_Info_List(logfile,'WOI:;',InfoPatt_mapping,1)[0]
+	try:
+		MME_CC_MAPPING_ENABLED_Value = int(Find_NS_MME_Patt_Return_Info_List(logfile,'WOI:;',InfoPatt_mapping,1)[0],16)
+	except IndexError:
+		MME_CC_MAPPING_ENABLED_Value = None
 ##	print "MME_CC_MAPPING_ENABLED_Value = ",MME_CC_MAPPING_ENABLED_Value
-	if int(MME_CC_MAPPING_ENABLED_Value) == 1:
+	if MME_CC_MAPPING_ENABLED_Value == 1:
 		result.status = CheckStatus.PASSED
-		info.append("    - ¼ì²éµ½ NS/MME ¹¦ÄÜ¿ª¹ØPRFILE002:2244-MME_CC_MAPPING_ENABLEDÒÑ¿ªÆô.")
+		info.append("    - æ£€æŸ¥åˆ° NS/MME åŠŸèƒ½å¼€å…³PRFILE002:2244-MME_CC_MAPPING_ENABLEDå·²å¼€å¯.")
 	else:
 		result.status = CheckStatus.FAILED
-		info.append("    - ¼ì²éµ½ NS/MME ¹¦ÄÜ¿ª¹ØPRFILE002:2244-MME_CC_MAPPING_ENABLEDÎ´¿ªÆô.")
+		info.append("    - æ£€æŸ¥åˆ° NS/MME åŠŸèƒ½å¼€å…³PRFILE002:2244-MME_CC_MAPPING_ENABLEDæœªå¼€å¯.")
 		result.update(info=info,error=errmsg)
 		return result
 	EPCEMM_Patt = r"\s*(\S*)\s+EMM\s*$"
-	EPCESM_Patt = r"\s*(EPCESM)\s+ESM\s*$"
+	EPCESM_Patt = r"\s*(\S*)\s+ESM\s*$"
 	Cause_code_set_EMM_Name_List = Find_NS_MME_Patt_Return_Info_List(logfile,'KAL:;',EPCEMM_Patt,1)
 	Cause_code_set_ESM_Name_List = Find_NS_MME_Patt_Return_Info_List(logfile,'KAL:;',EPCESM_Patt,1)
 	Cause_code_set_EPCEMM = returnNotMatchItemInList(Cause_code_set_EMM_Name_List,'EMMDEF')
@@ -158,23 +163,42 @@ def run(logfile):
 	EmmIntcause96_Command = 'KAL:NAME=%s,TYPE=EMM,PROC=ATTREJ,INTCAUSE=96:;' % (Cause_code_set_EPCEMM)
 	EsmIntcause165_Command = 'KAL:NAME=%s,TYPE=ESM,PROC=PDNCR,INTCAUSE=165:;' % (Cause_code_set_EPCESM)
 	
-	EmmExternal142 = Find_NS_MME_Patt_Return_Info_List(logfile,EmmIntcause142_Command,EmmIntcause142_Patt,1)[0]
-	EmmExternal96= Find_NS_MME_Patt_Return_Info_List(logfile,EmmIntcause96_Command,EmmIntcause96_Patt,1)[0]
-	EsmExternal165 = Find_NS_MME_Patt_Return_Info_List(logfile,EsmIntcause165_Command,EsmIntcause165_Patt,1)[0]
+	try:
+		EmmExternal142 = int(Find_NS_MME_Patt_Return_Info_List(logfile,EmmIntcause142_Command,EmmIntcause142_Patt,1)[0])
+	except IndexError:
+		EmmExternal142 = None
+	try:
+		EmmExternal96= int(Find_NS_MME_Patt_Return_Info_List(logfile,EmmIntcause96_Command,EmmIntcause96_Patt,1)[0])
+	except IndexError:
+		EmmExternal96 = None
+	try:
+		EsmExternal165 = int(Find_NS_MME_Patt_Return_Info_List(logfile,EsmIntcause165_Command,EsmIntcause165_Patt,1)[0])
+	except IndexError:
+		EsmExternal165 = None
+
 ##	print "EmmExternal142 = ",EmmExternal142
 ##	print "EmmExternal96 = ",EmmExternal96
 ##	print "EsmExternal165 = ",EsmExternal165
-	
-	if int(EmmExternal142) == 15 and int(EmmExternal96) == 7 and int(EsmExternal165) == 33 :
-		result.status = CheckStatus.PASSED
-		info.append("    - ¼ì²éµ½ NS/MME µÄCAUSE CODE SETS: %s,TYPE=EMM,PROC=ATTREJ,INTCAUSE=142 To EXTERNAL CAUSE=%s" % (Cause_code_set_EPCEMM,EmmExternal142))
-		info.append("    - ¼ì²éµ½ NS/MME µÄCAUSE CODE SETS: %s,,TYPE=EMM,PROC=ATTREJ,INTCAUSE=96 To EXTERNAL CAUSE=%s" % (Cause_code_set_EPCEMM,EmmExternal96))
-		info.append("    - ¼ì²éµ½ NS/MME µÄCAUSE CODE SETS: %s,,TYPE=ESM,PROC=PDNCR,INTCAUSE=165 To EXTERNAL CAUSE=%s" % (Cause_code_set_EPCESM,EsmExternal165))
-	else:
-		result.status = CheckStatus.FAILED
-		info.append("    - ¼ì²éµ½ NS/MME µÄCAUSE CODE SETS: %s,TYPE=EMM,PROC=ATTREJ,INTCAUSE=142 To EXTERNAL CAUSE=%s" % (Cause_code_set_EPCEMM,EmmExternal142))
-		info.append("    - ¼ì²éµ½ NS/MME µÄCAUSE CODE SETS: %s,,TYPE=EMM,PROC=ATTREJ,INTCAUSE=96 To EXTERNAL CAUSE=%s" % (Cause_code_set_EPCEMM,EmmExternal96))
-		info.append("    - ¼ì²éµ½ NS/MME µÄCAUSE CODE SETS: %s,,TYPE=ESM,PROC=PDNCR,INTCAUSE=165 To EXTERNAL CAUSE=%s" % (Cause_code_set_EPCESM,EsmExternal165))
 
+	EmmExternal142_info_str = "    - æ£€æŸ¥åˆ° NS/MME çš„CAUSE CODE SETS: %s,TYPE=EMM,PROC=ATTREJ,INTCAUSE=142 To EXTERNAL CAUSE=%s" % (Cause_code_set_EPCEMM,EmmExternal142)
+	EmmExternal96_info_str = "    - æ£€æŸ¥åˆ° NS/MME çš„CAUSE CODE SETS: %s,TYPE=EMM,PROC=ATTREJ,INTCAUSE=96 To EXTERNAL CAUSE=%s" % (Cause_code_set_EPCEMM,EmmExternal96)
+	EsmExternal165_info_str = "    - æ£€æŸ¥åˆ° NS/MME çš„CAUSE CODE SETS: %s,TYPE=ESM,PROC=PDNCR,INTCAUSE=165 To EXTERNAL CAUSE=%s" % (Cause_code_set_EPCESM,EsmExternal165)
+	info_dic = {'EmmExternal142':[15,EmmExternal142,EmmExternal142_info_str],
+		'EmmExternal96':[7,EmmExternal96,EmmExternal96_info_str],
+		'EsmExternal165':[33,EsmExternal165,EsmExternal165_info_str]
+		}
+	for check_Items in info_dic:
+		print check_Items,info_dic[check_Items][1]
+		if info_dic[check_Items][0] == info_dic[check_Items][1]:
+			info.append(info_dic[check_Items][2])
+		else:
+			info.append(info_dic[check_Items][2].replace('- ','- !'))
+			result.status = CheckStatus.FAILED
+
+	info.append("\n")
 	result.update(info=info,error=errmsg)
 	return result
+
+
+
+ 
