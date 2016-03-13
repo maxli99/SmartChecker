@@ -3,7 +3,9 @@ import os,yaml,re,json
 from subprocess import check_output, STDOUT,PIPE,CalledProcessError    
 from collections import Counter
 from importlib import import_module
+from libs.tools import to_unicode
 
+__version__ = "v1.0"
 MODULE_PATH = 'modules'
 IGNORE_FILES = ['^_', '^\.', '\.pyc$']
 _filefilters = [re.compile(pat) for pat in IGNORE_FILES]
