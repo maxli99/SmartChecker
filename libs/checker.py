@@ -140,42 +140,6 @@ def ImportCheckModules(modulefilenames, modulepath=MODULE_PATH):
 
     return modules
 
-def _ImportCheckModules(modulefilenames, modulepath=MODULE_PATH):
-    """Import the modules which defined in the checklist_file and return the modules list.
-    """
-
-    if checklist_file:     
-        #read the script filename from files .
-        checklist = CheckList(checklist_file)
-        path = checklist.paths.get('modules',modulepath)
-        #print "path,mname:",path,checklist.get('modules')
-        ##
-        modulefilenames = filter(ignore_files,checklist.get('modules_name'))
-        #print "modulefilenames:",modulefilenames
-    else:
-        # read the script filename from the modules directory. 
-        # NOT USED in Version 1.
-        modulefilenames = filter(ignore_files, os.listdir(path))
-        #print modulefilenames
-
-    modules = []
-    for name in modulefilenames:
-        #print 'module path/name: %s\\%s' % (path,name)
-        if name.endswith('.py'):
-            mpath = '.'.join(os.path.split(path))
-            mname = '.'.join([mpath,name[:-3]])
-            #print "mname:",mpath,name[:-3]
-            modules.append(import_module(mname))
-        elif os.path.isdir(os.path.join(path,name)):
-            # this name is a directory.
-            continue
-        else:
-            # non-python script modules
-            #print "name:",name
-            modules.append(ShellModule(name,path))
-
-    return modules, checklist
-
 
 class ResultInfo(object):
     """Storing the information of the check result.
@@ -188,6 +152,7 @@ class ResultInfo(object):
     keys = ['status','info','error']
     def __init__(self,name):
         self.name = name
+        self.criteria = ''
         self.data = {'status' : CheckStatus.UNKNOWN,
                       'info'   : '',
                       'error'  : '',
@@ -251,16 +216,19 @@ class ResultInfo(object):
 
 
 class ResultList(object):
-	"""this class store all the check results.
-	"""
-	def __init__(self):
-		self._results = []
+    """this class store all the check results.
+    """
+    def __init__(self):
+        self._results = []
 
-	def append(self,obj):
-		self._results.append(obj)
+    def append(self,obj):
+        self._results.append(obj)
 
-	def __len__(self):
-		return len(self._results)
+    def __len__(self):
+        return len(self._results)
 
-	def stats(self):
-		return Counter([r.data['status'] for r in self._results])
+    def stats(self):
+        return Counter([r.data['status'] for r in self._results])
+
+    def __iter__(self):
+        return iter(self._results)

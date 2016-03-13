@@ -8,7 +8,7 @@ description: this is a short description for the checklist.
 #模板变量，包含模块信息模板和检查报告模板。缺省
 templates:
    module_info: module_info.md
-   report: report.md
+   report: common_report.md
 
 #相关路径信息
 paths: 

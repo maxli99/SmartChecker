@@ -124,30 +124,32 @@ def run_modules(checklist,logfile):
     results = ResultList()
     output_format = CONFIG.output_format
     err_flag = 0
-
+    jinja = JinjaTemplate(CONFIG.template_path)
+    template = jinja.template(checklist.templates['report'])
     msgbuf = MessageBuffer()
 
     print("Running check modules...")
   
-    for idx,m in enumerate(checklist['modules']):
+    for idx,m in enumerate(checklist.modules):
         _result = m.run(logfile)
-        msgbuf.append("\n[%s] %s: " % (idx+1,m.name))
-        msgbuf.append( "Criteria: %s" % m.criteria)
-        msgbuf.append(_result.dump(output_format))     
+        _result.criteria = m.criteria    
         results.append(_result)
         #results.append(m.run(CONFIG.logfile))
 
-    msgbuf.output(CONFIG.runmode)
-    print("\nTotal %s check modules were executed." % len(results))
-    #print results.stats()
-    for key,value in results.stats().items():
-        print("%10s: %s" % (key,value))
+    report = template.render(results=results)
+    print type(report)
+    print(report)
 
-    if checklist.templates['report']:
-        #print "templatefile:",templatefile
-        report = Reportor(checklist.templates['report'])
-        report.load_data(results)
-        report.save()
+    # print("\nTotal %s check modules were executed." % len(results))
+    # #print results.stats()
+    # for key,value in results.stats().items():
+    #     print("%10s: %s" % (key,value))
+
+    # if checklist.templates['report']:
+    #     #print "templatefile:",templatefile
+    #     report = Reportor(checklist.templates['report'])
+    #     report.load_data(results)
+    #     report.save()
 
     #no error happend, 0 is return.
     return err_flag
