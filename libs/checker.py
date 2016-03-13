@@ -8,6 +8,34 @@ MODULE_PATH = 'modules'
 IGNORE_FILES = ['^_', '^\.', '\.pyc$']
 _filefilters = [re.compile(pat) for pat in IGNORE_FILES]
 
+###############################################################
+# Common Functions
+###############################################################
+def dict2csv(dictdata,columnnames):
+    """Transfer the dict data to csv string.
+    """
+    values =[]
+    for name in columnnames:
+        if isinstance(dictdata[name],list):
+            values.append('|'.join(dictdata[name]))
+        else:
+            values.append(str(dictdata[name]))
+
+    return ','.join(values)
+
+def ignore_files(filename):
+    """filter the non-script filenames
+    if '.ignore_file' is found in 'modules' directory, then those filter in file 
+    will be added to the patterns
+    """
+    for pat in _filefilters:
+        if pat.search(filename):
+            return False
+    return True
+
+###############################################################
+# Class CheckStatus
+###############################################################
 class CheckStatus(object):
     PASSED = 'PASSED'      # check result is passed
     FAILED = 'FAILED'      # check result is failed
@@ -20,6 +48,9 @@ def validateResult(result):
         return result.upper()
     return UNKNOWN
 
+###############################################################
+# Class ShellModule
+###############################################################
 class ShellModule(object):
     """This class wrap the non-python script.
     """
@@ -50,42 +81,83 @@ class ShellModule(object):
         #result = validateResult(result)  
         return result
 
-def dict2csv(dictdata,columnnames):
-    """Transfer the dict data to csv string.
+class CheckList(object):
+    """Class store and handle the data of check list.
+    checklist = Checklist(checklist_file)
+    checklist.module
     """
-    values =[]
-    for name in columnnames:
-        if isinstance(dictdata[name],list):
-            values.append('|'.join(dictdata[name]))
+    def __init__(self,filename=''):
+        self.info = {}
+        self.modules = []
+        self.filename = os.path.split(filename)[1]
+        if filename:
+            self.load(filename)
+
+    @property
+    def templates(self):
+        return self.info.get('templates',{})
+
+    @property
+    def paths(self):
+        return self.info.get('paths',{})
+    @property
+    def modules_name(self):
+        return self.info.get('modules_name',[])
+    
+    def load(self,filename):
+        self.info.update(yaml.load(file(filename)))
+
+    def getinfo(self,key):
+        return self.info.get(key)
+
+    def import_modules(self,modules_filename=None):
+        if modules_filename:
+            self._modules_name = modules_filename
+        module_path = self.info['paths']['modules']
+        module_names = filter(ignore_files,self.info['modules_name'])
+        self.modules = ImportCheckModules(module_names,module_path)
+
+def ImportCheckModules(modulefilenames, modulepath=MODULE_PATH):
+    """Import the modules and return the modules list.
+    """
+
+    modules = []
+
+    for name in modulefilenames:
+        #print 'module path/name: %s\\%s' % (path,name)
+        if name.endswith('.py'):
+            mpath = '.'.join(os.path.split(modulepath))
+            mname = '.'.join([mpath,name[:-3]])
+            #print "mname:",mpath,name[:-3]
+            modules.append(import_module(mname))
+        elif os.path.isdir(os.path.join(path,name)):
+            # this name is a directory.
+            continue
         else:
-            values.append(str(dictdata[name]))
+            # non-python script modules
+            #print "name:",name
+            modules.append(ShellModule(name,path))
 
-    return ','.join(values)
+    return modules
 
-def ignore_files(filename):
-    """filter the non-script filenames
-    if '.ignore_file' is found in 'modules' directory, then those filter in file 
-    will be added to the patterns
+def _ImportCheckModules(modulefilenames, modulepath=MODULE_PATH):
+    """Import the modules which defined in the checklist_file and return the modules list.
     """
-    for pat in _filefilters:
-        if pat.search(filename):
-            return False
-    return True
 
-def ImportCheckModules(moduleslist, modulepath=MODULE_PATH):
-    """import the 
-    """
-    if moduleslist:     
+    if checklist_file:     
         #read the script filename from files .
-        modules_info = yaml.load(file(moduleslist))
-        path = modules_info.get('path',modulepath)
-        #print "path,mname:",path,modules_info.get('modules')
-        modulefilenames = filter(ignore_files,modules_info.get('modules',None))
+        checklist = CheckList(checklist_file)
+        path = checklist.paths.get('modules',modulepath)
+        #print "path,mname:",path,checklist.get('modules')
+        ##
+        modulefilenames = filter(ignore_files,checklist.get('modules_name'))
         #print "modulefilenames:",modulefilenames
     else:
-        # read the script filename from the modules directory.
+        # read the script filename from the modules directory. 
+        # NOT USED in Version 1.
         modulefilenames = filter(ignore_files, os.listdir(path))
         #print modulefilenames
+
     modules = []
     for name in modulefilenames:
         #print 'module path/name: %s\\%s' % (path,name)
@@ -102,26 +174,8 @@ def ImportCheckModules(moduleslist, modulepath=MODULE_PATH):
             #print "name:",name
             modules.append(ShellModule(name,path))
 
-    return modules
+    return modules, checklist
 
-class ModuleBase(object):
-    """Base class for check module
-    """
-
-    def __init__(self,name=''):
-        self.name = name
-        cmdset = []
-
-    def run(self):
-        """the check action should be done here.
-        """
-        print "I'm checking the log"
-        
-    def log_commands(self):
-        """output the commands which used to collect log.
-        """
-        return '\n'.join(self.cmdset)
-            
 
 class ResultInfo(object):
     """Storing the information of the check result.
@@ -180,15 +234,20 @@ class ResultInfo(object):
         if oformat == 'reading':
             data = self.data.copy()
             data['info'] = "\n".join(data['info'])
-            print(ResultInfo.strformat % data)
+            return ResultInfo.strformat % data
 
         elif oformat == 'json':
-            print(json.dumps(self.data))
+            return json.dumps(self.data)
         elif oformat == 'csv':
-            print(dict2csv(self.data, ResultInfo.keys))
+            return dict2csv(self.data, ResultInfo.keys)
         else:
             #status_str = "\n[%s] %s, " % (idx+1,m.name)
-            print(ResultInfo.strformat  % self.data)
+            return ResultInfo.strformat  % self.data
+
+    def dumpstr(self,template=None):
+        """
+        """
+        strbuf = []
 
 
 class ResultList(object):

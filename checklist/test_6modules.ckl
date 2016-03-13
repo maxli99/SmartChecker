@@ -1,0 +1,17 @@
+## 本checklist仅用作测试及示例
+
+title: this is a short description for the checklist.
+
+templates:
+   modules_info: module_info.md
+   report: fns_base.html
+
+paths: 
+    modules: modules\flexins
+    reports: reports
+    
+## below check modules will be executed.    
+modules:
+    - nsversion.py
+    - ns_fragment_check.py
+    - TN_CN_20151013_ns_mme_cause_code_mapping.py

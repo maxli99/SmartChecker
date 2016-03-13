@@ -33,6 +33,9 @@ class ConfigObject(object):
     def items(self):
         return self.__dict__.items()
         
+    def set(self,key,value):
+        self.__dict__[key] = value
+        
     def get(self,key,notfound=None):
         """return the value for 'key' or notfound if key not exist"""
         return self.__dict__.get(key,notfound)
