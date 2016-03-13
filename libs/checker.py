@@ -178,7 +178,7 @@ class ResultInfo(object):
 
     @info.setter
     def info(self,value):
-        self.data['info'] = value
+        self.data['info'] = value if isinstance(value, unicode) else unicode(value, "utf-8")
     
     @property
     def error(self):
@@ -186,18 +186,28 @@ class ResultInfo(object):
 
     @error.setter
     def error(self,value):
-        self.data['error']
+        self.data['error'] = value if isinstance(value, unicode) else unicode(value, "utf-8")
+
+    def _encode_to_unicode(self):
+        for index in xrange(len(self.data['info'])):
+            self.data['info'][index] = self.data['info'][index] \
+                if isinstance(self.data['info'][index], unicode) \
+                else unicode(self.data['info'][index], "utf-8")
+        self.data['error'] = self.data['error'] if isinstance(self.data['error'], unicode) else unicode(self.data['error'], "utf-8")
     
     def update(self,**kwargs):
         self.data.update(kwargs)
-        
+        self._encode_to_unicode()
+
     def load(self,**kwargs):
         "obslated function, please use the update instead."
         self.update(**kwargs)
+        self._encode_to_unicode()
         
     def dump(self,oformat='reading'):
         if oformat == 'reading':
             data = self.data.copy()
+            #data['info'] = "\n".join(data['info'])
             data['info'] = "\n".join(data['info'])
             return ResultInfo.strformat % data
 

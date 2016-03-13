@@ -1,0 +1,243 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ENTER USERNAME < 
+
+ENTER USERNAME < SYSTEM
+
+ENTER PASSWORD < ***************
+
+Flexi NS  SHMME08BNK                2016-03-11  12:55:00
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                       WELCOME TO THE DX 200 SERIES DIALOGUE
+
+
+
+
+
+MAIN LEVEL COMMAND <___>
+< ZQNI;
+
+
+LOADING PROGRAM VERSION 12.7-0
+
+Flexi NS  SHMME08BNK                2016-03-11  12:55:04 PAGE      1
+
+CON  TYPE     SW  C-NUM   ID  NAME         LOCATION          CHA  STATE  CTYP
+ 
+000  DX220     5  375399      SHMME08BNK   SHPUDONG          
+
+COMMAND EXECUTED
+
+
+O&M NETWORK HANDLING COMMAND <QN_>
+< ZWQO:CR;
+
+LOADING PROGRAM VERSION 14.29-0
+
+PACKAGES CREATED IN OMU:
+
+    SW-PACKAGE     STATUS   DIRECTORY           ENVIRONMENT          DEF  ACT
+                            PACKAGE-ID (REP-ID) DELIVERY
+                                                CD-ID
+
+    MME08FBK       FB       MME08FBK            N5 1.19-3             -    Y 
+                            N5 1.19-3           CID000NX 8.19-3   
+                                                          
+
+    N5011903       BU       N5_1_19_3           N5 1.19-3             Y    Y 
+                            N5 1.19-3           CID000NX 8.19-3   
+                                                          
+
+
+COMMAND EXECUTED
+
+
+SOFTWARE PACKAGE ADMINISTRATION COMMAND <WQ_>
+< ZDDE:IPDU,0:"cat /opt/mme/conf/mmeGTPLBS-0x0968.ini";
+
+LOADING PROGRAM VERSION 8.22-0
+
+Flexi NS  SHMME08BNK                2016-03-11  12:55:24
+Last login: Fri Mar 11 12:54:29 on pts/0
+0040-$ cat /opt/mme/conf/mmeGTPLBS-0x0968.ini
+#########################################################
+#  SGW Related IP(for local testing) and Port
+#########################################################
+GTPLBS_GW_SERVER_IP=0.0.0.0
+GTPLBS_GW_SERVER_PORT=2123
+
+#########################################################
+#  SGSN Related IP(for local testing) and Port
+#########################################################
+GTPLBS_SGSN_SERVER_IP=0.0.0.0
+GTPLBS_SGSN_SERVER_PORT=2123
+
+#########################################################
+#  S10 Related IP(for local testing) and Port
+#########################################################
+GTPLBS_MME_SERVER_IP=0.0.0.0
+GTPLBS_MME_SERVER_PORT=2123
+
+#########################################################
+#  S3 Related IP(for local testing) and Port
+#########################################################
+GTPLBS_S3SGSN_SERVER_IP=0.0.0.0
+GTPLBS_S3SGSN_SERVER_PORT=2123
+
+#########################################################
+#  Sv Interface Related IP(for local testing) and Port
+#########################################################
+GTPLBS_MSC_SERVER_IP=0.0.0.0
+GTPLBS_MSC_SERVER_PORT=2123
+
+#########################################################
+#  GTPLBS CPPU Related Port
+#########################################################
+GTPLBS_UDP_SERVER_PORT=36415
+
+#########################################################
+#  GTPLBS CPPU Related IP(for local testing) and Port
+#########################################################
+GTPLBS_CLI_UDP_SERVER_IP=127.0.0.1
+GTPLBS_CLI_UDP_SERVER_PORT=50036
+
+#########################################################
+#  TRHandler Listener Port. Will be same on all blades.
+#########################################################
+TRHANDLER_UDP_SERVER_PORT=36414
+
+
+#########################################################
+# Synapse Ports & timer value
+#########################################################
+SYNAPSE_LOCAL_PORT=50066
+SYNAPSE_REMOTE_PORT=55001
+RegistrationTimer=200
+CppuScaling=1
+
+#########################################################
+#  Logging Information
+#########################################################
+# DISABLED-0, CONSOLE_LOG-1, FILE_LOG-2
+LOG_TYPE=2    
+# Available log level options:
+# DISABLED-0, ERROR-1, WARNING-2, INFO-3, SECURITY-4, DEBUG-5, TRACE-6
+LOG_LEVEL=3
+# No of log files to be archived
+NO_OF_LOG_FILES=5    
+# Size is in MB.
+LOG_FILE_SIZE=5   
+
+#########################################################
+#  Configuration Parameters for IPDU/CPPU Fault Tolerance
+#########################################################
+# Time (in milli sec) for which IPDU stops accepting any 
+# new incoming msg triggering new procedures.
+FREEZE_TIME=2000                         
+
+#########################################################
+#  DSCP value for UDP Packet transmission
+#########################################################
+DSCP=34
+
+#########################################################
+#  Cleanup timer values for S10 Echo feature
+#  CLEANUP_TIME in milliseconds (1h)
+#  VALIDITY_TIME in milliseconds (24h)
+#########################################################
+# Time (in milli sec) 
+CLEANUP_TIME=3600000    
+VALIDITY_TIME=86400000
+
+#########################################################
+# Port number used for UDP communication with CPPU
+# Used with DMX messages
+#########################################################
+TRHANDLER_UDP_DMX_PORT=21111
+
+#########################################################
+# Uses different source ports for outgoing requests
+#########################################################
+LOAD_BALANCING_SEND_PORTS=1
+
+#########################################################
+# Configuration Parameters for SGW Snapshot
+#########################################################
+# Time (in milliseconds)
+SGW_SNAPSHOT_INTERVAL=60000
+SGW_SNAPSHOT_ENABLE=1
+
+#########################################################
+# Enable/Disable S11 Throttling
+#########################################################
+S11_THROTTLING_ENABLED=1
+
+#########################################################
+# Config Parameters for CPU Load monitoring  (S11 Throttling)
+#########################################################
+# Time (in milliseconds)
+CPU_LOAD_MONITOR_INTERVAL=1000
+# Trigger value in percentage (indicates CPU overload when the amount of IDLE CPU 
+#  is below this value)
+CPU_OVERLOAD_TRIGGER=10 
+# Threshold value in percentage (indicates the amount in which S11 sent messages is 
+# considered greater than S11 received messages)
+S11_MESSAGE_THRESHOLD=15
+
+########################################################
+# Config Parameters for UDP Socket Buffer monitoring (S11 Throttling)
+########################################################
+# Time (in milliseconds)
+BUFFER_MONITORING_INTERVAL=2000
+# Allowed UDP packet drops
+ALLOWED_DROPS_PER_INTERVAL=0
+
+#####THIS SHOULD BE THE LAST LINE. ADD FIELDS ABOVE THIS LINE. DONOT DELETE THIS LINE#####
+0040-$ 
+
+COMMAND EXECUTED
+
+
+REMOTE DEBUGGER SESSION COMMAND <DD_>
+< ZZZ;
+
+END OF DIALOGUE SESSION
+
