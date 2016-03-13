@@ -21,12 +21,12 @@ examples:
    smartchecker logfile
 """
 __programname__ = 'Smartchecker'
-__version__     = '0.613'
+__version__     = '0.800'
 
 import sys,os, argparse
 from libs.configobject import ConfigObject
 from libs.checker import ImportCheckModules,ResultList,CheckList
-from libs.reportor import Reportor, JinjaTemplate
+from libs.reportor import CheckReport, JinjaTemplate
 from libs.tools import MessageBuffer
 
 default_config = {
@@ -36,10 +36,13 @@ default_config = {
 }
 
 module_info_format ="""
-Module #{{idx}}
+{% for m in modules %}
+Module #{{loop.index}}
 ----------------------------------------------------------------
-       Name: {{module.name}}
-Description: {{module.desc}}
+       Name: {{m.name}}
+Description: {{m.desc}}
+
+{% endfor %}
 """
 ## initilize the global variables with default config.
 CONFIG = ConfigObject(default_config)
@@ -66,26 +69,17 @@ def args_parse():
     parser.add_argument('-d','--debug', action="store_true",
                         help="debug option, detail info will be output")
     parser.add_argument('--save', action="store_true",
-                        help="save the module info if option is set. ")
+                        help="save the module info or check report if option is set. ")
 
     return parser,parser.parse_args()
 
-def command_description(cmdlist):
-    """Combine every command and its description in the <cmdlist> to two line string.
-This function is used to output the check commands for log collections.
-    """
-    #cmdmark = "#CmdMark#"
-    cmd_desc_format ="\n## %(desc)s \n%(cmd)s\n"
-
-    _cmdstr = []
-    for cmd,desc in cmdlist:
-        _cmdstr.append(cmd_desc_format % dict(desc=desc.capitalize(),cmd=cmd))
-    
-    return _cmdstr
-
-
 def show_module_info(checklist,logfile=None):
-    """show the information of given modules """
+    """show the information of given modules. if CONFIG.module_info_file is set,
+    save the modules info to a file.
+    parameters:
+       checklist,   the CheckList object, contain the checklist info.
+       logfile,     no use for this function.
+    """
 
     msgbuf = MessageBuffer()
     cmdlist = []
@@ -100,20 +94,14 @@ def show_module_info(checklist,logfile=None):
     modules = checklist.modules
 
     for idx, m in enumerate(modules):
-        #print "type:",type(m.name),type(m.desc),type(m.criteria)
-        infotext = template.render(idx=idx+1,module=m)
-        msgbuf.append(infotext)
         if hasattr(m,'check_commands'):
-            cmdbuf="".join(command_description(m.check_commands))
-            cmdlist.append(cmdbuf)
+            cmdlist.extend(m.check_commands)
 
-    msgbuf.append("\n##The Checklist include below %s check modules:\n" % len(modules))
-
-    msgbuf.append("\n# Below are all the commands used to collect the needed information:")
-    msgbuf.append("="*70+"\n")    
-    msgbuf.append("".join(cmdlist))
+    info=template.render(modules=modules,cmdlist=cmdlist,checklist=checklist)
+    msgbuf.append(info)
 
     msgbuf.output(CONFIG.runmode)
+    
     if CONFIG.get('module_info_file'):
         msgbuf.output('file',CONFIG.get('module_info_file'))
     return 0
@@ -128,30 +116,21 @@ def run_modules(checklist,logfile):
     template = jinja.template(checklist.templates['report'])
     msgbuf = MessageBuffer()
 
+    report = CheckReport()
+    report.template_path = CONFIG.template_path
+    report.template_name = checklist.templates['report']
+
     print("Running check modules...")
-  
     for idx,m in enumerate(checklist.modules):
         _result = m.run(logfile)
         _result.criteria = m.criteria    
         results.append(_result)
-        #results.append(m.run(CONFIG.logfile))
 
     report = template.render(results=results)
-    print type(report)
-    print(report)
+    msgbuf.append(report)
 
-    # print("\nTotal %s check modules were executed." % len(results))
-    # #print results.stats()
-    # for key,value in results.stats().items():
-    #     print("%10s: %s" % (key,value))
+    msgbuf.output(CONFIG.runmode)
 
-    # if checklist.templates['report']:
-    #     #print "templatefile:",templatefile
-    #     report = Reportor(checklist.templates['report'])
-    #     report.load_data(results)
-    #     report.save()
-
-    #no error happend, 0 is return.
     return err_flag
 
 if __name__ == "__main__":
@@ -166,7 +145,6 @@ if __name__ == "__main__":
     if DEBUG:
         print(args)
 
-    #print(CONFIG)
     checklist_file = args.run or args.show
     cklpath,cklfile = os.path.split(checklist_file)
     
@@ -175,8 +153,11 @@ if __name__ == "__main__":
 
     checklist = CheckList(os.path.join(cklpath,cklfile))
     checklist.import_modules()
+
     if args.save:
-        CONFIG.set('module_info_file',checklist.templates['module_info'])
+        _filename = "_".join([checklist.name, checklist.templates["module_info"]])
+        CONFIG.set('module_info_file',_filename)
+
     if not checklist.modules:
         parser.print_help()
         sys.exit(1)

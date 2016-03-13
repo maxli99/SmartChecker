@@ -96,6 +96,13 @@ class CheckList(object):
             self.load(filename)
 
     @property
+    def name(self):
+        if self.filename:
+            return self.filename[:-4]
+        else:
+            return ""
+    
+    @property
     def templates(self):
         return self.info.get('templates',{})
 
