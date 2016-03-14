@@ -61,6 +61,7 @@ def log_collection():
 ##--------------------------------------------
 def run(logfile):
     rsult_info=[]
+    total_status=CheckStatus.PASSED
 
     blocks = read_block(logfile,'ZDDE:SMMU,')
 
@@ -83,11 +84,12 @@ def run(logfile):
             status=CheckStatus.PASSED
         else:
             status=CheckStatus.FAILED
+            total_status=CheckStatus.FAILED
 
         if status == CheckStatus.UNCHECKED:
             status = CheckStatus.UNKNOWN
         rsult_info.append(smmu_info %(unit_index,status))
 
-    result.load(status=status,info=rsult_info,error=error)
+    result.load(status=total_status,info=rsult_info,error=error)
 
     return result
