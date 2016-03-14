@@ -1,0 +1,144 @@
+
+
+ENTER USERNAME < 
+
+ENTER USERNAME < SYSTEM
+
+ENTER PASSWORD < ***************
+
+Flexi NS  SHMME03BNK                2016-02-29  14:33:38
+
+
+
+
+
+                       WELCOME TO THE DX 200 SERIES DIALOGUE
+
+
+
+
+
+MAIN LEVEL COMMAND <___>
+< ZDDE:OMU:"ZMA:W0,F3,,,,,","ZMA:W1,F3,,,,,","ZGSC:,00FC";
+
+
+LOADING PROGRAM VERSION 8.22-0
+
+Flexi NS  SHMME03BNK                2016-02-29  14:33:43
+
+WELCOME TO SERVICE TERMINAL DIALOGUE
+
+0001-MAN> ZMA:W0,F3,,,,,
+SENDING SCSI COMMAND: W0  
+EXECUTED
+0001-MAS> ZMA:W1,F3,,,,,
+SENDING SCSI COMMAND: W1  
+EXECUTED
+
+         -- COMPUTER LOG --
+
+
+CALLER    : 00FC 0001 00    RETURN ADDRESS: 000C (L0001).0001E3A4
+WRITE TIME: 2016-02-29    14:33:46.63
+PARAMETERS: I-08 0614.00000000 00000111 016C.000018A9
+USER TEXT : Disk file system info on WDU-0:
+USER DATA : 17771 files, 155 directories, 17926 total
+            Disk size   300000 MB
+            Used size    13639 MB, 4% of disk size
+            Alloc unit     512 bytes
+            Free size   286360 MB, 95% of disk size
+            Number of free areas 3194
+            Biggest free area 278209 MB, 97% of total free
+            Fragmentation degree 62.9%
+
+
+CALLER    : 00FC 0002 00    RETURN ADDRESS: 000C (L0001).0001E3A4
+WRITE TIME: 2016-02-29    14:33:49.40
+PARAMETERS: I-08 09B4.00000000 00000111 017C.000018A9
+USER TEXT : Disk file system info on WDU-1:
+USER DATA : 18069 files, 155 directories, 18224 total
+            Disk size   300000 MB
+            Used size    10508 MB, 3% of disk size
+            Alloc unit     512 bytes
+            Free size   289365 MB, 96% of disk size
+            Number of free areas 3349
+            Biggest free area 274460 MB, 94% of total free
+            Fragmentation degree 5.2%
+
+OUTPUT IS COMPLETE.
+0001-LOG> 
+
+END OF SERVICE TERMINAL SESSION
+
+COMMAND EXECUTED
+
+
+REMOTE DEBUGGER SESSION COMMAND <DD_>
+< ZDDE:MCHU:"ZMA:W0,F3,,,,,","ZMA:W1,F3,,,,,","ZGSC:,00FC";
+
+LOADING PROGRAM VERSION 8.22-0
+
+Flexi NS  SHMME03BNK                2016-02-29  14:34:00
+
+WELCOME TO SERVICE TERMINAL DIALOGUE
+
+0004-MAN> ZMA:W0,F3,,,,,
+SENDING SCSI COMMAND: W0  
+EXECUTED
+0004-MAS> ZMA:W1,F3,,,,,
+SENDING SCSI COMMAND: W1  
+EXECUTED
+
+         -- COMPUTER LOG --
+
+
+CALLER    : 00FC 0001 00    RETURN ADDRESS: 000C (L0001).0001E3A4
+WRITE TIME: 2016-02-29    14:34:03.07
+PARAMETERS: I-08 097C.00000000 0000010B 016C.000018A9
+USER TEXT : Disk file system info on WDU-0:
+USER DATA : 2207 files, 28 directories, 2235 total
+            Disk size   300000 MB
+            Used size    16956 MB, 5% of disk size
+            Alloc unit     512 bytes
+            Free size   283043 MB, 94% of disk size
+            Number of free areas 3
+            Biggest free area 282649 MB, 99% of total free
+            Fragmentation degree 0.2%
+
+
+CALLER    : 00FC 0002 00    RETURN ADDRESS: 000C (L0001).0001E3A4
+WRITE TIME: 2016-02-29    14:34:05.49
+PARAMETERS: I-08 05E4.00000000 0000010B 017C.000018A9
+USER TEXT : Disk file system info on WDU-1:
+USER DATA : 2207 files, 28 directories, 2235 total
+            Disk size   300000 MB
+            Used size    16956 MB, 5% of disk size
+            Alloc unit     512 bytes
+            Free size   283043 MB, 94% of disk size
+            Number of free areas 3
+            Biggest free area 282649 MB, 99% of total free
+            Fragmentation degree 0.2%
+
+OUTPUT IS COMPLETE.
+0004-LOG> 
+
+END OF SERVICE TERMINAL SESSION
+
+COMMAND EXECUTED
+
+
+REMOTE DEBUGGER SESSION COMMAND <DD_>
+< exit
+
+/*** UNKNOWN COMMAND ***/
+
+MAIN LEVEL COMMAND <___>
+< ZZZ
+
+
+/* TO EXECUTE COMMAND, ENTER ";" */
+? ;
+
+
+END OF DIALOGUE SESSION
+

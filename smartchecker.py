@@ -21,12 +21,13 @@ examples:
    smartchecker logfile
 """
 __programname__ = 'Smartchecker'
-__version__     = '0.613'
+__version__     = '0.800'
 
 import sys,os, argparse
 from libs.configobject import ConfigObject
-from libs.checker import ImportCheckModules,ResultList
-from libs.tools import OutputBuffer
+from libs.checker import ImportCheckModules,ResultList,CheckList
+from libs.reportor import CheckReport, JinjaTemplate
+from libs.tools import MessageBuffer
 
 default_config = {
 'output_format' : "reading",
@@ -34,6 +35,15 @@ default_config = {
 'runmode'       : "console",
 }
 
+module_info_format ="""
+{% for m in modules %}
+Module #{{loop.index}}
+----------------------------------------------------------------
+       Name: {{m.name}}
+Description: {{m.desc}}
+
+{% endfor %}
+"""
 ## initilize the global variables with default config.
 CONFIG = ConfigObject(default_config)
 
@@ -43,6 +53,7 @@ if os.path.exists(config_file):  #read the config file if it's exists.
     CONFIG.read(config_file)
 
 DEBUG = False
+SAVEFILE = False
 
 def args_parse():
     parser = argparse.ArgumentParser(version=" v".join([__programname__,__version__]))
@@ -57,72 +68,69 @@ def args_parse():
                         help="view the modules specified in check lsit.")    
     parser.add_argument('-d','--debug', action="store_true",
                         help="debug option, detail info will be output")
+    parser.add_argument('--save', action="store_true",
+                        help="save the module info or check report if option is set. ")
 
     return parser,parser.parse_args()
 
-def command_description(cmdlist):
-    """ combine every command and its description in the <cmdlist> to two line string.
-    this function is for output the check commands.
+def show_module_info(checklist,logfile=None):
+    """show the information of given modules. if CONFIG.module_info_file is set,
+    save the modules info to a file.
+    parameters:
+       checklist,   the CheckList object, contain the checklist info.
+       logfile,     no use for this function.
     """
-    #cmdmark = "#CmdMark#"
-    cmd_desc_format ="\n## %(desc)s \n%(cmd)s\n"
 
-    _cmdstr = []
-    for cmd,desc in cmdlist:
-        _cmdstr.append(cmd_desc_format % dict(desc=desc.capitalize(),cmd=cmd))
-    
-    return _cmdstr
-
-
-def show_module_info(modules,logfile=None):
-    """show the information of given modules """
-
-    _hashline = "#" * 68
-    outbuf = OutputBuffer()
+    msgbuf = MessageBuffer()
     cmdlist = []
+    jinja = JinjaTemplate(CONFIG.template_path)
 
-    for m in modules:
-        outbuf.append("- name: %s\n  desc: %s\n" % (m.name,m.desc))
+    if 'module_info' in checklist.templates:
+        template = jinja.template(checklist.templates['module_info'])
+    else:
+        template = jinja.template()(module_info_format)
+
+
+    modules = checklist.modules
+
+    for idx, m in enumerate(modules):
         if hasattr(m,'check_commands'):
-            cmdbuf="".join(command_description(m.check_commands))
-            #outbuf.append("- check commands:\n%s\n" % cmdbuf)
-            cmdlist.append(cmdbuf)
+            cmdlist.extend(m.check_commands)
 
-    outbuf.append("There are total %s check modules need to been run." % len(modules))
-    outbuf.append("\n\n"+ _hashline)
-    outbuf.append("\n# Below are all the commands used to collect the needed information:")
-    outbuf.append("\n"+ _hashline)
-    outbuf.append("".join(cmdlist))
-    outbuf.output(CONFIG.runmode)
+    info=template.render(modules=modules,cmdlist=cmdlist,checklist=checklist)
+    msgbuf.append(info)
 
+    msgbuf.output(CONFIG.runmode)
+    
+    if CONFIG.get('module_info_file'):
+        msgbuf.output('file',CONFIG.get('module_info_file'))
     return 0
 
-def run_modules(modules,logfile):
+def run_modules(checklist,logfile):
     """run the check modules in console mode
     """
     results = ResultList()
     output_format = CONFIG.output_format
     err_flag = 0
+    jinja = JinjaTemplate(CONFIG.template_path)
+    template = jinja.template(checklist.templates['report'])
+    msgbuf = MessageBuffer()
+
+    report = CheckReport()
+    report.template_path = CONFIG.template_path
+    report.template_name = checklist.templates['report']
 
     print("Running check modules...")
-    #print "ModuleName\t Result\t Description"
-    #print "-"*50    
-    for idx,m in enumerate(modules):
+    for idx,m in enumerate(checklist.modules):
         _result = m.run(logfile)
-        status_str = "\n[%s] %s: " % (idx+1, m.name if isinstance(m.name, unicode) else unicode(m.name, "utf-8"))
-        criteria_str = "Criteria: %s" % (m.criteria if isinstance(m.criteria, unicode) else unicode(m.criteria, "utf-8"))
-        print(status_str)
-        print(criteria_str)
-        _result.dump(output_format)        
+        _result.criteria = m.criteria    
         results.append(_result)
-        #results.append(m.run(CONFIG.logfile))
 
-    print("\nTotal %s check modules were executed." % len(results))
-    #print results.stats()
-    for key,value in results.stats().items():
-        print("%10s: %s" % (key,value))
+    report = template.render(results=results)
+    msgbuf.append(report)
 
-    #no error happend, 0 is return.
+    msgbuf.output(CONFIG.runmode)
+
     return err_flag
 
 if __name__ == "__main__":
@@ -137,19 +145,23 @@ if __name__ == "__main__":
     if DEBUG:
         print(args)
 
-    #print(CONFIG)
-    modules_list = args.run or args.show
-    modules = []
-    modulepath,modulefile = os.path.split(modules_list)
-    if not modulepath:
-        modulepath = CONFIG.checklist_path
+    checklist_file = args.run or args.show
+    cklpath,cklfile = os.path.split(checklist_file)
+    
+    if not cklpath:
+        cklpath = CONFIG.checklist_path
 
-    modules = ImportCheckModules(os.path.join(modulepath,modulefile))
+    checklist = CheckList(os.path.join(cklpath,cklfile))
+    checklist.import_modules()
 
-    if not modules:
+    if args.save:
+        _filename = "_".join([checklist.name, checklist.templates["module_info"]])
+        CONFIG.set('module_info_file',_filename)
+
+    if not checklist.modules:
         parser.print_help()
         sys.exit(1)
 
     command = (args.run and 'run') or (args.show and 'show') or 'run'
 
-    sys.exit(do_action[command](modules,args.logfile))
+    do_action[command](checklist,args.logfile)

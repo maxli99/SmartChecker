@@ -5,7 +5,7 @@ VALIDITY: NG3.1, NG3.2
 import re
 from libs.checker import CheckStatus,ResultInfo
 from libs.flexing import get_ng_version
-from libs.tools import OutputBuffer
+from libs.tools import MessageBuffer
 
 ## Mandatory variables 
 ##--------------------------------------------
@@ -31,7 +31,7 @@ logline_format = "    - %s"
 def check_memory_fail_counter(loglines):
     _logblk=''.join(loglines)
     status = CheckStatus.UNKNOWN
-    info = OutputBuffer(lineformat=logline_format)
+    info = MessageBuffer(lineformat=logline_format)
     error = ''
     
     _results = pat_memfail.findall(_logblk)
@@ -46,7 +46,7 @@ def check_memory_allocation(loglines):
     status = CheckStatus.UNKNOWN
     flag_fail = False
     flag_passed = False
-    info = OutputBuffer(lineformat=logline_format)
+    info = MessageBuffer(lineformat=logline_format)
     error = ''
     _mem = {'AS':[],'SAB':[]}
     
