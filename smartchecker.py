@@ -120,7 +120,7 @@ def run_modules(checklist,logfile):
     report.template_path = CONFIG.template_path
     report.template_name = checklist.templates['report']
 
-    print("Running check modules...")
+    #print("Running check modules...")
     for idx,m in enumerate(checklist.modules):
         _result = m.run(logfile)
         _result.criteria = m.criteria    
@@ -130,7 +130,10 @@ def run_modules(checklist,logfile):
     msgbuf.append(report)
 
     msgbuf.output(CONFIG.runmode)
-
+    report_file=CONFIG.get('report_file')
+    if report_file:
+        msgbuf.output('file',report_file)
+        
     return err_flag
 
 if __name__ == "__main__":
@@ -155,8 +158,10 @@ if __name__ == "__main__":
     checklist.import_modules()
 
     if args.save:
-        _filename = "_".join([checklist.name, checklist.templates["module_info"]])
-        CONFIG.set('module_info_file',_filename)
+        minfo_filename = "_".join([checklist.name, checklist.templates["module_info"]])
+        report_filename = "_".join([checklist.name,checklist.templates["report"]])
+        CONFIG.set('module_info_file',minfo_filename)
+        CONFIG.set('report_file',report_filename)
 
     if not checklist.modules:
         parser.print_help()

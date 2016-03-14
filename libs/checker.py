@@ -206,12 +206,12 @@ class ResultInfo(object):
     
     def update(self,**kwargs):
         self.data.update(kwargs)
-        self._encode_to_unicode()
+        #self._encode_to_unicode()
 
     def load(self,**kwargs):
         "obslated function, please use the update instead."
         self.update(**kwargs)
-        self._encode_to_unicode()
+        #self._encode_to_unicode()
         
     def dump(self,oformat='reading'):
         if oformat == 'reading':
