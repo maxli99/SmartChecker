@@ -18,10 +18,10 @@ priority = 'critical'
 name = "TN_Ch_20151124_IPDU_FreeMem"
 desc = __doc__
 criteria = """(1)检查NS/MME软件版本为 ['N5 1.19-3','N5 1.17-5'] 或者更高版本.
-          (2) IPDU FREE MEMORY < 20%. 或者 IPDU 单元1143 告警 或者 lnx-mmeGTPLBS 模块占用内存较多>20%
-          
-          
-
+          (2) IPDU FREE MEMORY < 20%. 
+          或者 IPDU 单元1143 告警 
+          或者 lnx-mmeGTPLBS 模块占用内存较多>20%
+ 
 """
 ##-----------------------------------------------------
 
@@ -30,6 +30,7 @@ criteria = """(1)检查NS/MME软件版本为 ['N5 1.19-3','N5 1.17-5'] 或者更
 # available target versions:
 target_versions = ['N5 1.19-3','N5 1.17-5']
 check_commands = [
+        ("ZWQO:CR;","show the VERSION in the MME/SGSN"),
 	("ZAHO:;","show the alarms in the MME/SGSN"),
 	("ZDOI:IPDU,(active):M;","show the memory of active IPDU ."),
 	("ZDDE:IPDU,(active):\"top -n1\";","show the memory usage of process lnx-mmeGTPLBS in active IPDU .")
@@ -197,7 +198,34 @@ def run(logfile):
 		result.update(info=info,error=errmsg)
 		return result
 
-        #条件一 ，IPDU 告警1143
+        #条件一 IPDU FREE MEMORY >20%
+	#ZDOI:IPDU,0:M;
+	#FREE MEMORY 2265 39
+	CommandPatt=r"DOI:IPDU,\d{1}:M:+;"
+	
+	InfoPatt1=r"^\s*FREE MEMORY\s+\S+\s+(\S+)\s*$"	
+	InfoPatt2=r""
+	
+	try:
+		MME_Usage = F_MME_Patt_Return_Info_List(logfile,CommandPatt,InfoPatt1,0,InfoPatt2,1,0)
+	except IndexError:
+		MME_Usage[0][0] = "Unkown Error!"
+		MME_Usage[0][1] = -1
+
+	if MME_Usage[0][0] =="HIT" :
+		if float(MME_Usage[1][1])<20 :
+			abnormal_flag=1
+			info.append("    - 检查到 NS/MME IPDU 空闲内存存量过低 ."+MME_Usage[1][1])
+		else:
+			info.append("    - 检查到 NS/MME IPDU 空闲内存存量在门限范围: "+MME_Usage[1][1])
+	elif MME_Usage[0][0] =="UNHIT" :
+		
+		info.append("    - 没有检查到特征字符串.")
+	else:
+		abnormal_flag=-1
+		info.append("    - 检查过程中异常错误，结果未知。 Unknown Result.")
+			
+        #条件二 ，IPDU 告警1143
 	"""
         <HIST> SHMME03BNK IPDU-0 SWITCH 2015-11-01 02:13:02.99
         * DISTUR IPDU-0 1A001-00-5 CPUPRO
@@ -225,7 +253,7 @@ def run(logfile):
 		info.append("    - 检查到过程中异常错误，结果未知。 Unknown Result.")
 
         
-        #条件二 IPDU FREE MEMORY < 20%
+        #条件三 IPDU lnx-mmeGTPLBS 进程内存利用 < 20%
 	CommandPatt=r"DDE:IPDU,\d{1}:\"top -n1\",;"
 	
 	#11965 root 20 0 554m 231m 3500 S 9.9 4.0 3476:31 lnx-mmeGTPLBS
