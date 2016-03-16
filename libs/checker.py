@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os,yaml,re,json
-from subprocess import check_output, STDOUT,PIPE,CalledProcessError    
+from subprocess import check_output, STDOUT,PIPE,CalledProcessError
 from collections import Counter
 from importlib import import_module
 from libs.tools import to_unicode
@@ -27,7 +27,7 @@ def dict2csv(dictdata,columnnames):
 
 def ignore_files(filename):
     """filter the non-script filenames
-    if '.ignore_file' is found in 'modules' directory, then those filter in file 
+    if '.ignore_file' is found in 'modules' directory, then those filter in file
     will be added to the patterns
     """
     for pat in _filefilters:
@@ -42,7 +42,7 @@ class CheckStatus(object):
     PASSED = 'PASSED'      # check result is passed
     FAILED = 'FAILED'      # check result is failed
     UNKNOWN = 'UNKNOWN'    # unknown stituation
-    RUNERR  = 'RUNERR'     # error in runtime 
+    RUNERR  = 'RUNERR'     # error in runtime
     UNCHECKED = 'UNCHECKED'
 
 def validateResult(result):
@@ -80,7 +80,7 @@ class ShellModule(object):
             error = "  errmsg: <<%s>> " % err
             result.load(status=CheckStatus.RUNERR,error=error)
 
-        #result = validateResult(result)  
+        #result = validateResult(result)
         return result
 
 class CheckList(object):
@@ -101,7 +101,7 @@ class CheckList(object):
             return self.filename[:-4]
         else:
             return ""
-    
+
     @property
     def templates(self):
         return self.info.get('templates',{})
@@ -112,7 +112,7 @@ class CheckList(object):
     @property
     def modules_name(self):
         return self.info.get('modules_name',[])
-    
+
     def load(self,filename):
         self.info.update(yaml.load(file(filename)))
 
@@ -166,7 +166,7 @@ class ResultInfo(object):
                       'info'   : '',
                       'error'  : '',
                     }
-        
+
 
     def setvalue(self,key,value):
         if key not in ResultInfo.keys:
@@ -174,7 +174,7 @@ class ResultInfo(object):
         self.__dict__[key] == value
         return True
 
-    @property    
+    @property
     def status(self):
         return self.data['status']
     @status.setter
@@ -188,7 +188,7 @@ class ResultInfo(object):
     @info.setter
     def info(self,value):
         self.data['info'] = value if isinstance(value, unicode) else unicode(value, "utf-8")
-    
+
     @property
     def error(self):
         return self.data['error']
@@ -203,16 +203,16 @@ class ResultInfo(object):
                 if isinstance(self.data['info'][index], unicode) \
                 else unicode(self.data['info'][index], "utf-8")
         self.data['error'] = self.data['error'] if isinstance(self.data['error'], unicode) else unicode(self.data['error'], "utf-8")
-    
+
     def update(self,**kwargs):
         self.data.update(kwargs)
-        #self._encode_to_unicode()
+        self._encode_to_unicode()
 
     def load(self,**kwargs):
         "obslated function, please use the update instead."
         self.update(**kwargs)
-        #self._encode_to_unicode()
-        
+        self._encode_to_unicode()
+
     def dump(self,oformat='reading'):
         if oformat == 'reading':
             data = self.data.copy()
