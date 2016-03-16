@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
-"""Check the Charging character config for Huawei PCRF and CC=0 issue
+u"""检查Charging character配置（华为PCRF和CC=0用户问题）
+开启gx 功能后，用户签约为CC=0 的用户GX CCR 消息中的携带的online（在线计费）和
+offline（离线计费）被设置为disable 状态（不计费），由PCRF 来指示计费方式。华为PCRF 会返回与SAEGW 发送一致的online（在线计费）
+和 offline（离线计费）字段，disable 状态（不计费），导致CC=0 的用户不产生话单。
+添加下面的配置即可避免上述的问题。
+charchar-index = 0
+charging-profile = charging-profile-1
+建议将其余字段均使用缺省的计费方式。
 When enable gx function, subscriber with CC=0 's GX CCR message will set th online and 
 offline as disable and the charging mode decide by PCRF . But Huawei PCRF will return 
 disable , so these subsciber(CC=0) will not generate CDR.
@@ -10,15 +17,16 @@ other cc=1,2,3,5,6,7,9 can use the same way.
 """
 import re
 from libs.checker import ResultInfo,CheckStatus
+from libs.flexing import get_ng_version
 
 ## Mandatory variables 
 ##--------------------------------------------
 module_id = '20160304.01'
 tag  = ['flexing','china']
 priority = 'critical'
-name = "Verify the Charging character configuration in Session Profile"
+name = u"校验Session Profile中的Charging character配置"
 desc = __doc__
-criteria = "NG Charging character configuration have problem "
+criteria = u"NG Charging character configuration have problem "
 result = ResultInfo(name)
 error = ''
 ##--------------------------------------------
@@ -27,7 +35,7 @@ error = ''
 
 ##--------------------------------------------
 ## Optional variables
-target_version = ['3.0','4.0','15.0']    
+target_version = ['3.1_1.0','3.2','15']    
 
 ## first get the block of each 'show session-profile'
 ## from each block we will get the session-profile 's name and charging-index config 
@@ -57,7 +65,19 @@ def run(logfile):
     
 	charging_index_status=[]
 	status = CheckStatus.UNCHECKED
-    
+	
+	# check the NG version first.
+	ngversion=get_ng_version(logfile)
+	
+	if not ngversion:  # not version info found.
+		#status = CheckStatus.UNKNOWN
+		charging_index_status.append(u"    - NG version can't be determindated. \n")
+		#error = "NG version is not found."
+		
+	elif ngversion[0] not in target_version:
+		charging_index_status.append(u"    - NG version: " +ngversion[0]+" (Not in the target_version list). \n")
+	else:
+		charging_index_status.append(u"    - NG version: " +ngversion[0]+" (in target_version list). \n")
 	# Get every session-profile-block
 	session_profile_block=[]
 	pat=pats_charchar['session-profile-block']
@@ -79,11 +99,11 @@ def run(logfile):
 			if r:
 				if status == CheckStatus.UNCHECKED:
 					status = CheckStatus.PASSED
-				charging_index_status.append(session_profile_name + ' have charchar-index=0')
+				charging_index_status.append(session_profile_name + ' have charchar-index=0 \n')
 			else:
 				if status == CheckStatus.UNCHECKED:
 					status = CheckStatus.FAILED
-				charging_index_status.append(session_profile_name + ' have NOT charchar-index=0')
+				charging_index_status.append(session_profile_name + ' have NOT charchar-index=0 \n')
     
 	if status == CheckStatus.UNCHECKED:
 		status = CheckStatus.UNKNOWN
