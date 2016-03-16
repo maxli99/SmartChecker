@@ -1,26 +1,24 @@
-"""Analysis and Check the FlexiNS software version.
-
+u"""Analysis and Check the FlexiNS software version.
 """
 import re
 from libs.checker import ResultInfo,CheckStatus
-from libs.log_spliter import LogSpliter,LOG_TYPE_FLEXI_NS
 from libs.tools import read_cmdblock_from_log
 
 ## Mandatory variables 
 ##--------------------------------------------
-module_id = 'fnsbase.20160305.01'
+module_id = 'fnsbase.2016030500'
 tag       = ['flexins','base']
 priority  = 'normal'
 name      = "Check the FNS software version"
 desc      = __doc__
-criteria  = "FNS version is ['N5 1.19-3']."
+criteria  = "FNS version is in ['N5 1.19-3'] or ['all']"
 result    = ResultInfo(name)
-##--------------------------------------------
+
 
 ## Optional variables
 ##--------------------------------------------
 target_version = ['N5 1.19-3']    
-version_info = "Packages Info:\n  %s"
+version_info = u"Packages Info:\n  %s"
 pat_pkgid= re.compile("\s+(BU|FB|NW)\s+.*?\n\s+(\w\d [\d\.-]+)")
 check_commands = [
     ("ZWQO:CR;","show the NS packages information"),

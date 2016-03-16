@@ -1,4 +1,18 @@
-## below check modules will be executed.
-path: 'modules\flexins'
-modules:
+## Checklist for NS15 MP1 throttling configuration
+
+description: checklist for NS15 MP1 throttling configuration
+
+#模板变量，包含模块信息模板和检查报告模板。缺省
+templates:
+   module_info: module_info.md
+   report: common_report.md
+
+#相关路径信息
+paths:
+    #显示检查模块信息的模板
+    modules: modules\flexins
+    #生成检查结果报告的模板
+    reports: reports
+
+modules_name:
     - TN_CN_20160215_S11_Throttling.py
