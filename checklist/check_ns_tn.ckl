@@ -1,6 +1,6 @@
 ## 本checklist仅用作测试及示例
 
-title: this is a short description for the checklist.
+title: 本checklist用于对FlexiNS 进行部分TN检查
 
 templates:
    modules_info: module_info.md

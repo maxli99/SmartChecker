@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-"""Check if memory leaks in FlexiNG AS/SAB nodes
-VALIDITY: NG3.1, NG3.2
+u"""由于有NG3.x 版本SAEGW的AS/SAB存在内存泄露的问题，导致发生终端用户上网困难等多种症状非常多样，
+需要对SAE经常检查内存是否泄露。
 """
 import re
 from libs.checker import CheckStatus,ResultInfo
@@ -10,18 +10,22 @@ from libs.tools import MessageBuffer
 ## Mandatory variables 
 ##--------------------------------------------
 module_id = 'NG20150518.01'
-name      = "memory_leak"
+name      = "FlexiNG(NG3.x) AS/SAB Memory leak Check"
 version   = '1.0'
 desc      = __doc__
 tags      = ['flexing','china']
 priority  = 'critical'
 
 mem_threshold = {'AS':110,'SAB':500}  #MB
-criteria      = "memory usage: AS < %(AS)sMB or SAB < %(SAB)sMB" % mem_threshold
-##--------------------------------------------
+criteria      = u"""正常的内存利益率: AS < %(AS)sMB or SAB < %(SAB)sMB
 
-## Optional variables
-   
+解决方案：
+  1. 有条件关闭 hicut 的项目就关闭（因为关闭 hitcut 会导致 Node 负荷小幅增加，需要提前检查 CPU 使用情况）。
+  2. 没有条件关 hitcut 的项目，必需要把检查内存利用率的操作列入日常的维护计划
+""" % mem_threshold
+
+
+## Optional variables 
 pat_memfail = re.compile("ssh ([\w\d-]+) showstat\|.*?mem_alloc_failed_for_linear_filters = (\d+)",re.DOTALL)
 pat_memallo = re.compile("info ([\w\d-]+) featuremem.*FASTPATH_MALLOC dynamic allocated bytes \[chunks\]: (\d+)/(\d+)")
 
