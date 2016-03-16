@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+__author__='liming.wang'
+__date__='20160308'
 ''' SPMU GNRPRB hand checking
 Case 描述：当MME/SGSN运行大约248天后，SMMU的GRNPRB的hand group 2里面的50个hand会自动被
 释放，而不能重启创建，从现象上可以观察到终端用户PDP激活困难，SGSN会出大量的
