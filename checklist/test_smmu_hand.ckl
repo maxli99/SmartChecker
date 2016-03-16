@@ -13,10 +13,10 @@ templates:
 #相关路径信息
 paths:
     #显示检查模块信息的模板
-    modules: modules/flexing
+    modules: modules/flexins
     #生成检查结果报告的模板
     reports: reports
 
 ## 指定需要运行的检查模块名
 modules_name:
-    - smmu_hand_check.py
+    - TN_CN_20150728_smmu_hand_check.py
