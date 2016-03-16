@@ -4,10 +4,16 @@
      -  ACPI4-A& ACPI4-B
 
      解决方法：单元倒换或重启
+     
 
 """
 import re
 from libs.checker import ResultInfo,CheckStatus
+import sys  
+  
+reload(sys)  
+sys.setdefaultencoding('utf8')  
+
 
 ## Mandatory variables 
 ##-----------------------------------------------------
@@ -17,7 +23,7 @@ tag = ['flexins','china']
 priority = 'critical'
 name = "TN_Ch_20151124_IPDU_FreeMem"
 desc = __doc__
-criteria = """(1)检查NS/MME软件版本为 ['N5 1.19-3','N5 1.17-5'] 或者更高版本.
+criteria ="""(1)检查NS/MME软件版本为 ['N5 1.19-3','N5 1.17-5'] 或者更高版本.
           (2) IPDU FREE MEMORY < 20%. 
           或者 IPDU 单元1143 告警 
           或者 lnx-mmeGTPLBS 模块占用内存较多>20%
