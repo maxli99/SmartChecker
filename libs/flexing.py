@@ -1,4 +1,4 @@
-import re,textfsm
+import re
 from hwparser import HardwareInfo
 
 def get_ng_version(configlog):
