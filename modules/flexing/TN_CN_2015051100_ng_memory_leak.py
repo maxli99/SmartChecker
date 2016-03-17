@@ -20,8 +20,8 @@ mem_threshold = {'AS':110,'SAB':500}  #MB
 criteria      = u"""正常的内存利益率: AS < %(AS)sMB or SAB < %(SAB)sMB
 
 解决方案：
-  1. 有条件关闭 hicut 的项目就关闭（因为关闭 hitcut 会导致 Node 负荷小幅增加，需要提前检查 CPU 使用情况）。
-  2. 没有条件关 hitcut 的项目，必需要把检查内存利用率的操作列入日常的维护计划
+  1. 有条件关闭 hicut 的项目就关闭（因为关闭 hitcut 会导致 Node 负荷小幅增加，需要提前检查 CPU 使用情况）。
+  2. 没有条件关 hitcut 的项目，必需要把检查内存利用率的操作列入日常的维护计划
 """ % mem_threshold
 
 

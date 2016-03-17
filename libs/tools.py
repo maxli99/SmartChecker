@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import codecs
+import sys,codecs
 
 def to_unicode(line):
     """translate the string line to unicode.
@@ -16,7 +16,7 @@ class MessageBuffer(object):
         self.buffer = []
         self.size = size
         self.lineformat = lineformat
-        self.template = template
+        self.template = template    #template for message.
 
     def append(self,txt):
         self.buffer.append(self.lineformat % txt)
@@ -25,15 +25,19 @@ class MessageBuffer(object):
     def to_console(self, concatenation="\n"):
         _lines = map(to_unicode,self.buffer)
         utextblock = concatenation.join(_lines)
-        #print utextblock
+
+
         if self.template:
             print(template % utextblock)
         else:
-            print(utextblock)
+            print("typeof:utextblock",type(utextblock),"sysencoding:",sys.stdout.encoding)
+            print([utextblock[470:480]])
+            sys.stdout.write(utextblock)
 
     def to_file(self,filename):
+        _lines = map(to_unicode,self.buffer)
         with codecs.open(filename,'wb','utf-8') as fp:
-            fp.writelines(self.buffer)
+            fp.writelines(_lines)
 
     def to_socket(self):
         pass

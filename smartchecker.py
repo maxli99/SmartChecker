@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """Nokia Smart NE Health Checker
 
@@ -126,7 +127,6 @@ def run_modules(checklist,logfile):
         _result.criteria = m.criteria    
         results.append(_result)
 
-    print results
     report = template.render(results=results)
     msgbuf.append(report)
 
