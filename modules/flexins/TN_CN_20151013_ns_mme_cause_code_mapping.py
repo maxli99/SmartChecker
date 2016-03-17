@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""FlexiNS/MME Cause code mapping Checking
+u"""FlexiNS/MME Cause code mapping Checking
      -  NS/MME软件版本为NS15或者更高版本
      -  已开启功能开关PRFILE002:2244-MME_CC_MAPPING_ENABLED
      -  有新建CAUSE CODE SETS,如:EPCEMM和EPCESM(各项目名称可能不相同).
@@ -18,7 +18,7 @@ module_id = 'TN-China-20151013'
 tag = ['flexins','china']
 priority = 'intermediate'
 name = "TN-China-20151013-ns_mme_cause_code_mapping"
-desc = __doc__.decode('utf-8')
+desc = __doc__
 criteria = u"""(1)检查NS/MME软件版本为 ['N5 1.19-3','N5 1.17-5'] 或者更高版本
 (2)开启功能开关PRFILE002:2244-MME_CC_MAPPING_ENABLED.
 (3)新建CAUSE CODE SETS 满足下面条件,如:EPCEMM和EPCESM：
@@ -117,15 +117,15 @@ def run(logfile):
 ##	print "\n****Find version id is : ",version
 	if is_NS15_version_id(version,target_versions)>0 or version_up_NS15_id(version)>0:
 		result.status = CheckStatus.PASSED
-		info.append("    - 检查到 NS/MME 软件版本为：'%s' ,它属于或者高于NS15版本." % version)
+		info.append(u"    - 检查到 NS/MME 软件版本为：'%s' ,它属于或者高于NS15版本." % version)
 	else:
 		m=re.search(know_version_identify_Patt,version)
 		if m:
 			result.status = CheckStatus.FAILED
-			info.append("    - 检查到 NS/MME 软件版本为：'%s' ,它不属于或者低于NS15版本." % version)
+			info.append(u"    - 检查到 NS/MME 软件版本为：'%s' ,它不属于或者低于NS15版本." % version)
 		else:
 			result.status = CheckStatus.UNKNOWN
-			info.append("    - 检查到 NS/MME 软件版本为：'%s' ,它不属于NS/MME主流版本,请手动确认版本信息." % version)
+			info.append(u"    - 检查到 NS/MME 软件版本为：'%s' ,它不属于NS/MME主流版本,请手动确认版本信息." % version)
 			if version == '':
 				errmsg = ' Have not find NS Version release identification !!'
 		result.update(info=info,error=errmsg)
@@ -139,10 +139,10 @@ def run(logfile):
 ##	print "MME_CC_MAPPING_ENABLED_Value = ",MME_CC_MAPPING_ENABLED_Value
 	if MME_CC_MAPPING_ENABLED_Value == 1:
 		result.status = CheckStatus.PASSED
-		info.append("    - 检查到 NS/MME 功能开关PRFILE002:2244-MME_CC_MAPPING_ENABLED已开启.")
+		info.append(u"    - 检查到 NS/MME 功能开关PRFILE002:2244-MME_CC_MAPPING_ENABLED已开启.")
 	else:
 		result.status = CheckStatus.FAILED
-		info.append("    - 检查到 NS/MME 功能开关PRFILE002:2244-MME_CC_MAPPING_ENABLED未开启.")
+		info.append(u"    - 检查到 NS/MME 功能开关PRFILE002:2244-MME_CC_MAPPING_ENABLED未开启.")
 		result.update(info=info,error=errmsg)
 		return result
 	EPCEMM_Patt = r"\s*(\S*)\s+EMM\s*$"
@@ -180,9 +180,9 @@ def run(logfile):
 ##	print "EmmExternal96 = ",EmmExternal96
 ##	print "EsmExternal165 = ",EsmExternal165
 
-	EmmExternal142_info_str = "    - 检查到 NS/MME 的CAUSE CODE SETS: %s,TYPE=EMM,PROC=ATTREJ,INTCAUSE=142 To EXTERNAL CAUSE=%s" % (Cause_code_set_EPCEMM,EmmExternal142)
-	EmmExternal96_info_str = "    - 检查到 NS/MME 的CAUSE CODE SETS: %s,TYPE=EMM,PROC=ATTREJ,INTCAUSE=96 To EXTERNAL CAUSE=%s" % (Cause_code_set_EPCEMM,EmmExternal96)
-	EsmExternal165_info_str = "    - 检查到 NS/MME 的CAUSE CODE SETS: %s,TYPE=ESM,PROC=PDNCR,INTCAUSE=165 To EXTERNAL CAUSE=%s" % (Cause_code_set_EPCESM,EsmExternal165)
+	EmmExternal142_info_str = u"    - 检查到 NS/MME 的CAUSE CODE SETS: %s,TYPE=EMM,PROC=ATTREJ,INTCAUSE=142 To EXTERNAL CAUSE=%s" % (Cause_code_set_EPCEMM,EmmExternal142)
+	EmmExternal96_info_str = u"    - 检查到 NS/MME 的CAUSE CODE SETS: %s,TYPE=EMM,PROC=ATTREJ,INTCAUSE=96 To EXTERNAL CAUSE=%s" % (Cause_code_set_EPCEMM,EmmExternal96)
+	EsmExternal165_info_str = u"    - 检查到 NS/MME 的CAUSE CODE SETS: %s,TYPE=ESM,PROC=PDNCR,INTCAUSE=165 To EXTERNAL CAUSE=%s" % (Cause_code_set_EPCESM,EsmExternal165)
 	info_dic = {'EmmExternal142':[15,EmmExternal142,EmmExternal142_info_str],
 		'EmmExternal96':[7,EmmExternal96,EmmExternal96_info_str],
 		'EsmExternal165':[33,EsmExternal165,EsmExternal165_info_str]

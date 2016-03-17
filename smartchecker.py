@@ -96,7 +96,7 @@ def show_module_info(checklist,logfile=None):
     for idx, m in enumerate(modules):
         if hasattr(m,'check_commands'):
             cmdlist.extend(m.check_commands)
-    
+
     info=template.render(modules=modules,cmdlist=cmdlist,checklist=checklist)
     msgbuf.append(info)
 
@@ -126,6 +126,7 @@ def run_modules(checklist,logfile):
         _result.criteria = m.criteria    
         results.append(_result)
 
+    print results
     report = template.render(results=results)
     msgbuf.append(report)
 
