@@ -2,7 +2,7 @@
 import codecs
 
 def to_unicode(line):
-    """translate the lines in buffer(list) to unicode.
+    """translate the string line to unicode.
     """
     if isinstance(line,unicode):
         return line
