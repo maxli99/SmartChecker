@@ -24,11 +24,11 @@ examples:
 __programname__ = 'Smartchecker'
 __version__     = '0.800'
 
-import sys,os, argparse
+import sys,os, argparse,time
 from libs.configobject import ConfigObject
 from libs.checker import ImportCheckModules,ResultList,CheckList
 from libs.reportor import CheckReport, JinjaTemplate
-from libs.tools import MessageBuffer
+from libs.tools import MessageBuffer,InfoCache
 
 default_config = {
 'output_format' : "reading",
@@ -98,7 +98,8 @@ def show_module_info(checklist,logfile=None):
         if hasattr(m,'check_commands'):
             cmdlist.extend(m.check_commands)
 
-    info=template.render(modules=modules,cmdlist=cmdlist,checklist=checklist)
+    #info=template.render(modules=modules,cmdlist=cmdlist,checklist=checklist)
+    info=template.render(locals())
     msgbuf.append(info)
 
     msgbuf.output(CONFIG.runmode)
@@ -127,7 +128,8 @@ def run_modules(checklist,logfile):
         _result.criteria = m.criteria    
         results.append(_result)
 
-    report = template.render(results=results)
+    timestamp=time.strftime("%Y-%m-%d %H:%M")
+    report = template.render(locals())
     msgbuf.append(report)
 
     msgbuf.output(CONFIG.runmode)
@@ -142,7 +144,10 @@ if __name__ == "__main__":
     do_action = {'show' : show_module_info,
                  'run'  : run_modules,
                 }
-
+    
+    #ginfo's data can be share in global.
+    ginfo = InfoCache()
+    
     parser,args = args_parse()
     DEBUG = args.debug
 
