@@ -5,6 +5,7 @@
 import re
 from libs.flexing import get_ng_version
 from libs.checker import ResultInfo,CheckStatus
+from libs.tools import InfoCache
 
 ## Mandatory variables 
 ##-----------------------------------------------------
@@ -22,6 +23,8 @@ target_versions = ['3.1_1.0','3.2']
 check_commands = [
     ('fsclish -c "show ng version" ',"show the FNG version information"),
 ]
+ginfo = InfoCache()
+
 ##-----------------------------------------------------
 
     
@@ -32,8 +35,10 @@ def run(logfile):
     errmsg = ''
     
     version = get_ng_version(logfile)
-    #version(version,release,hw_ver) -> ('3.1_1.0', '235397', '2')
-
+    #version(version,release,hw_ver) -> ('3.1_1.0', '235397', 'AB2')
+    if version:
+        ginfo.set('ngversion',version)
+    
     if version and version[0] in target_versions:
         result.status = CheckStatus.PASSED
         info.append("    - NG%s_r%s_AB%s" % version)

@@ -5,7 +5,11 @@ u"""由于有NG3.x 版本SAEGW的AS/SAB存在内存泄露的问题，导致发�
 import re
 from libs.checker import CheckStatus,ResultInfo
 from libs.flexing import get_ng_version
-from libs.tools import MessageBuffer
+from libs.tools import MessageBuffer, InfoCache
+
+__author__ = 'Liu Jun'
+__email__ = 'jun1.liu@nokia.com'
+__date__ = '20160315'
 
 ## Mandatory variables 
 ##--------------------------------------------
@@ -29,7 +33,8 @@ criteria      = u"""正常的内存利益率: AS < %(AS)sMB or SAB < %(SAB)sMB
 pat_memfail = re.compile("ssh ([\w\d-]+) showstat\|.*?mem_alloc_failed_for_linear_filters = (\d+)",re.DOTALL)
 pat_memallo = re.compile("info ([\w\d-]+) featuremem.*FASTPATH_MALLOC dynamic allocated bytes \[chunks\]: (\d+)/(\d+)")
 
-logline_format = "    - %s"
+logline_format = "    - %s\n"
+ginfo = InfoCache()
 ##
 
 def check_memory_fail_counter(loglines):
@@ -64,10 +69,10 @@ def check_memory_allocation(loglines):
             #print "mem allocated!",node,mem,node_type,mem_threshold[node_type]
             if mem > mem_threshold[node_type]:
                 flag_fail = CheckStatus.FAILED
-                info.append('%s memory is closing to full: %.5s MB\n' %(node, mem))
+                info.append('%s memory is closing to full: %.5s MB' %(node, mem))
             else:
                 flag_passed = CheckStatus.PASSED
-                info.append("%s memory: %s\n" %(node,mem))
+                info.append("%s memory: %s" %(node,mem))
 
     status = (flag_fail or flag_passed) or CheckStatus.UNKNOWN
     
@@ -77,7 +82,7 @@ def check_memory_allocation(loglines):
         for ntype,memlist in _mem.items():
             if len(memlist) == 0: continue
             maxmem=sorted(memlist,key=lambda x:x[1],reverse=True)[0]
-            info.append('%s has a max memory %.6s MB\n' % maxmem) 
+            info.append('%s has a max memory %.6s MB' % maxmem) 
 
     return status,info.buffer,error
     
@@ -90,11 +95,14 @@ def run(logfile, *args,**kwargs):
     error = ''
     
     # check the NG version first.
-    ngversion=get_ng_version(logfile)
+    if 'ngversion' in ginfo:
+        ngversion = ginfo.get('ngversion')
+    else:
+        ngversion=get_ng_version(logfile)
 
     if not ngversion:  # not version info found.
         #status = CheckStatus.UNKNOWN
-        info.append("    - NG version can't be determindated.")
+        info.append(logline_format % "NG version can't be determindated.")
         #error = "NG version is not found."
 
     elif ngversion[0][:3] == '3.2':
@@ -105,9 +113,8 @@ def run(logfile, *args,**kwargs):
 
     ## check function 2
     status,_info,error = check_memory_allocation(loglines)
-
     info.append(''.join(_info))
     #result.status = status
-
+    
     result.update(status=status,info=info,error=error)
     return result
