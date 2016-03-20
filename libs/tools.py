@@ -9,8 +9,31 @@ def to_unicode(line):
     else:
         return line.decode('utf-8')
 
+class InfoCache(object):
+    """A singleton Class can store the information shared in global/modules.
+    """
+    _cache = {}
+
+    def __new__(cls, *p, **k):
+        self = object.__new__(cls, *p, **k)
+        self.__dict__ = cls._cache
+        return self
+
+    def set(self,key,value):
+        self._cache[key] = value   
+        return self._cache[key]
+        
+    def get(self,key):
+        return self._cache.get(key,None)
+        
+    def __repr__(self):
+        return "InfoCache:%s" % self._cache
+    
+    def __contains__(self,key):
+        return key in self._cache
+        
 class MessageBuffer(object):
-    """Class for store the information for sending to differnt destination later.
+    """Store the information for sending to differnt destination later.
     """
     def __init__(self,lineformat="%s",size=1024*1024,template=None):
         self.buffer = []
@@ -30,8 +53,8 @@ class MessageBuffer(object):
         if self.template:
             print(template % utextblock)
         else:
-            print("typeof:utextblock",type(utextblock),"sysencoding:",sys.stdout.encoding)
-            print([utextblock[470:480]])
+            #print("typeof:utextblock",type(utextblock),"sysencoding:",sys.stdout.encoding)
+            #unicode, cp936/utf-8
             sys.stdout.write(utextblock)
 
     def to_file(self,filename):

@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 """Check the PCC rule filter in "disabled" state
+
 VALIDITY: NG3.2, NG15
+
 Correction for this issue will be provided in NG15 MP1 and NG3.2 3.0
 
-SOLUTION
-Use fsclish command 鈥渦nset鈥?to completely remove unwanted filters from pcc-rule configuration and do not use filters in 鈥渄isabled鈥?state.
+SOLUTION:
+Use fsclish command unset to completely remove unwanted filters from pcc-rule configuration and do not use filters in disabled state.
 """
 import re
 from libs.flexing import get_ng_version
