@@ -53,10 +53,13 @@ config_file = 'checker.conf'
 if os.path.exists(config_file):  #read the config file if it's exists.
     CONFIG.read(config_file)
 
-DEBUG = False
-SAVEFILE = False
+DEBUG    = False
+SILENT   = False
+REPORT_TEMPLATE = None
+SAVE_OUTPUT = None
 
 def args_parse():
+    global DEBUG,SILENT,REPORT_TEMPLATE,SAVE_OUTPUT
     parser = argparse.ArgumentParser(version=" v".join([__programname__,__version__]))
     
     parser.usage = __doc__
@@ -71,8 +74,26 @@ def args_parse():
                         help="debug option, detail info will be output")
     parser.add_argument('--save', action="store_true",
                         help="save the module info or check report if option is set. ")
+    parser.add_argument('--silent', action="store_true",
+                        help="turn off the output to stdout.")    
+    parser.add_argument('-t','--template',
+                        help="template for report output.")
 
-    return parser,parser.parse_args()
+    args = parser.parse_args()
+
+    DEBUG = args.debug
+    SILENT = args.silent
+    REPORT_TEMPLATE = args.template
+    SAVE_OUTPUT = args.save
+
+    if DEBUG:
+        print(args)
+
+    return parser, args
+
+def save_output_to_file(msgbuf,filename,path=None):
+    output_path = path or CONFIG.reports_path
+    msgbuf.output('file',os.path.join(output_path,filename))
 
 def show_module_info(checklist,logfile=None):
     """show the information of given modules. if CONFIG.module_info_file is set,
@@ -102,10 +123,12 @@ def show_module_info(checklist,logfile=None):
     info=template.render(locals())
     msgbuf.append(info)
 
-    msgbuf.output(CONFIG.runmode)
+    if not SILENT:
+        msgbuf.output(CONFIG.runmode)
     
-    if CONFIG.get('module_info_file'):
-        msgbuf.output('file',CONFIG.get('module_info_file'))
+    if SAVE_OUTPUT:
+        save_output_to_file(msgbuf,SAVE_OUTPUT)
+
     return 0
 
 def run_modules(checklist,logfile):
@@ -115,7 +138,9 @@ def run_modules(checklist,logfile):
     output_format = CONFIG.output_format
     err_flag = 0
     jinja = JinjaTemplate(CONFIG.template_path)
-    template = jinja.template(checklist.templates['report'])
+
+    template_file = REPORT_TEMPLATE or checklist.templates['report']
+    template = jinja.template(template_file)
     msgbuf = MessageBuffer()
 
     report = CheckReport()
@@ -132,11 +157,12 @@ def run_modules(checklist,logfile):
     report = template.render(locals())
     msgbuf.append(report)
 
-    msgbuf.output(CONFIG.runmode)
-    report_file=CONFIG.get('report_file')
-    if report_file:
-        msgbuf.output('file',report_file)
-        
+    if not SILENT:
+        msgbuf.output(CONFIG.runmode)
+    
+    if SAVE_OUTPUT:
+        save_output_to_file(msgbuf,SAVE_OUTPUT)
+
     return err_flag
 
 if __name__ == "__main__":
@@ -145,14 +171,10 @@ if __name__ == "__main__":
                  'run'  : run_modules,
                 }
     
-    #ginfo's data can be share in global.
-    ginfo = InfoCache()
+    #shareinfo's data can be share in global.
+    shareinfo = InfoCache()
     
     parser,args = args_parse()
-    DEBUG = args.debug
-
-    if DEBUG:
-        print(args)
 
     checklist_file = args.run or args.show
     cklpath,cklfile = os.path.split(checklist_file)
@@ -163,11 +185,12 @@ if __name__ == "__main__":
     checklist = CheckList(os.path.join(cklpath,cklfile))
     checklist.import_modules()
 
-    if args.save:
-        minfo_filename = "_".join([checklist.name, checklist.templates["module_info"]])
-        report_filename = "_".join([checklist.name,checklist.templates["report"]])
-        CONFIG.set('module_info_file',minfo_filename)
-        CONFIG.set('report_file',report_filename)
+    if SAVE_OUTPUT and args.show:
+        file_postfix = REPORT_TEMPLATE or checklist.templates["module_info"]
+        SAVE_OUTPUT = "_".join([checklist.name, file_postfix])
+    elif SAVE_OUTPUT and args.run:
+        file_postfix = REPORT_TEMPLATE or checklist.templates["report"]
+        SAVE_OUTPUT = "_".join([checklist.name,file_postfix])
 
     if not checklist.modules:
         parser.print_help()
@@ -176,3 +199,4 @@ if __name__ == "__main__":
     command = (args.run and 'run') or (args.show and 'show') or 'run'
 
     do_action[command](checklist,args.logfile)
+
