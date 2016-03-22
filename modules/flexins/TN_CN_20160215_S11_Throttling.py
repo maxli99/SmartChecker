@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Author: maxli
 # @Date:   2016-03-10 14:10:40
-# @Last Modified by:   maxli
-# @Last Modified time: 2016-03-16 18:03:08
+# @Last Modified by:   Max Li
+# @Last Modified time: 2016-03-20 19:23:44
 
 u'''
 FlexiNS/MME S11 Throttling 检查
@@ -120,7 +120,7 @@ def is_throttling_on(logs):
     status = CheckStatus.UNKNOWN
     pattern = re.compile("\s*S11_THROTTLING_ENABLED\s*=\s*(\d){1}")
     if len(logs) == 0:
-        raise(u"日志文件中无法找到需要检测的信息，请确所认收集日志是是否执行“ZIBT:,,LNX968NX,INI,,,,A,;”。")
+        raise Exception(u"日志文件中无法找到需要检测的信息，请确所认收集日志是是否执行“ZIBT:,,LNX968NX,INI,,,,A,;”。")
     for cmd_result in logs[0].result:
         matched = pattern.match(cmd_result)
         if matched:
@@ -134,7 +134,7 @@ def is_throttling_on(logs):
                 info.append(u"检查未通过，S11 Throttling功能处于开启状态，请尽快关闭该功能")
                 break
     if status == CheckStatus.UNKNOWN:
-        raise(u"日志文件中无法找到需要检测的信息，请确认所收集的日志是否正确。")
+        raise Exception(u"日志文件中无法找到需要检测的信息，请确认所收集的日志是否正确。")
     return (status, info)
 
 
@@ -177,7 +177,7 @@ def run(logfile):
             result.status, extra_info = is_throttling_on(logs)
             info.extend(extra_info)
         except Exception as e:
-            errmsg = str(e)
+            errmsg = e.args[0]
             result.status = CheckStatus.UNKNOWN
     result.update(info=info, error=errmsg)
     return result

@@ -70,10 +70,7 @@ def run(logfile):
 	ngversion=get_ng_version(logfile)
 	
 	if not ngversion:  # not version info found.
-		#status = CheckStatus.UNKNOWN
 		charging_index_status.append(u"    - NG version can't be determindated. \n")
-		#error = "NG version is not found."
-		
 	elif ngversion[0] not in target_version:
 		charging_index_status.append(u"    - NG version: " +ngversion[0]+" (Not in the target_version list). \n")
 	else:

@@ -249,5 +249,11 @@ class ResultList(object):
     def stats(self):
         return Counter([r.data['status'] for r in self._results])
 
+    def stats_dict(self):
+        status = {}
+        for k, v in Counter([r.data['status'] for r in self._results]).items():
+            status[k] = v
+        return status
+
     def __iter__(self):
         return iter(self._results)
