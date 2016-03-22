@@ -1,22 +1,23 @@
 import re
-from libs.tools import read_cmdblock_from_log
+from tools import read_cmdblock_from_log
+
+__version__ = "v0.5"
 
 command_end_mark = "COMMAND EXECUTED"
 
 class FlexiNS(object):
+    """Class parse and stroe basic infomation of FlexiNS
     """
-    """
-    def __init__(self,logfile=None):
+    def __init__(self,hostname='unknow',logfile=None):
         self.logfile = logfile
         self._data = {}
-
+        self._data['hostname'] = hostname
         if logfile:
             self.parse_log(logfile)
 
     def parse_log(self,logfile):
         loglines = file(logfile).readlines()
-        self._data['hostname'] = 'DummyHost'
-        self._data['version'] = get_ns_version(loglines)
+        self._data['version'] = _get_ns_version(loglines)
 
     def get(self,key):
         return self._data.get(key,None)
@@ -26,7 +27,7 @@ class FlexiNS(object):
             if re.match(ver,self.version):
                 return True
         return False
-        
+
     def __repr__(self):
         return "FlexiNSObj:<%s>" % self.hostname
 
@@ -39,12 +40,12 @@ class FlexiNS(object):
         return self._data['version']
     
     
-def get_ns_version(loglines):
-    """This function will parse the FlexiNS version info from logfile.
+def _get_ns_version(loglines):
+    """This function will parse the FlexiNS version info from log lines.
 parameters:
-    configlog    config logfiler
+    loglines   log lines
 return:
-    return  a dict include package's status and id info.
+    return  a dict include package's status and id info or an empty dict.
     
     example: {'BU': 'N5 1.17-5', 'FB': 'N5 1.17-5', 'NW': 'N4 1.19-2', 'UT': 'N4 1.19-2'}
     
@@ -57,4 +58,9 @@ return:
     return version
 
 
+if __name__ == "__main__":
+    ns = FlexiNS()
+    ns.parse_log("log/nsinfo.log")
 
+    print ns.version
+    print ns
