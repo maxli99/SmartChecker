@@ -1,17 +1,33 @@
-"""Check the NS Harddisk fragment status
-Before MME/SGSN upgrade or when we find the operation on MME/SGSN become slowly,we 'd better check the harddisk have fragment issue. 
+# -*- coding: utf-8 -*-
+
+u"""
+ 检查Flexi NS设备的WDU磁盘碎片率
+	--在MME/SGSN升级前,或发现MME/SGSN操作变得缓慢,建议检查硬盘的碎片率是否有较高的现象。
+	--检查指令:
+		ZDDE:OMU:"ZMA:W0,F3,,,,,","ZMA:W1,F3,,,,,","ZGSC:,00FC";
+		ZDDE:MCHU:"ZMA:W0,F3,,,,,","ZMA:W1,F3,,,,,","ZGSC:,00FC";
+		如果磁盘碎片率大于60%,判断为偏高。
+	--检查指令可能会对硬盘有影响，执行后，请检查硬盘状态。
+		ZISI:,:WDU,;
+	--如果出现磁盘碎片率偏高的现象，请按照TN-Flexi_NS-SW0013-CI2中介绍修复。
 """
+
 import re
 from libs.checker import ResultInfo,CheckStatus
+from libs.flexins import get_ns_version
 
 ## Mandatory variables 
 ##--------------------------------------------
 module_id = '20160228.01'
 tag  = ['flexins','china']
 priority = 'critical'
-name = "Verify the Disk fragmentation problem in FNS"
+name = u"FNS MME/SGSN 磁盘碎片率检查 --TN_CN-SW0013-CI2"
 desc = __doc__
-criteria = "NS fragment status is (normal,abnormal)"
+criteria = u"""
+（1）检查MME/SGSN版本为 ['N5 1.19-3','N5 1.17-5'] 或者更高版本。
+（2）检查OMU，MCHU的硬盘碎片率是否大于60%。大于为FAILED，小于则为PASSED。
+（3）如果log中没有相应的指令log，结果为UNKNOWN。
+"""
 result = ResultInfo(name)
 error = ''
 ##--------------------------------------------
@@ -20,30 +36,31 @@ error = ''
 
 ##--------------------------------------------
 ## Optional variables
-target_version = 3.0-15.0    
+target_version = ['N5 1.17-5','N5 1.19-3']    
 
 pats_fragment = {'OMU-WDU0': re.compile(r"ZDDE:OMU.*?WDU-0.*?Fragmentation degree ",re.S),
 		'OMU-WDU1': re.compile(r"ZDDE:OMU.*?WDU-1.*?Fragmentation degree ",re.S),
 		'MCHU-WDU0': re.compile(r"ZDDE:MCHU.*?WDU-0.*?Fragmentation degree ",re.S),
 		'MCHU-WDU1': re.compile(r"ZDDE:MCHU.*?WDU-1.*?Fragmentation degree ",re.S),
 }
-fragmentstatus_str = "OMU(WDU-0):%(OMU-WDU0)s, OMU(WDU-1):%(OMU-WDU1)s, MCHU(WDU-0):%(MCHU-WDU0)s, MCHU(WDU-1):%(MCHU-WDU1)s"
+#fragmentstatus_str = "NS Version:%(nsversion)s, OMU(WDU-0):%(OMU-WDU0)s, OMU(WDU-1):%(OMU-WDU1)s, MCHU(WDU-0):%(MCHU-WDU0)s, MCHU(WDU-1):%(MCHU-WDU1)s"
 ##
+fragmentstatus_str = "NS Version:%(nsversion)s OMU(WDU-0):%(OMU-WDU0)s OMU(WDU-1):%(OMU-WDU1)s MCHU(WDU-0):%(MCHU-WDU0)s MCHU(WDU-1):%(MCHU-WDU1)s"
 
+check_commands = [
+	("ZWQO:CR;","show the NS packages information"),
+	("ZDDE:OMU:\"ZMA:W0,F3,,,,,\",\"ZMA:W1,F3,,,,,\",\"ZGSC:,00FC\";","show OMU WDU fragment ratio"),
+	("ZDDE:MCHU:\"ZMA:W0,F3,,,,,\",\"ZMA:W1,F3,,,,,\",\"ZGSC:,00FC\";","show MCHU WDU fragment ratio"),
+]
 def read_block(logfile,blkname):
 	loglines = file(logfile).readlines()
 
 	return ''.join(loglines)
 
-def hardwareinfo():
-	hwinfo = {}
-	return hwinfo
-    
-def get_card(caretype):
-	return 
 ##--------------------------------------------
 ## Mandatory function: log_collection
 ##--------------------------------------------
+
 def log_collection():
 	cmds = ['ZDDE:OMU:"ZMA:W0,F3,,,,,","ZMA:W1,F3,,,,,","ZGSC:,00FC";',
             'ZDDE:MCHU:"ZMA:W0,F3,,,,,","ZMA:W1,F3,,,,,","ZGSC:,00FC";',
@@ -55,9 +72,25 @@ def log_collection():
 ## Mandatory function: run
 ##--------------------------------------------    
 def run(logfile):
+
+	fragment_status={name:'' for name in pats_fragment}
+	
+	# Check NS Version
+	nsversion=get_ns_version(logfile).strip()
+	
+	if nsversion == 'UNKNOWN':  
+		fragment_status['nsversion']=u"    - NS version 无法确定. \n"	
+	elif nsversion not in target_version:
+		if nsversion > target_version[len(target_version)-1]:
+			fragment_status['nsversion']=u"    - NS version: " +nsversion+u" 高于目前支持版本. \n"
+		else:
+			fragment_status['nsversion']=u"    - NS version: " +nsversion+u" 不在支持版本清单里. \n"
+	else:
+		fragment_status['nsversion']=u"    - NS version: " +nsversion+u" 在支持版本清单里. \n"
+	
 	logtxt = read_block(logfile,'NS_fragment_status')
     
-	fragment_status={name:'' for name in pats_fragment}
+	
 	status = CheckStatus.UNCHECKED
     
 	for name,pat in pats_fragment.items():
@@ -70,13 +103,10 @@ def run(logfile):
 			fragment_status[name] = logtxt[logpos:logpos+5]
 			if fragment_status[name] > '60.0':
 				status = CheckStatus.FAILED
-			#else:
-			#	status = CheckStatus.PASSED
-    
-    #print ntpstatus_str, ntpstatus
+			
+    #print fragementstatus_str, fragment_status
 	if status == CheckStatus.UNCHECKED:
 		status = CheckStatus.UNKNOWN
-	#result.load(status=status,info=[fragmentstatus_str % fragment_status],error=error)
 	result.load(status=status,info=[fragmentstatus_str % fragment_status],error=error)
 	return result
     
