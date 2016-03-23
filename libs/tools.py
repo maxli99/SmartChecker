@@ -25,7 +25,13 @@ class InfoCache(object):
         
     def get(self,key):
         return self._cache.get(key,None)
-        
+ 
+    def __getitem__(self,key):
+        return self.get(key)
+    
+    def __setitem__(self,key,value):
+        self._cache[key] = value
+
     def __repr__(self):
         return "InfoCache:%s" % self._cache
     
@@ -73,7 +79,7 @@ class MessageBuffer(object):
         elif mode == "file":
             self.to_file(filename)
 
-def read_cmdblock_from_log(logfile,startline=None,endline=None):
+def read_cmdblock_from_log(loglines,startline=None,endline=None):
     """read the command block from logfile.
 
     parameters:
@@ -87,7 +93,7 @@ def read_cmdblock_from_log(logfile,startline=None,endline=None):
     """
     blocklines = [] 
     flag_start = False
-    loglines = file(logfile).readlines()
+    #loglines = file(logfile).readlines()
 
     for line in loglines:
         if flag_start:

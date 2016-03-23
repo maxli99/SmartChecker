@@ -22,7 +22,7 @@ examples:
    smartchecker logfile
 """
 __programname__ = 'Smartchecker'
-__version__     = '0.800'
+__version__     = '0.806'
 
 import sys,os, argparse,time
 from libs.configobject import ConfigObject

@@ -3,7 +3,7 @@
   Check the NG version, passed if version >= 3.1
 """
 import re
-from libs.flexing import get_ng_version
+#from libs.flexing import get_ng_version
 from libs.checker import ResultInfo,CheckStatus
 from libs.tools import InfoCache
 
@@ -20,10 +20,8 @@ criteria = "Check if version number in ['3.1_1.0','3.2']"
 ##-----------------------------------------------------
 # available target versions:
 target_versions = ['3.1_1.0','3.2']
-check_commands = [
-    ('fsclish -c "show ng version" ',"show the FNG version information"),
-]
-ginfo = InfoCache()
+check_commands = []
+shareinfo = InfoCache()
 
 ##-----------------------------------------------------
 
@@ -34,19 +32,19 @@ def run(logfile):
     info   = []
     errmsg = ''
     
-    version = get_ng_version(logfile)
+    ng = shareinfo.get('FlexiNG')
     #version(version,release,hw_ver) -> ('3.1_1.0', '235397', 'AB2')
-    if version:
-        ginfo.set('ngversion',version)
     
-    if version and version[0] in target_versions:
-        result.status = CheckStatus.PASSED
-        info.append("    - NG%s_r%s_AB%s" % version)
-    elif version and version[0] not in target_versions:
-        result.status = CheckStatus.FAILED
-        info.append("    - NG%s_r%s_AB%s" % version)
+    if ng and ng.get('version'):
+        if ng.match_version(major=target_versions):
+            result.status = CheckStatus.PASSED
+        else:
+            result.status = CheckStatus.FAILED
+        info.append("FlexiNG version checked.")
     else:
-        result.status = CheckStatus.UNKNOWN
+        status = CheckStatus.UNKNOWN
+        info.append("unknow version")
+        error = " - Can't find the packages info from log."
     
     result.update(info=info,error=errmsg)
     return result

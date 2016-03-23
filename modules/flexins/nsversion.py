@@ -2,7 +2,8 @@ u"""Analysis and Check the FlexiNS software version.
 """
 import re
 from libs.checker import ResultInfo,CheckStatus
-from libs.tools import read_cmdblock_from_log
+from libs.tools import InfoCache
+from libs.flexins import FlexiNS
 
 ## Mandatory variables 
 ##--------------------------------------------
@@ -11,35 +12,34 @@ tag       = ['flexins','base']
 priority  = 'normal'
 name      = "Check the FNS software version"
 desc      = __doc__
-criteria  = "FNS version is in ['N5 1.19-3'] or ['all']"
+criteria  = "FNS package's ID match 'N5' or 'N4'"
 result    = ResultInfo(name)
 
 
 ## Optional variables
 ##--------------------------------------------
-target_version = ['N5 1.19-3']    
+target_version = ['N5 1.19-3','N5*']    
 version_info = u"Packages Info:\n  %s"
-pat_pkgid= re.compile("\s+(BU|FB|NW)\s+.*?\n\s+(\w\d [\d\.-]+)")
 check_commands = [
     ("ZWQO:CR;","show the NS packages information"),
 ]
+shareinfo = InfoCache()
 ##
-def check_version(logtxt):
+def check_version(ns):
     error = ''
-    info = ''
+    info = []
     status = ''
-
-    pkgid = dict(pat_pkgid.findall(str(logtxt)))
-
-    try:
-        if pkgid['BU'] in target_version:
+        
+    if ns and ns.get('version'):
+        if ns.match_version(target_version):
             status = CheckStatus.PASSED
         else:
             status = CheckStatus.FAILED
-        info = str(pkgid)
-    except (KeyError,ValueError) as e:
+        info.append(str(ns.version))
+    else:
         status = CheckStatus.UNKNOWN
-        info = e  
+        info.append("unknow version")
+        error = " - Can't find the packages info from log."
     
     return status,info,error  
 ##--------------------------------------------
@@ -48,15 +48,11 @@ def check_version(logtxt):
 def run(logfile):
     """The 'run' function is a mandatory fucntion. and it must return a ResultInfo.
     """
-    ns_command_end_mark = "COMMAND EXECUTED"  
-    logtxt = read_cmdblock_from_log(logfile,'ZWQO:CR;',ns_command_end_mark)
-    if logtxt:
-        status,info,error = check_version(logtxt)
-        result.update(status=status,info=(version_info % info).split('\n'),error=error)
-    else:
-        status = CheckStatus.UNKNOWN
-        error = "Can't find the version info in the log."
-        result.update(status=status,info='',error=error)
     
+    ns = shareinfo.get('FlexiNS')
+
+    status,info,error = check_version(ns)
+    result.update(status=status,info=info,error=error)
+
     return result
     

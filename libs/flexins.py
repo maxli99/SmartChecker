@@ -1,11 +1,12 @@
 import re
 from tools import read_cmdblock_from_log
+from networkelement import NetworkElement
 
 __version__ = "v0.5"
 
 command_end_mark = "COMMAND EXECUTED"
 
-class FlexiNS(object):
+class FlexiNS(NetworkElement):
     """Class parse and stroe basic infomation of FlexiNS
 example:
     ns = FlexiNS()
@@ -13,37 +14,25 @@ example:
 
     print ns.version    
     """
-    def __init__(self,hostname='unknow',logfile=None):
-        self.logfile = logfile
-        self._data = {}
-        self._data['hostname'] = hostname
-        if logfile:
-            self.parse_log(logfile)
 
     def parse_log(self,logfile):
         loglines = file(logfile).readlines()
         self._data['version'] = _get_ns_version(loglines)
 
-    def get(self,key):
-        return self._data.get(key,None)
-
-    def match_version(self,versionlist):
-        for ver in versionlist:
-            if re.match(ver,self.version):
+    def match_version(self,versions):
+        nsversion = self.version.get('BU','')
+        if isinstance(versions,list):
+            for ver in versions:
+                if re.match(ver,nsversion):
+                    return True
+        else:
+            if re.match(versions,nsversion):
                 return True
         return False
 
     def __repr__(self):
         return "FlexiNSObj:<%s>" % self.hostname
-
-    @property
-    def hostname(self):
-        return self._data['hostname']
-
-    @property
-    def version(self):
-        return self._data['version']
-    
+ 
     
 def _get_ns_version(loglines):
     """This function will parse the FlexiNS version info from log lines.
@@ -88,8 +77,6 @@ def get_ns_version(configlog):
 		print("IOError: %s" % e)
 		return 'UNKNOWN'
 		
-	
-
 if __name__ == "__main__":
 	nsversion = get_ns_version('..\\log\\test_ALL_NS_TN_check.log')
 	print nsversion

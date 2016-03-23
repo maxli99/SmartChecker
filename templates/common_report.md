@@ -8,6 +8,13 @@ SmartChecker检查结果
 ###     运行时间：   `{{timestamp}}`
 
 ------------------------------------------------------------
+
+### There are total {{results|count}} check modules executed.
+{% for key,value in results.stats().items()%}
+ * {{key}}: {{value}}
+{%- endfor %}
+
+------------------------------------------------------------
 {% for r in results %}
 ###模块{{loop.index}} : {{r.name}}
 ###判断条件： 
@@ -23,7 +30,3 @@ SmartChecker检查结果
 {% endfor %}
 
 
-## There are total {{loop.length}} check modules executed.
-{% for key,value in results.stats().items()%}
- * {{key}}: {{value}}
-{%- endfor %}

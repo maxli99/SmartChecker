@@ -19,6 +19,7 @@ paths:
     
 ## 指定需要运行的检查模块名 
 modules_name:
+    - nginfo.py
     - ngversion.py
     - TN_TS_SW0081_ng_pcc_filter_disable_state.py
     - TN_CN_2015051100_ng_memory_leak.py
