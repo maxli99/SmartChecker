@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-"""Check the PCC rule filter in "disabled" state
+u"""检查PCC rule的pcc filter状态是否有'disable'状态在'enable'之前的情况
 
 VALIDITY: NG3.2, NG15
 
-Correction for this issue will be provided in NG15 MP1 and NG3.2 3.0
+该问题将在NG15 MP1 and NG3.2 3.0中修正
 
 SOLUTION:
-Use fsclish command unset to completely remove unwanted filters from pcc-rule configuration and do not use filters in disabled state.
+使用fsclish删除不需要的filter,并且不要用disabled状态的pcc filter.
 """
 import re
 from libs.flexing import get_ng_version
@@ -30,7 +30,11 @@ error = ''
 target_version = ['3.2','15']
 ## first get the block of each 'filter-state'
 
-pats_stat = {'filter-state-block': re.compile(r"filter-state = disable.*\n.*filter-state = enable")}
+pats_stat = {'pcc-rule-cmd': re.compile(r"show ng service-awareness pcc-rule"),
+'pcc-rule-name': re.compile(r"pcc-rule-name = (.*)"),
+'filter-state-disable': re.compile(r"filter-state = disable"),
+'filter-state-enable': re.compile(r"filter-state = enable")
+}
 
 check_commands = [('show ng service-awareness pcc-rule *','## show service-awareness pcc-rule'),]
 
@@ -45,24 +49,46 @@ def run(logfile):
 
     check_info = []
 
-    logtxt = read_block(logfile,'filter-state')
-
+    loglines = file(logfile).readlines()
+    logtxt = read_block(logfile,'pcc_rule')
+	
     status = CheckStatus.UNCHECKED
-
-    pat=pats_stat['filter-state-block']
-
+	
+    pat=pats_stat['pcc-rule-cmd']
     r=pat.search(logtxt)
     if r:
         if status == CheckStatus.UNCHECKED:
-            status = CheckStatus.FAILED
-            check_info.append('Check failed.')
+            status = CheckStatus.PASSED
     else:
         if status == CheckStatus.UNCHECKED:
-            status = CheckStatus.PASSED
-            check_info.append('Check passed.')
-
-    if status == CheckStatus.UNCHECKED:
-        status = CheckStatus.UNKNOWN
-
+            status = CheckStatus.UNKNOWN
+            check_info.append(u'请检查PCC RULE的log是否已收集.')
+            result.load(status=status,info=check_info,error=error)
+        return result  
+		
+    pat_rulename = pats_stat['pcc-rule-name']
+    pat_disable = pats_stat['filter-state-disable']
+    pat_enable = pats_stat['filter-state-enable']
+	
+    line_count = len(loglines)
+    line = 0
+    while (line < line_count):
+        r_pcc_name = pat_rulename.search(loglines[line])
+        if r_pcc_name:
+            curr_pcc_name=r_pcc_name.group(1)
+            line = line + 1
+            continue
+        r_disable = pat_disable.search(loglines[line])
+        if r_disable:
+            r_enable = pat_enable.search(loglines[line+1])
+            if r_enable:
+                check_info.append(u'Rule Name: ' + curr_pcc_name + '\n')
+                check_info.append(loglines[line])
+                check_info.append(loglines[line+1])
+                status = CheckStatus.FAILED
+                line = line + 1
+        line = line + 1
+		
+		
     result.load(status=status,info=check_info,error=error)
     return result

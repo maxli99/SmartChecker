@@ -8,7 +8,7 @@ description: 本checklist用于对FlexiNS 进行部分TN检查
 #模板变量，包含模块信息模板和检查报告模板。缺省
 templates:
    module_info: module_info.md
-   report: common_report.md
+   report: common_report.html
 
 #相关路径信息
 paths: 
@@ -19,6 +19,7 @@ paths:
     
 ## 指定需要运行的检查模块名 
 modules_name:
+    - nsinfo.py
     - nsversion.py
     - TN_CN_20150728_smmu_hand_check.py
     - TN_CN_20151013_ns_mme_cause_code_mapping.py

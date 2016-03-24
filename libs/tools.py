@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys,codecs
+from infocache import shareinfo
 
 def to_unicode(line):
     """translate the string line to unicode.
@@ -9,29 +10,10 @@ def to_unicode(line):
     else:
         return line.decode('utf-8')
 
-class InfoCache(object):
-    """A singleton Class can store the information shared in global/modules.
-    """
-    _cache = {}
+def debugmsg(msg):
+    if shareinfo.get('DEBUG'):
+        print(msg) 
 
-    def __new__(cls, *p, **k):
-        self = object.__new__(cls, *p, **k)
-        self.__dict__ = cls._cache
-        return self
-
-    def set(self,key,value):
-        self._cache[key] = value   
-        return self._cache[key]
-        
-    def get(self,key):
-        return self._cache.get(key,None)
-        
-    def __repr__(self):
-        return "InfoCache:%s" % self._cache
-    
-    def __contains__(self,key):
-        return key in self._cache
-        
 class MessageBuffer(object):
     """Store the information for sending to differnt destination later.
     """
@@ -43,7 +25,6 @@ class MessageBuffer(object):
 
     def append(self,txt):
         self.buffer.append(self.lineformat % txt)
-
 
     def to_console(self, concatenation="\n"):
         _lines = map(to_unicode,self.buffer)
@@ -73,7 +54,7 @@ class MessageBuffer(object):
         elif mode == "file":
             self.to_file(filename)
 
-def read_cmdblock_from_log(logfile,startline=None,endline=None):
+def read_cmdblock_from_log(loglines,startline=None,endline=None):
     """read the command block from logfile.
 
     parameters:
@@ -87,7 +68,7 @@ def read_cmdblock_from_log(logfile,startline=None,endline=None):
     """
     blocklines = [] 
     flag_start = False
-    loglines = file(logfile).readlines()
+    #loglines = file(logfile).readlines()
 
     for line in loglines:
         if flag_start:
@@ -100,3 +81,5 @@ def read_cmdblock_from_log(logfile,startline=None,endline=None):
             #print "start line found!"
 
     return ''.join(blocklines)            
+
+   

@@ -7,8 +7,8 @@ description: 本checklist用于对NG进行部分TN检查
 
 #模板变量，包含模块信息模板和检查报告模板。缺省
 templates:
-   module_info: module_info.md
-   report: common_report.md
+   module_info: module_info.html
+   report: common_report.html
 
 #相关路径信息
 paths: 
@@ -19,7 +19,6 @@ paths:
     
 ## 指定需要运行的检查模块名 
 modules_name:
-    - nginfo.py
     - ngversion.py
     - TN_TS_SW0081_ng_pcc_filter_disable_state.py
     - TN_CN_2015051100_ng_memory_leak.py

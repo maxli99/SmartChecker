@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 u"""FlexiNS/MME IPDU空闲内存持续减少的问题
-     -  NS/MME软件版本为NS3.15， NS3.15.1
-     -  ACPI4-A& ACPI4-B
 
-     解决方法：单元倒换或重启
+  -  NS/MME软件版本为NS3.15， NS3.15.1
+  -  ACPI4-A& ACPI4-B
 
+  解决方法：单元倒换或重启
 """
 import re
 from libs.checker import ResultInfo,CheckStatus

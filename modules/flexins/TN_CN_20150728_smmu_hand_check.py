@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__='liming.wang'
 __date__='20160308'
-''' SPMU GNRPRB hand checking
+u''' SPMU GNRPRB hand checking
 Case 描述：当MME/SGSN运行大约248天后，SMMU的GRNPRB的hand group 2里面的50个hand会自动被
 释放，而不能重启创建，从现象上可以观察到终端用户PDP激活困难，SGSN会出大量的
 0x167( no_rsp_co_process_c )的错误代码
@@ -29,7 +29,7 @@ error = ''
 ##--------------------------------------------
 ## Optional variables
 target_version = ['NS30', 'NS40', 'NS15']
-command='ZDDE:SMMU,x:"ZL:9","ZLP:9,FAM","Z9H:404";'
+check_commands= 'ZDDE:SMMU,x:"ZL:9","ZLP:9,FAM","Z9H:404";'
 #match_start= 'HAND FO:PREV NEXT TIME     GR STATE    STABITS  JBUFFER      RCOMP FAM  PROC FO'
 patten = re.compile("^[0-9,A-F]{4}")
 smmu_info="SMMU-%s GRNPRB hand check %s\n"
@@ -43,12 +43,6 @@ def read_block(logfile,blkname):
     logspliter.load(logfile)
     return logspliter.get_log(blkname,fuzzy=True)
 
-def hardwareinfo():
-    hwinfo = {}
-    return hwinfo
-
-def get_card(caretype):
-    return
 ##--------------------------------------------
 ## Mandatory function: log_collection
 ##--------------------------------------------
