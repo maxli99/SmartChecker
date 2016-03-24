@@ -1,34 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Nokia Smart NE Health Checker
+"""Nokia Smart Elements Health Checker
 
-SmartChecker will import and run all the health check modules listed in 
-<checklist_options> or default modules directory:<modules>
+SmartChecker will import and run all the health check modules listed in <checklist> file.
 
-Usage: 
-    
-    smartchecker [logfile] [checklist_options]
-
-Checklist options:
-	-s, --show	show all check modules information.
-	-r, --run 	run all check scripts/rules under directory 'modules' if no check modules 
-                list specified.
-logfile:
-	the logfile to be analysised and checked.
+Usage:    
+    smartchecker <checklist> [logfile]
 
 examples:
-   smartchecker logfile  -r check.list
-   smartchecker -s check.list
-   smartchecker logfile
+   smartchecker -s checklist.ckl
+   smartchecker -r checklist.ckl logfile   
+   smartchecker -r checklist.ckl logfile  --saveto report_sae01.html
+   smartchecker -r checklist.ckl logfile  --saveto report_sae01.html --silent
 """
 __programname__ = 'Smartchecker'
-__version__     = '0.806'
+__version__     = '0.82'
 
 import sys,os, argparse,time
 from libs.configobject import ConfigObject
 from libs.checker import ImportCheckModules,ResultList,CheckList
 from libs.reportor import CheckReport, JinjaTemplate
-from libs.tools import MessageBuffer,InfoCache
+from libs.tools import MessageBuffer,debugmsg
+from libs.infocache import shareinfo
 
 default_config = {
 'output_format' : "reading",
@@ -36,15 +29,6 @@ default_config = {
 'runmode'       : "console",
 }
 
-module_info_format ="""
-{% for m in modules %}
-Module #{{loop.index}}
-----------------------------------------------------------------
-       Name: {{m.name}}
-Description: {{m.desc}}
-
-{% endfor %}
-"""
 ## initilize the global variables with default config.
 CONFIG = ConfigObject(default_config)
 
@@ -72,8 +56,8 @@ def args_parse():
                         help="view the modules specified in check lsit.")    
     parser.add_argument('-d','--debug', action="store_true",
                         help="debug option, detail info will be output")
-    parser.add_argument('--save', action="store_true",
-                        help="save the module info or check report if option is set. ")
+    parser.add_argument('--saveto', 
+                        help="save the report to a specified filename ")
     parser.add_argument('--silent', action="store_true",
                         help="turn off the output to stdout.")    
     parser.add_argument('-t','--template',
@@ -81,13 +65,14 @@ def args_parse():
 
     args = parser.parse_args()
 
-    DEBUG = args.debug
-    SILENT = args.silent
-    REPORT_TEMPLATE = args.template
-    SAVE_OUTPUT = args.save
+    if not (args.run or args.show):
+        parser.print_help()
+        sys.exit(1)
 
-    if DEBUG:
-        print(args)
+    DEBUG   = args.debug
+    SILENT  = args.silent
+    REPORT_TEMPLATE = args.template
+    SAVE_OUTPUT     = args.saveto
 
     return parser, args
 
@@ -110,7 +95,7 @@ def show_module_info(checklist,logfile=None):
     if 'module_info' in checklist.templates:
         template = jinja.template(checklist.templates['module_info'])
     else:
-        template = jinja.template()(module_info_format)
+        template = jinja.template()(CONFIG.show_modules_template)
 
 
     modules = checklist.modules
@@ -171,32 +156,27 @@ if __name__ == "__main__":
                  'run'  : run_modules,
                 }
     
-    #shareinfo's data can be share in global.
-    shareinfo = InfoCache()
     
+    #parse the arguments and options.
     parser,args = args_parse()
+    shareinfo.set('DEBUG',args.debug)
+    debugmsg(args)
 
+    #checklsit was speicifiied. 
     checklist_file = args.run or args.show
     cklpath,cklfile = os.path.split(checklist_file)
     
+    #load the checklist file.
     if not cklpath:
         cklpath = CONFIG.checklist_path
-
     checklist = CheckList(os.path.join(cklpath,cklfile))
-    checklist.import_modules()
 
-    if SAVE_OUTPUT and args.show:
-        file_postfix = REPORT_TEMPLATE or checklist.templates["module_info"]
-        SAVE_OUTPUT = "_".join([checklist.name, file_postfix])
-    elif SAVE_OUTPUT and args.run:
-        file_postfix = REPORT_TEMPLATE or checklist.templates["report"]
-        SAVE_OUTPUT = "_".join([checklist.name,file_postfix])
+    #import the modules and save to checklist.modules 
+    checklist.modules = ImportCheckModules(checklist)
 
     if not checklist.modules:
         parser.print_help()
         sys.exit(1)
 
     command = (args.run and 'run') or (args.show and 'show') or 'run'
-
     do_action[command](checklist,args.logfile)
-

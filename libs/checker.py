@@ -124,13 +124,16 @@ class CheckList(object):
             self._modules_name = modules_filename
         module_path = self.info['paths']['modules']
         module_names = filter(ignore_files,self.info['modules_name'])
-        self.modules = ImportCheckModules(module_names,module_path)
+        self.modules = ImportCheckModules(self)
 
-def ImportCheckModules(modulefilenames, modulepath=MODULE_PATH):
+        return self.modules
+
+def ImportCheckModules(checklist):
     """Import the modules and return the modules list.
     """
-
     modules = []
+    modulefilenames = filter(ignore_files,checklist.modules_name)
+    modulepath = checklist.paths['modules']
 
     for name in modulefilenames:
         #print 'module path/name: %s\\%s' % (path,name)
