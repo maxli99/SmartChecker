@@ -15,7 +15,7 @@ from libs.checker import ResultInfo,CheckStatus
 module_id = 'TN-China-20151124'
 tag = ['flexins','china']
 priority = 'critical'
-name = "TN_Ch_20151124_IPDU_FreeMem"
+name = "TN_CN_20151124_IPDU_FreeMem"
 desc = __doc__
 criteria = u"""\
 (1)检查NS/MME软件版本为 ['N5 1.19-3','N5 1.17-5'] 或者更高版本.
@@ -287,7 +287,7 @@ def run(logfile):
 	else:
 		result.status = CheckStatus.PASSED
 
-	info.append("\n")
+	info=[line+'\n' for line in info]
 	result.update(info=info,error=errmsg)
 	return result
 

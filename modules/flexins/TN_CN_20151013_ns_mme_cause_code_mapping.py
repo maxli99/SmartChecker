@@ -188,14 +188,14 @@ def run(logfile):
 		'EsmExternal165':[33,EsmExternal165,EsmExternal165_info_str]
 		}
 	for check_Items in info_dic:
-		print check_Items,info_dic[check_Items][1]
+		#print check_Items,info_dic[check_Items][1]
 		if info_dic[check_Items][0] == info_dic[check_Items][1]:
 			info.append(info_dic[check_Items][2])
 		else:
 			info.append(info_dic[check_Items][2].replace('- ','- !'))
 			result.status = CheckStatus.FAILED
 
-	info.append("\n")
+	info=[line+"\n" for line in info]
 	result.update(info=info,error=errmsg)
 	return result
 
