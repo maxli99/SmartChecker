@@ -2,8 +2,9 @@ u"""Analysis and Check the FlexiNS software version.
 """
 import re
 from libs.checker import ResultInfo,CheckStatus
-from libs.tools import InfoCache
+from libs.infocache import shareinfo
 from libs.flexins import FlexiNS
+from libs.tools import debugmsg
 
 ## Mandatory variables 
 ##--------------------------------------------
@@ -23,7 +24,7 @@ version_info = u"Packages Info:\n  %s"
 check_commands = [
     ("ZWQO:CR;","show the NS packages information"),
 ]
-shareinfo = InfoCache()
+
 ##
 def check_version(ns):
     error = ''
@@ -31,11 +32,12 @@ def check_version(ns):
     status = ''
         
     if ns and ns.get('version'):
-        if ns.match_version(target_version):
+        if ns.match_version(target_version):  # todo: match_version(BU=target_version)
             status = CheckStatus.PASSED
         else:
             status = CheckStatus.FAILED
         info.append(str(ns.version))
+    #in case no ns version found.
     else:
         status = CheckStatus.UNKNOWN
         info.append("unknow version")
@@ -50,7 +52,7 @@ def run(logfile):
     """
     
     ns = shareinfo.get('FlexiNS')
-
+    debugmsg(shareinfo)
     status,info,error = check_version(ns)
     result.update(status=status,info=info,error=error)
 

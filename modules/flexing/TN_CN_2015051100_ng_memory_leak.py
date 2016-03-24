@@ -4,8 +4,8 @@ u"""由于有NG3.x 版本SAEGW的AS/SAB存在内存泄露的问题，导致发�
 """
 import re
 from libs.checker import CheckStatus,ResultInfo
-from libs.flexing import get_ng_version
-from libs.tools import MessageBuffer, InfoCache
+from libs.infocache import shareinfo
+from libs.tools import MessageBuffer
 
 __author__ = 'Liu Jun'
 __email__ = 'jun1.liu@nokia.com'
@@ -21,7 +21,8 @@ tags      = ['flexing','china']
 priority  = 'critical'
 
 mem_threshold = {'AS':110,'SAB':500}  #MB
-criteria      = u"""正常的内存利益率: AS < %(AS)sMB or SAB < %(SAB)sMB
+criteria      = u"""
+FlexiNG NG3.1/NG3.2, 正常的内存利益率: AS < %(AS)sMB or SAB < %(SAB)sMB
 
 解决方案：
   1. 有条件关闭 hicut 的项目就关闭（因为关闭 hitcut 会导致 Node 负荷小幅增加，需要提前检查 CPU 使用情况）。
@@ -32,9 +33,9 @@ criteria      = u"""正常的内存利益率: AS < %(AS)sMB or SAB < %(SAB)sMB
 ## Optional variables 
 pat_memfail = re.compile("ssh ([\w\d-]+) showstat\|.*?mem_alloc_failed_for_linear_filters = (\d+)",re.DOTALL)
 pat_memallo = re.compile("info ([\w\d-]+) featuremem.*FASTPATH_MALLOC dynamic allocated bytes \[chunks\]: (\d+)/(\d+)")
-
+target_version = ['3.1','3.2']
 logline_format = "    - %s\n"
-ginfo = InfoCache()
+
 ##
 
 def check_memory_fail_counter(loglines):
@@ -94,27 +95,26 @@ def run(logfile, *args,**kwargs):
     info = []
     error = ''
     
-    # check the NG version first.
-    if 'ngversion' in ginfo:
-        ngversion = ginfo.get('ngversion')
-    else:
-        ngversion=get_ng_version(logfile)
+    ng = shareinfo['FlexiNG']
 
-    if not ngversion:  # not version info found.
+    # check the NG version first.
+    if not ng.version:  # not version info found.
         #status = CheckStatus.UNKNOWN
         info.append(logline_format % "NG version can't be determindated.")
-        #error = "NG version is not found."
+        
+    else:
+        match = ng.match_version(major=target_version)
 
-    elif ngversion[0][:3] == '3.2':
-        status,info,error = check_memory_fail_counter(loglines)
-        if status == CheckStatus.FAILED and len(info)>0:
-            result.status = status
-    
+        if match['major']:
+            status,info,error = check_memory_fail_counter(loglines)
+            if status == CheckStatus.FAILED and len(info)>0:
+                result.status = status
+        else:
+            major_version = ng.version['major']
+            info.append(logline_format % ("The TN is vaild for %s, this NG version is (%s)" % major_version))
 
     ## check function 2
     status,_info,error = check_memory_allocation(loglines)
     info.append(''.join(_info))
-    #result.status = status
-    
     result.update(status=status,info=info,error=error)
     return result
