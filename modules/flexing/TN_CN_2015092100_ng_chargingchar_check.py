@@ -18,6 +18,8 @@ other cc=1,2,3,5,6,7,9 can use the same way.
 import re
 from libs.checker import ResultInfo,CheckStatus
 from libs.flexing import get_ng_version
+from libs.infocache import InfoCache
+from libs.flexing import FlexiNG
 
 ## Mandatory variables 
 ##--------------------------------------------
@@ -67,14 +69,25 @@ def run(logfile):
 	status = CheckStatus.UNCHECKED
 	
 	# check the NG version first.
-	ngversion=get_ng_version(logfile)
+	#ngversion=get_ng_version(logfile)
 	
-	if not ngversion:  # not version info found.
-		charging_index_status.append(u"- NG version can't be determindated. \n")
-	elif ngversion[0] not in target_version:
-		charging_index_status.append(u"- NG version: " +ngversion[0]+" (Not in the target_version list). \n")
+	#if not ngversion:  # not version info found.
+	#	charging_index_status.append(u"- NG version can't be determindated. \n")
+	#elif ngversion[0] not in target_version:
+	#	charging_index_status.append(u"- NG version: " +ngversion[0]+" (Not in the target_version list). \n")
+	#else:
+	#	charging_index_status.append(u"- NG version: " +ngversion[0]+" (in target_version list). \n")
+	
+	shareinfo = InfoCache()
+	ng = FlexiNG()
+	ng = shareinfo.get('FlexiNG')
+	ngversion = ng.version
+	
+	if ng.match_version(target_version): 
+		charging_index_status.append(u"- NG version: " + ngversion['major'] + u" 在支持版本列表中. \n")
 	else:
-		charging_index_status.append(u"- NG version: " +ngversion[0]+" (in target_version list). \n")
+		charging_index_status.append(u"- NG version: " + ngversion['major'] + u" 不在支持版本列表中.. \n")
+	
 	# Get every session-profile-block
 	session_profile_block=[]
 	pat=pats_charchar['session-profile-block']

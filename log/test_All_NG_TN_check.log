@@ -510,7 +510,7 @@ filter = F_211.136.221.115  precedence = 1012  filter-state = enable
 filter = F_211.136.221.125  precedence = 1013  filter-state = enable
 filter = F_211.136.113.36   precedence = 1014  filter-state = enable
 filter = F_211.136.112.84   precedence = 1015  filter-state = enable
-filter = F_211.103.89.1     precedence = 1016  filter-state = enable
+filter = F_211.103.89.1     precedence = 1016  filter-state = enabled
 filter = F_211.137.170.81   precedence = 1017  filter-state = enable
 filter = F_218.201.4.226    precedence = 1018  filter-state = enable
 filter = F_211.137.33.203   precedence = 1019  filter-state = enable
@@ -1394,7 +1394,7 @@ service-id = 1030000008
 url-enrichment-profile-name = null
 url-enrichment-type = null
 filter = ZYYY1                             precedence = 1020  filter-state = enable
-filter = ZYYY2                             precedence = 1040  filter-state = disabled
+filter = ZYYY2                             precedence = 1040  filter-state = enabled
 filter = ZYYY3                             precedence = 1060  filter-state = enable
 filter = ZYYY4                             precedence = 1080  filter-state = enable
 filter = ZYYY5                             precedence = 1100  filter-state = enable
