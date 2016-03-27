@@ -2,7 +2,7 @@ u"""Collecting the basic info of FlexiNS.
 """
 
 from libs.checker import ResultInfo,CheckStatus
-from libs.tools import InfoCache
+from libs.infocache import InfoCache
 from libs.flexins import FlexiNS
 
 ## Mandatory variables 

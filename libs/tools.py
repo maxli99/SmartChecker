@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys,codecs
+from infocache import shareinfo
 
 def to_unicode(line):
     """translate the string line to unicode.
@@ -9,35 +10,10 @@ def to_unicode(line):
     else:
         return line.decode('utf-8')
 
-class InfoCache(object):
-    """A singleton Class can store the information shared in global/modules.
-    """
-    _cache = {}
+def debugmsg(msg):
+    if shareinfo.get('DEBUG'):
+        print(msg) 
 
-    def __new__(cls, *p, **k):
-        self = object.__new__(cls, *p, **k)
-        self.__dict__ = cls._cache
-        return self
-
-    def set(self,key,value):
-        self._cache[key] = value   
-        return self._cache[key]
-        
-    def get(self,key):
-        return self._cache.get(key,None)
- 
-    def __getitem__(self,key):
-        return self.get(key)
-    
-    def __setitem__(self,key,value):
-        self._cache[key] = value
-
-    def __repr__(self):
-        return "InfoCache:%s" % self._cache
-    
-    def __contains__(self,key):
-        return key in self._cache
-        
 class MessageBuffer(object):
     """Store the information for sending to differnt destination later.
     """
@@ -49,7 +25,6 @@ class MessageBuffer(object):
 
     def append(self,txt):
         self.buffer.append(self.lineformat % txt)
-
 
     def to_console(self, concatenation="\n"):
         _lines = map(to_unicode,self.buffer)
@@ -106,3 +81,5 @@ def read_cmdblock_from_log(loglines,startline=None,endline=None):
             #print "start line found!"
 
     return ''.join(blocklines)            
+
+   

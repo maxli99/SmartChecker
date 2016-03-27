@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-u"""FlexiNS/MME Cause code mapping Checking
-     -  NS/MME软件版本为NS15或者更高版本
-     -  已开启功能开关PRFILE002:2244-MME_CC_MAPPING_ENABLED
-     -  有新建CAUSE CODE SETS,如:EPCEMM和EPCESM(各项目名称可能不相同).
-     -  EPCEMM,TYPE=EMM,PROC=ATTREJ,INTCAUSE=142 To EXTERNAL CAUSE=15
-     -  EPCEMM,TYPE=EMM,PROC=ATTREJ,INTCAUSE=96 To EXTERNAL CAUSE=7
-     -  EPCESM,TYPE=ESM,PROC=PDNCR,INTCAUSE=165 To EXTERNAL CAUSE=33
-
+u"""\
+FlexiNS/MME Cause code mapping Checking
+    -  NS/MME软件版本为NS15或者更高版本
+    -  已开启功能开关PRFILE002:2244-MME_CC_MAPPING_ENABLED
+    -  有新建CAUSE CODE SETS,如:EPCEMM和EPCESM(各项目名称可能不相同).
+    -  EPCEMM,TYPE=EMM,PROC=ATTREJ,INTCAUSE=142 To EXTERNAL CAUSE=15
+    -  EPCEMM,TYPE=EMM,PROC=ATTREJ,INTCAUSE=96 To EXTERNAL CAUSE=7
+    -  EPCESM,TYPE=ESM,PROC=PDNCR,INTCAUSE=165 To EXTERNAL CAUSE=33
 """
 import re
 from libs.checker import ResultInfo,CheckStatus
@@ -188,14 +188,14 @@ def run(logfile):
 		'EsmExternal165':[33,EsmExternal165,EsmExternal165_info_str]
 		}
 	for check_Items in info_dic:
-		print check_Items,info_dic[check_Items][1]
+		#print check_Items,info_dic[check_Items][1]
 		if info_dic[check_Items][0] == info_dic[check_Items][1]:
 			info.append(info_dic[check_Items][2])
 		else:
 			info.append(info_dic[check_Items][2].replace('- ','- !'))
 			result.status = CheckStatus.FAILED
 
-	info.append("\n")
+	info=[line+"\n" for line in info]
 	result.update(info=info,error=errmsg)
 	return result
 

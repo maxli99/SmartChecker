@@ -5,7 +5,8 @@
 import re
 #from libs.flexing import get_ng_version
 from libs.checker import ResultInfo,CheckStatus
-from libs.tools import InfoCache
+from libs.infocache import InfoCache
+from libs.tools import debugmsg
 
 ## Mandatory variables 
 ##-----------------------------------------------------
@@ -34,13 +35,14 @@ def run(logfile):
     
     ng = shareinfo.get('FlexiNG')
     #version(version,release,hw_ver) -> ('3.1_1.0', '235397', 'AB2')
-    
+    debugmsg(ng)
     if ng and ng.get('version'):
-        if ng.match_version(major=target_versions):
+        match=ng.match_version(major=target_versions)
+        if match['major']:
             result.status = CheckStatus.PASSED
         else:
             result.status = CheckStatus.FAILED
-        info.append("FlexiNG version checked.")
+        info.append("FlexiNG version checked: %s" % str(ng.version))
     else:
         status = CheckStatus.UNKNOWN
         info.append("unknow version")
