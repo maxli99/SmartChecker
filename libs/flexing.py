@@ -17,13 +17,21 @@ example:
         loglines = file(logfile).readlines()
         self._data['version'] = _get_ng_version(loglines)
 
-    def match_version(self,major=[],release=[],hardware=[]):
+        hostname,version = _get_ng_hostname_version(loglines)
+        self._data['hostname'] = hostname
+        self._data['version'] = version
+        ##extract the hostnme
+
+
+    def match_version(self,major=None,release=None,hardware=None):
         """match_version(major=['3.2'], release=['r23456'])
 
         return (marjor_flag,release_flag,hardware_flag)
         """
         match_flag  = {'major':False, 'release':False, 'hardware':False}
-        
+        major = major or []
+        release = release or []
+        hardware = hardware or []
         for ver in major:
             if re.match(ver,self.version['major']):
                 match_flag['major'] = True
@@ -42,8 +50,6 @@ example:
     def __repr__(self):
         return "FlexiNSObj:<%(hostname)s, %(version)s>" % self._data
 
-
-    
 def _get_ng_version(loglines):
     """This function will parse the NG version info from logfile.
 parameters:
@@ -65,8 +71,32 @@ return:
 
     if check:
         version = dict(zip(version_names,check.groups()))
-    
+
     return version
+
+def _get_ng_hostname_version(loglines):
+    names = ['hostname','version']
+    pat_host = re.compile("fsLogicalNetworkElemId: (\w+)")
+    pat_version = re.compile("fsStaticDataDelivery: R_NG([\d\._]+)_r(\d+)_AB(\d+)")
+
+    h_flag=v_flag=False
+    hostname = ''
+    version = {}
+    for line in loglines:
+        r1 = pat_host.search(line)
+        r2 = pat_version.search(line)
+        if r1:
+            hostname = r1.groups()[0]
+            h_flag = True
+        if r2:
+            version = dict(zip(version_names,r2.groups()))
+            v_flag = True
+
+        if h_flag and v_flag:
+            break
+    return hostname,version
+
+
 
 def get_ng_version(configlog):
     """This function will parse the NG version info from logfile.

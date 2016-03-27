@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-u"""检查Charging character配置（华为PCRF和CC=0用户问题）
-开启gx 功能后，用户签约为CC=0 的用户GX CCR 消息中的携带的online（在线计费）和
-offline（离线计费）被设置为disable 状态（不计费），由PCRF 来指示计费方式。华为PCRF 会返回与SAEGW 发送一致的online（在线计费）
-和 offline（离线计费）字段，disable 状态（不计费），导致CC=0 的用户不产生话单。
+u"""Gx 接口使用后部分用户不产生话单（华为PCRF和CC=0用户问题）
+
 添加下面的配置即可避免上述的问题。
+
 charchar-index = 0
 charging-profile = charging-profile-1
+
 建议将其余字段均使用缺省的计费方式。
 When enable gx function, subscriber with CC=0 's GX CCR message will set th online and 
 offline as disable and the charging mode decide by PCRF . But Huawei PCRF will return 
@@ -19,6 +19,8 @@ import re
 from libs.checker import ResultInfo,CheckStatus
 from libs.flexing import get_ng_version
 
+__author__ = "richard.hu@nokia.com"
+
 ## Mandatory variables 
 ##--------------------------------------------
 module_id = '20160304.01'
@@ -26,7 +28,15 @@ tag  = ['flexing','china']
 priority = 'critical'
 name = u"校验Session Profile中的Charging character配置"
 desc = __doc__
-criteria = u"NG Charging character configuration have problem "
+criteria = u"""发生问题的前提条件：
+1. 用户在 HLR/HSS 的 CC（ChargingCharacteristics）字段被设置为 0。不符合集团规范
+《中国移动分组域实时计费接口规范 V1.1.0》要求，集团规范设置为 0X0400（4） 表示
+在线计费，设置为 0X0800（8）表示离线计费。
+2. 使用了华为的 PCRF.
+3. SAE/GGSN没有设置charging-index为0的charging profile
+
+注意：本报告仅显示第三项内容的检查结果。
+"""
 result = ResultInfo(name)
 error = ''
 ##--------------------------------------------
@@ -46,9 +56,9 @@ pats_charchar = {'session-profile-block': re.compile(r"show ng session-profile (
 #charchar_str = "charchar-index = 0:%(charchar0)s
 
 check_commands = [
-    ('show ng session-profile {{apn_name}}-session-profile','## show the {{apn_name}} session profiles'),
+    ('@fsclish', '#below commands should be executed in fsclish shell'),
+    ('show ng session-profile *','## show the configuration of all session profiles'),
 ]
-##
 
 def read_block(logfile,blkname):
 	loglines = file(logfile).readlines()
@@ -56,7 +66,6 @@ def read_block(logfile,blkname):
 	return ''.join(loglines)
 
     
-        
 ##--------------------------------------------
 ## Mandatory function: run
 ##--------------------------------------------    
@@ -105,6 +114,6 @@ def run(logfile):
 	if status == CheckStatus.UNCHECKED:
 		status = CheckStatus.UNKNOWN
 	
-	result.load(status=status,info=charging_index_status,error=error)
+	result.update(status=status,info=charging_index_status,error=error)
 	return result
     

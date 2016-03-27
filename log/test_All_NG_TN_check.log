@@ -1,3 +1,88 @@
+[root@CLA-0(SZHGGSN503BNk) /root]
+# ldapsearch "fsLogicalNetworkElemId=*"
+# extended LDIF
+#
+# LDAPv3
+# base <> with scope subtree
+# filter: fsLogicalNetworkElemId=*
+# requesting: ALL
+#
+
+# ClusterRoot
+dn: fsClusterId=ClusterRoot
+objectClass: FSCluster
+objectClass: extensibleObject
+fsClusterId: ClusterRoot
+fsLayer: FlexiPlatformBase FlexiPlatformFull NG NGATCA NGNONHAATCA
+fsDeployment: create_ng.sh
+fsPostDeploymentPlugin: NG_plugin.py
+fsMOID: 1
+fsLastMOID: 1716
+fsLogicalNetworkElemId: SZHGGSN503BNk
+fsStaticDataDelivery: R_NG15_r291939_AB2
+fsLogicalNetworkElemType: FING
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 2
+# numEntries: 1
+[root@CLA-0(SZHGGSN503BNk) /root]
+
+show sw-manage current all 
+AS6-0 R_NG3.2_r245989_AB2
+AS6-1 R_NG3.2_r245989_AB2
+SE7-1 R_NG3.2_r245989_AB2
+SE7-0 R_NG3.2_r245989_AB2
+SE3-1 R_NG3.2_r245989_AB2
+SE3-0 R_NG3.2_r245989_AB2
+CLA-0 R_NG3.2_r245989_AB2
+CLA-1 R_NG3.2_r245989_AB2
+SE14-0 R_NG3.2_r245989_AB2
+SE14-1 R_NG3.2_r245989_AB2
+SE10-0 R_NG3.2_r245989_AB2
+SAB3-0 R_NG3.2_r245989_AB2
+SAB3-1 R_NG3.2_r245989_AB2
+SE10-1 R_NG3.2_r245989_AB2
+SAB2-1 R_NG3.2_r245989_AB2
+SAB2-0 R_NG3.2_r245989_AB2
+SE2-0 R_NG3.2_r245989_AB2
+SE11-1 R_NG3.2_r245989_AB2
+SE11-0 R_NG3.2_r245989_AB2
+SE6-0 R_NG3.2_r245989_AB2
+SE6-1 R_NG3.2_r245989_AB2
+SE2-1 R_NG3.2_r245989_AB2
+SE12-0 R_NG3.2_r245989_AB2
+SE12-1 R_NG3.2_r245989_AB2
+SE4-0 R_NG3.2_r245989_AB2
+SE13-1 R_NG3.2_r245989_AB2
+SE13-0 R_NG3.2_r245989_AB2
+SE5-1 R_NG3.2_r245989_AB2
+SE5-0 R_NG3.2_r245989_AB2
+AS13-1 R_NG3.2_r245989_AB2
+AS13-0 R_NG3.2_r245989_AB2
+SAB14-1 R_NG3.2_r245989_AB2
+SAB14-0 R_NG3.2_r245989_AB2
+AS11-1 R_NG3.2_r245989_AB2
+AS11-0 R_NG3.2_r245989_AB2
+AS12-0 R_NG3.2_r245989_AB2
+AS12-1 R_NG3.2_r245989_AB2
+IB10-1 R_NG3.2_r245989_AB2
+IB10-0 R_NG3.2_r245989_AB2
+AS4-0 R_NG3.2_r245989_AB2
+AS4-1 R_NG3.2_r245989_AB2
+SAB15-0 R_NG3.2_r245989_AB2
+SAB15-1 R_NG3.2_r245989_AB2
+AS5-1 R_NG3.2_r245989_AB2
+SE4-1 R_NG3.2_r245989_AB2
+AS5-0 R_NG3.2_r245989_AB2
+SE15-1 R_NG3.2_r245989_AB2
+SE15-0 R_NG3.2_r245989_AB2
+IB7-0 R_NG3.2_r245989_AB2
+IB7-1 R_NG3.2_r245989_AB2
+
+
 show sw-manage list 	
 R_FPT_1.40.1.50.1.0_379835_NG3.1_1.0_r235397_AB2
 
@@ -86,8 +171,6 @@ May 18 17:27:25.668515 info AS11-1 featuremem_ctrl[3995]: [0]: LIBFMEM:         
 May 18 17:27:25.668515 info SAB2-1 featuremem_ctrl[3995]: [0]: LIBFMEM:                              SUM                  FASTPATH_MALLOC dynamic allocated bytes [chunks]: 65804896/66779024 [225959/227230] (libfmem_ctrl.c:612) //308
 May 18 17:27:25.668515 info SAB2-0 featuremem_ctrl[3995]: [0]: LIBFMEM:                              SUM                  FASTPATH_MALLOC dynamic allocated bytes [chunks]: 165804896/66779024 [225959/227230] (libfmem_ctrl.c:612) //308
 
-show sw-manage list 	
-R_FPT_1.40.1.50.1.0_379835_NG3.2_r235397_AB2
 
 root@CLA-0 [SHSAEGW07BNK]  > show ng session-profile cmnet-session-profile 
 session-profile-name = cmnet-session-profile
