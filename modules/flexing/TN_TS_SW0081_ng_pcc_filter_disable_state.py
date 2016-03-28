@@ -11,6 +11,8 @@ SOLUTION:
 import re
 from libs.flexing import get_ng_version
 from libs.checker import ResultInfo,CheckStatus
+from libs.infocache import InfoCache
+from libs.flexing import FlexiNG
 
 __author__ = 'wei.yao@huanuo-nokia.com'
 
@@ -53,6 +55,16 @@ def read_block(logfile,blkname):
 def run(logfile):
 
     check_info = []
+	
+    shareinfo = InfoCache()
+    ng = FlexiNG()
+    ng = shareinfo.get('FlexiNG')
+    ngversion = ng.version
+	
+    if ng.match_version(target_version): 
+        check_info.append(u"- NG version: " + ngversion['major'] + u" 在支持版本列表中. \n")
+    else:
+        check_info.append(u"- NG version: " + ngversion['major'] + u" 不在支持版本列表中.. \n")
 
     loglines = file(logfile).readlines()
     logtxt = read_block(logfile,'pcc_rule')

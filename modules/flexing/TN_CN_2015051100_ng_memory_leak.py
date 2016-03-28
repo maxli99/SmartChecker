@@ -34,7 +34,7 @@ criteria      = u"""
 ## Optional variables 
 pat_memfail = re.compile("ssh ([\w\d-]+) showstat\|.*?mem_alloc_failed_for_linear_filters = (\d+)",re.DOTALL)
 pat_memallo = re.compile("info ([\w\d-]+) featuremem.*FASTPATH_MALLOC dynamic allocated bytes \[chunks\]: (\d+)/(\d+)")
-target_version = ['3.1','3.2']
+target_version = ['3.1','3.2','15']
 logline_format = "    - %s\n"
 
 check_commands = [

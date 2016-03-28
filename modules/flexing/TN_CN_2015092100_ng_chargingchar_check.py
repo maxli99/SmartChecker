@@ -18,6 +18,8 @@ other cc=1,2,3,5,6,7,9 can use the same way.
 import re
 from libs.checker import ResultInfo,CheckStatus
 from libs.flexing import get_ng_version
+from libs.infocache import InfoCache
+from libs.flexing import FlexiNG
 
 __author__ = "richard.hu@nokia.com"
 
@@ -76,43 +78,85 @@ def run(logfile):
 	status = CheckStatus.UNCHECKED
 	
 	# check the NG version first.
-	ngversion=get_ng_version(logfile)
+	#ngversion=get_ng_version(logfile)
 	
-	if not ngversion:  # not version info found.
-		charging_index_status.append(u"- NG version can't be determindated. \n")
-	elif ngversion[0] not in target_version:
-		charging_index_status.append(u"- NG version: " +ngversion[0]+" (Not in the target_version list). \n")
+	#if not ngversion:  # not version info found.
+	#	charging_index_status.append(u"- NG version can't be determindated. \n")
+	#elif ngversion[0] not in target_version:
+	#	charging_index_status.append(u"- NG version: " +ngversion[0]+" (Not in the target_version list). \n")
+	#else:
+	#	charging_index_status.append(u"- NG version: " +ngversion[0]+" (in target_version list). \n")
+	
+	shareinfo = InfoCache()
+	ng = FlexiNG()
+	ng = shareinfo.get('FlexiNG')
+	ngversion = ng.version
+	
+	if ng.match_version(target_version): 
+		charging_index_status.append(u"- NG version: " + ngversion['major'] + u" 在支持版本列表中. \n")
 	else:
-		charging_index_status.append(u"- NG version: " +ngversion[0]+" (in target_version list). \n")
+		charging_index_status.append(u"- NG version: " + ngversion['major'] + u" 不在支持版本列表中.. \n")
+	
 	# Get every session-profile-block
 	session_profile_block=[]
 	pat=pats_charchar['session-profile-block']
 	logtmp=logtxt
 	r=pat.search(logtxt)
-	while r<>None:
-		session_profile_block.append(r.group())
-		logtmp=logtmp[r.end():]
-		r=pat.search(logtmp)
+	if (r):
+		status = CheckStatus.PASSED
+		while r<>None:
+			session_profile_block.append(r.group())
+			logtmp=logtmp[r.end():]
+			r=pat.search(logtmp)
 	
 	# From each block get session-profile-name and charging-index info
-	pat=pats_charchar['session-profile-name']
 	for block in session_profile_block:
-		r=pat.search(block)
-		if r:
-			session_profile_name=r.group(1)
-			pat1=pats_charchar['charchar-index']
-			r=pat1.search(block)
-			if r:
-				if status == CheckStatus.UNCHECKED:
-					status = CheckStatus.PASSED
-				charging_index_status.append(session_profile_name + ' have charchar-index=0 \n')
-			else:
-				if status == CheckStatus.UNCHECKED:
-					status = CheckStatus.FAILED
-				charging_index_status.append(session_profile_name + ' have NOT charchar-index=0 \n')
-    
-	if status == CheckStatus.UNCHECKED:
-		status = CheckStatus.UNKNOWN
+		block_logs = block.split('\n')
+		line_count = len(block_logs)
+		line = 0
+		sp_name=''
+		sp_chargingindex=''
+		while (line < line_count):
+			sp_file_name = pats_charchar['session-profile-name'].search(block_logs[line])
+			if sp_file_name:
+				curr_sp_name=sp_file_name.group(1)
+				if (curr_sp_name <> sp_name and sp_name <> ''):
+					if (sp_chargingindex==''):
+						charging_index_status.append(u'Session Name: ' + sp_name + ' have no Index=0 configuration.\n')
+						status = CheckStatus.FAILED
+					else:
+						charging_index_status.append(u'Session Name: ' + sp_name + ' have Index=0 configuration.\n')
+				sp_name=curr_sp_name
+				line = line + 1
+				continue
+			chargingindex = pats_charchar['charchar-index'].search(block_logs[line])
+			if chargingindex:
+				sp_chargingindex = 'FIND'
+			line = line + 1
+		if (sp_chargingindex==''):
+			charging_index_status.append(u'Session Name: ' + sp_name + ' have no Index=0 configuration.\n')
+			status = CheckStatus.FAILED
+		else:
+			charging_index_status.append(u'Session Name: ' + sp_name + ' have Index=0 configuration.\n')
+		
+	#pat=pats_charchar['session-profile-name']
+	#for block in session_profile_block:
+	#	r=pat.search(block)
+	#	if r:
+	#		session_profile_name=r.group(1)
+	#		pat1=pats_charchar['charchar-index']
+	#		r=pat1.search(block)
+	#		if r:
+	#			if status == CheckStatus.UNCHECKED:
+	#				status = CheckStatus.PASSED
+	#			charging_index_status.append(session_profile_name + ' have charchar-index=0 \n')
+	#		else:
+	#			if status == CheckStatus.UNCHECKED:
+	#				status = CheckStatus.FAILED
+	#			charging_index_status.append(session_profile_name + ' have NOT charchar-index=0 \n')
+    #
+	#if status == CheckStatus.UNCHECKED:
+	#	status = CheckStatus.UNKNOWN
 	
 	result.update(status=status,info=charging_index_status,error=error)
 	return result
