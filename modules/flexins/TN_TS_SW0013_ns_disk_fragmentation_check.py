@@ -14,7 +14,11 @@ u"""
 
 import re
 from libs.checker import ResultInfo,CheckStatus
+from libs.infocache import InfoCache
+from libs.flexins import FlexiNS
 from libs.flexins import get_ns_version
+#from libs.flexins import get_ns_version
+
 
 ## Mandatory variables 
 ##--------------------------------------------
@@ -30,6 +34,7 @@ criteria = u"""
 """
 result = ResultInfo(name)
 error = ''
+shareinfo = InfoCache() 
 ##--------------------------------------------
 
 ##--------------------------------------------
@@ -77,16 +82,26 @@ def run(logfile):
 	
 	# Check NS Version
 	nsversion=get_ns_version(logfile).strip()
+	#
+	shareinfo = InfoCache()
+	ns = FlexiNS()
+	ns = shareinfo.get('FlexiNS')
+	nsversion = ns.version['BU']
 	
-	if nsversion == 'UNKNOWN':  
-		fragment_status['nsversion']=u"    - NS version 无法确定. \n"	
-	elif nsversion not in target_version:
-		if nsversion > target_version[len(target_version)-1]:
-			fragment_status['nsversion']=u"    - NS version: " +nsversion+u" 高于目前支持版本. \n"
-		else:
-			fragment_status['nsversion']=u"    - NS version: " +nsversion+u" 不在支持版本清单里. \n"
+	#if nsversion == 'UNKNOWN':  
+	#	fragment_status['nsversion']=u"    - NS version 无法确定. \n"	
+	#elif nsversion not in target_version:
+	#	if nsversion > target_version[len(target_version)-1]:
+	#		fragment_status['nsversion']=u"    - NS version: " +nsversion+u" 高于目前支持版本. \n"
+	#	else:
+	#		fragment_status['nsversion']=u"    - NS version: " +nsversion+u" 不在支持版本清单里. \n"
+	#else:
+	#	fragment_status['nsversion']=u"    - NS version: " +nsversion+u" 在支持版本清单里. \n"
+	
+	if ns.match_version(target_version):
+		fragment_status['nsversion']=u"    - NS version: " + nsversion + u" 在支持版本清单里. \n"	
 	else:
-		fragment_status['nsversion']=u"    - NS version: " +nsversion+u" 在支持版本清单里. \n"
+		fragment_status['nsversion']=u"    - NS version: " + nsversion + u" 不在支持版本清单里. \n"
 	
 	logtxt = read_block(logfile,'NS_fragment_status')
     
