@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 u"""由于有NG3.x 版本SAEGW的AS/SAB存在内存泄露的问题，导致发生终端用户上网困难等多种症状非常多样，
 需要对SAE经常检查内存是否泄露。
+
+适用版本：NG3.1, NG3.2
 """
 import re
 from libs.checker import CheckStatus,ResultInfo
 from libs.infocache import shareinfo
 from libs.tools import MessageBuffer
 
-__author__ = 'Liu Jun'
-__email__ = 'jun1.liu@nokia.com'
-__date__ = '20160315'
+__author__ = 'jun1.liu@nokia.com'
+__date__   = '20160315'
 
 ## Mandatory variables 
 ##--------------------------------------------
@@ -22,7 +23,7 @@ priority  = 'critical'
 
 mem_threshold = {'AS':110,'SAB':500}  #MB
 criteria      = u"""
-FlexiNG NG3.1/NG3.2, 正常的内存利益率: AS < %(AS)sMB or SAB < %(SAB)sMB
+正常情况下内存利益率应该在: AS < %(AS)sMB or SAB < %(SAB)sMB 范围内，如果超出这个范围则可认为发生了内存泄露。
 
 解决方案：
   1. 有条件关闭 hicut 的项目就关闭（因为关闭 hitcut 会导致 Node 负荷小幅增加，需要提前检查 CPU 使用情况）。
@@ -33,10 +34,21 @@ FlexiNG NG3.1/NG3.2, 正常的内存利益率: AS < %(AS)sMB or SAB < %(SAB)sMB
 ## Optional variables 
 pat_memfail = re.compile("ssh ([\w\d-]+) showstat\|.*?mem_alloc_failed_for_linear_filters = (\d+)",re.DOTALL)
 pat_memallo = re.compile("info ([\w\d-]+) featuremem.*FASTPATH_MALLOC dynamic allocated bytes \[chunks\]: (\d+)/(\d+)")
-target_version = ['3.1','3.2']
+target_version = ['3.1','3.2','15']
 logline_format = "    - %s\n"
 
-##
+check_commands = [
+    ('@bash', '#below commands should be executed in bash shell'),
+    ('#@jinja {%for node in as_sab_nodes %}',"#jinja template statement"),
+    ('ssh {{node}} killall -SIGUSR2 featuremem_ctrl.bin','# dump the memory usage stats of {{node}}'),
+    ('grep "FASTPATH_MALLOC dynamic" /var/log/syslog-{{node}}.log',"#grep the memeory usage data"),
+    ('ssh {{node}} showstat|grep shm_gwup_proxy.gwup.sa.sa_rule.filter.interr.mem_alloc_failed_for_linear_filters',
+     '#show the memory alloc failed counter of {{node}}'),
+    ('#@jinja {% endfor %}',"#jinja template statement"),
+    
+]
+
+##----------------------------------------
 
 def check_memory_fail_counter(loglines):
     _logblk=''.join(loglines)
@@ -111,7 +123,7 @@ def run(logfile, *args,**kwargs):
                 result.status = status
         else:
             major_version = ng.version['major']
-            info.append(logline_format % ("The TN is vaild for %s, this NG version is (%s)" % major_version))
+            info.append(logline_format % ("this NG version is `%s`, not affected by this TN." % major_version))
 
     ## check function 2
     status,_info,error = check_memory_allocation(loglines)

@@ -1,6 +1,6 @@
 import re
 from tools import read_cmdblock_from_log
-from networkelement import NetworkElement
+from networkelement import NetworkElement, extract_data
 
 __version__ = "v0.5"
 
@@ -19,6 +19,12 @@ example:
         loglines = file(logfile).readlines()
         self._data['version'] = _get_ns_version(loglines)
 
+        ##
+        om_names = ['hostname','c_num','location']
+        pat = re.compile("(\d+)\s+(\w+)\s+(\d+)\s+(\d+)\s+(\w+)\s+(\w+)")
+        
+        self._load_data(om_names,_get_om_config(loglines))
+
     def match_version(self,versions):
         nsversion = self.version.get('BU','')
         if isinstance(versions,list):
@@ -31,14 +37,14 @@ example:
         return False
 
     def __repr__(self):
-        return "FlexiNSObj:<%s>" % self.hostname
+        return "FlexiNSObj:<%(hostname)s,%(c_num)s>" % self._data
  
-    
+
 def _get_ns_version(loglines):
     """This function will parse the FlexiNS version info from log lines.
-parameters:
+Arguments:
     loglines   log lines
-return:
+Return:
     return  a dict include package's status and id info or an empty dict.
     
     example: {'BU': 'N5 1.17-5', 'FB': 'N5 1.17-5', 'NW': 'N4 1.19-2', 'UT': 'N4 1.19-2'}
@@ -50,6 +56,25 @@ return:
     version = dict(pkgid_pat.findall(logtxt))
     
     return version
+
+def _get_om_config(loglines):
+    """extract the om config from the loglines 
+Arguments:
+    loglines  log lines for analysis.
+Return:
+    a dict include the config_names: ['conn','type','sw_level','cnum','hostname','location']
+    example: 
+    {'cnum': '400248', 'hostname': 'NCMME30BNK', 'sw_level': '5', 'location': 'NC_HGT3F_M03', 'type': 'DX220', 'conn': '000'}
+    """
+    config_names = ['conn','type','sw_level','c_num','hostname','location']
+    pat = re.compile("(\d+)\s+(\w+)\s+(\d+)\s+(\d+)\s+(\w+)\s+(\w+)")
+
+    logtxt = read_cmdblock_from_log(loglines,'QNI',command_end_mark)
+    r = pat.search(logtxt)
+    if r:
+        return dict(zip(config_names,r.groups()))
+    else:
+        return None
 
 
 def get_ns_version(configlog):
