@@ -31,7 +31,7 @@ result = ResultInfo(name)
 target_version = ['NS30', 'NS40', 'NS15']
 check_commands= [('ZDDE:SMMU,x:"ZL:9","ZLP:9,FAM","Z9H:404";','Show GRNPRB hand state,x is the unit id of SMMU.')]
 #match_start= 'HAND FO:PREV NEXT TIME     GR STATE    STABITS  JBUFFER      RCOMP FAM  PROC FO'
-patten = re.compile("^[0-9,A-F]{4}")
+patten = re.compile("^[0-9,A-F]{4} [0-9,A-F]{2} [0-9,A-F]{4}")
 smmu_info="SMMU-%s GRNPRB hand check %s\n"
 ##
 
