@@ -62,11 +62,17 @@ def args_parse():
                         help="turn off the output to stdout.")    
     parser.add_argument('-t','--template',
                         help="template for report output.")
+    parser.add_argument('-c','--commands',
+                        help="template for report output.")
 
     args = parser.parse_args()
 
     if not (args.run or args.show):
         parser.print_help()
+        sys.exit(1)
+
+    if args.run and not args.logfile:
+        print("Need to specify a logfile!")
         sys.exit(1)
 
     DEBUG   = args.debug
@@ -155,7 +161,6 @@ if __name__ == "__main__":
     do_action = {'show' : show_module_info,
                  'run'  : run_modules,
                 }
-    
     
     #parse the arguments and options.
     parser,args = args_parse()
