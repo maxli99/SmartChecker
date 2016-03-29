@@ -79,6 +79,7 @@ def run(logfile):
                     hands.append(line[:4])
         if len(hands)==50:
             status=CheckStatus.PASSED
+            total_status=CheckStatus.PASSED
         else:
             status=CheckStatus.FAILED
             total_status=CheckStatus.FAILED
