@@ -20,11 +20,14 @@ result    = ResultInfo(name)
 ##--------------------------------------------
 check_commands = [
     ("ZWQO:CR;","show the NS packages information"),
+    ("ZQNI:;","show the NS O&M configuratio"),  
 ]
 shareinfo = InfoCache()
 info_template="""FlexiNS Info:
  - hostname: %(hostname)s
  -  version: %(version)s
+ -    C-NUM: %(c_num)s
+ -localtion: %(location)s
  - hardware: 
 """
 ##
@@ -37,8 +40,7 @@ def run(logfile):
     """
 
     ns = FlexiNS()  
-    ns.parse_log(logfile)
-       
+    ns.parse_log(logfile) 
     shareinfo.set('FlexiNS',ns)
     
     result.status = CheckStatus.PASSED

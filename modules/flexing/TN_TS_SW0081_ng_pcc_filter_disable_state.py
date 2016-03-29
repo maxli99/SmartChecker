@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-u"""检查PCC rule的pcc filter状态是否有'disable'状态在'enable'之前的情况
+u"""检查PCC rule的pcc filter状态是否有'disable'的情况
+当出现这种情况时，优先级在disable之后的所有filter都会被当作`disable`来对待。
 
-VALIDITY: NG3.2, NG15
-
-该问题将在NG15 MP1 and NG3.2 3.0中修正
+适用版本: NG3.2, NG15
+ - 该问题将在NG15 MP1 and NG3.2 3.0中修正
 
 SOLUTION:
-使用fsclish删除不需要的filter,并且不要用disabled状态的pcc filter.
+ - 使用fsclish删除不需要的filter,并且不要用disabled状态的pcc filter.
 """
 import re
 from libs.flexing import get_ng_version
@@ -14,16 +14,18 @@ from libs.checker import ResultInfo,CheckStatus
 from libs.infocache import InfoCache
 from libs.flexing import FlexiNG
 
+__author__ = 'wei.yao@huanuo-nokia.com'
+
 ## Mandatory variables
 ##--------------------------------------------
 module_id = 'tn_ts_sw0081'
-tag  = ['flexing','china']
-priority = 'critical'
-name = "Check PCC rule filter in disabled state"
-desc = __doc__
-criteria = "PCC rule filter in disabled state"
-result = ResultInfo(name)
-error = ''
+tag       = ['flexing','china']
+priority  = 'critical'
+name      = "Check PCC rule filter in disabled state"
+desc      = __doc__
+criteria  = u"There is PCC rule filter in DISABLE status"
+result    = ResultInfo(name)
+error     = ''
 ##--------------------------------------------
 
 
@@ -38,7 +40,10 @@ pats_stat = {'pcc-rule-cmd': re.compile(r"show ng service-awareness pcc-rule"),
 'filter-state-enable': re.compile(r"filter-state = enable")
 }
 
-check_commands = [('show ng service-awareness pcc-rule *','## show service-awareness pcc-rule'),]
+check_commands = [
+    ('@fsclish', "#below commands should be executed in fsclish shell."),
+    ('show ng service-awareness pcc-rule *','## show service-awareness pcc-rule'),
+]
 
 def read_block(logfile,blkname):
     loglines = file(logfile).readlines()

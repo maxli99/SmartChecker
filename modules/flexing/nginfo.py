@@ -20,7 +20,8 @@ result    = ResultInfo(name)
 ## Optional variables
 ##--------------------------------------------
 check_commands = [
-    ('fsclish -c "show ng version" ',"show the FNG version information"),
+    ('#'*60,"Please use `ngexec` to execute below commands:"),
+    ('@bash\nldapsearch "fsLogicalNetworkElemId=*"',"list the hostname & version info. must be run in shell mode not fsclish"),
 ]
 shareinfo = InfoCache()
 DEBUG = shareinfo.get('DEBUG')

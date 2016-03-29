@@ -25,7 +25,7 @@ from libs.flexins import get_ns_version
 module_id = '20160228.01'
 tag  = ['flexins','china']
 priority = 'critical'
-name = u"FNS MME/SGSN 磁盘碎片率检查 --TN_CN-SW0013-CI2"
+name = u"TN_TS_SW0013_CI2 FNS MME/SGSN 磁盘碎片率检查"
 desc = __doc__
 criteria = u"""
 （1）检查MME/SGSN版本为 ['N5 1.19-3','N5 1.17-5'] 或者更高版本。
@@ -37,7 +37,6 @@ error = ''
 shareinfo = InfoCache() 
 ##--------------------------------------------
 
-##--------------------------------------------
 
 ##--------------------------------------------
 ## Optional variables
