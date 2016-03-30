@@ -50,8 +50,8 @@ target_version = ['3.1_1.0','3.2','15']
 
 ## first get the block of each 'show session-profile'
 ## from each block we will get the session-profile 's name and charging-index config 
-pats_charchar = {'session-profile-block': re.compile(r"show ng session-profile (.*)\n(.* = .*(\n)+)+"), 
-                 'session-profile-name': re.compile(r"session-profile-name = (.*)"),
+pats_charchar = {'session-profile-block': re.compile(r"show ng session-profile (.*)\n([\w\d-]+ = [\S]+[\s]+)+"), 
+                 'session-profile-name': re.compile(r"session-profile-name = ([\w\d-]+)"),
                  'charchar-index': re.compile(r"charchar-index = 0"),
 }
 #charchar_str = "charchar-index = 0:%(charchar0)s
@@ -124,6 +124,7 @@ def run(logfile):
                     else:
                         charging_index_status.append(u'Session Name: ' + sp_name + ' have Index=0 configuration.\n')
                 sp_name=curr_sp_name
+                sp_chargingindex = ''
                 line = line + 1
                 continue
             chargingindex = pats_charchar['charchar-index'].search(block_logs[line])
@@ -154,7 +155,7 @@ def run(logfile):
     #
     #if status == CheckStatus.UNCHECKED:
     #    status = CheckStatus.UNKNOWN
-    
+    print charging_index_status 
     result.update(status=status,info=charging_index_status,error=error)
     return result
     
