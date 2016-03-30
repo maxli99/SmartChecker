@@ -155,7 +155,7 @@ def run(logfile):
     #
     #if status == CheckStatus.UNCHECKED:
     #    status = CheckStatus.UNKNOWN
-    print charging_index_status 
+    #print charging_index_status 
     result.update(status=status,info=charging_index_status,error=error)
     return result
     
