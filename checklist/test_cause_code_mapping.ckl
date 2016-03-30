@@ -15,4 +15,4 @@ paths:
     reports: reports
     
 modules_name:
-    - TN-China-20151013-ns_mme_cause_code_mapping_v1.py
+    - TN_CN_20151013_ns_mme_cause_code_mapping.py

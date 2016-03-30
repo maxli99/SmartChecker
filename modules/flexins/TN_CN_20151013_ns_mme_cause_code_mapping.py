@@ -109,6 +109,7 @@ def run(logfile):
 	result = ResultInfo(name)
 	info   = []
 	errmsg = ''
+	errid = 1
 	Ns_version_Patt=r"\s*\S+\s+BU\s+\S+\s+(\w+\d+\s*\S+)\s+Y\s+Y\s*$"
 	try :
 		version = Find_NS_MME_Patt_Return_Info_List(logfile,'WQO:CR;',Ns_version_Patt,1)[0]
@@ -131,7 +132,7 @@ def run(logfile):
 		result.update(info=info,error=errmsg)
 		return result
 	
-	InfoPatt_mapping=r"\s*02244\s+MME_CC_MAPPING_ENABLED\s+(\S+)\s+YESs*$"
+	InfoPatt_mapping=r"\s*02244\s+MME_CC_MAPPING_ENABLED\s+(\S+)\s+YES\s*$"
 	try:
 		MME_CC_MAPPING_ENABLED_Value = int(Find_NS_MME_Patt_Return_Info_List(logfile,'WOI:;',InfoPatt_mapping,1)[0],16)
 	except IndexError:
@@ -167,14 +168,20 @@ def run(logfile):
 		EmmExternal142 = int(Find_NS_MME_Patt_Return_Info_List(logfile,EmmIntcause142_Command,EmmIntcause142_Patt,1)[0])
 	except IndexError:
 		EmmExternal142 = None
+		errmsg =errmsg + u"%s.未检测到命令\" %s \"的输出\n" % (errid,EmmIntcause142_Command)
+		errid+=1
 	try:
 		EmmExternal96= int(Find_NS_MME_Patt_Return_Info_List(logfile,EmmIntcause96_Command,EmmIntcause96_Patt,1)[0])
 	except IndexError:
 		EmmExternal96 = None
+		errmsg =errmsg + u"%s.未检测到命令\" %s \"的输出\n" % (errid,EmmIntcause96_Command)
+		errid+=1
 	try:
 		EsmExternal165 = int(Find_NS_MME_Patt_Return_Info_List(logfile,EsmIntcause165_Command,EsmIntcause165_Patt,1)[0])
 	except IndexError:
 		EsmExternal165 = None
+		errmsg =errmsg + u"%s.未检测到命令\" %s \"的输出\n" % (errid,EsmIntcause165_Command)
+		errid+=1
 
 ##	print "EmmExternal142 = ",EmmExternal142
 ##	print "EmmExternal96 = ",EmmExternal96
@@ -201,4 +208,4 @@ def run(logfile):
 
 
 
- 
+ 
