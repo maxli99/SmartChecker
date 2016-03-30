@@ -17,8 +17,7 @@ other cc=1,2,3,5,6,7,9 can use the same way.
 """
 import re
 from libs.checker import ResultInfo,CheckStatus
-from libs.flexing import get_ng_version
-from libs.infocache import InfoCache
+from libs.infocache import shareinfo
 from libs.flexing import FlexiNG
 
 __author__ = "richard.hu@nokia.com"
@@ -26,11 +25,11 @@ __author__ = "richard.hu@nokia.com"
 ## Mandatory variables 
 ##--------------------------------------------
 module_id = '20160304.01'
-tag  = ['flexing','china']
-priority = 'critical'
-name = u"校验Session Profile中的Charging character配置"
-desc = __doc__
-criteria = u"""发生问题的前提条件：
+tag       = ['flexing','china']
+priority  = 'critical'
+name      = u"校验Session Profile中的Charging character配置"
+desc      = __doc__
+criteria  = u"""发生问题的前提条件：
 1. 用户在 HLR/HSS 的 CC（ChargingCharacteristics）字段被设置为 0。不符合集团规范
 《中国移动分组域实时计费接口规范 V1.1.0》要求，集团规范设置为 0X0400（4） 表示
 在线计费，设置为 0X0800（8）表示离线计费。
@@ -87,7 +86,6 @@ def run(logfile):
 	#else:
 	#	charging_index_status.append(u"- NG version: " +ngversion[0]+" (in target_version list). \n")
 	
-	shareinfo = InfoCache()
 	ng = shareinfo.get('ELEMENT')
 	ngversion = ng.version
 	

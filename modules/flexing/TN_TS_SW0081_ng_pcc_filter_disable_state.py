@@ -9,9 +9,8 @@ SOLUTION:
  - 使用fsclish删除不需要的filter,并且不要用disabled状态的pcc filter.
 """
 import re
-from libs.flexing import get_ng_version
 from libs.checker import ResultInfo,CheckStatus
-from libs.infocache import InfoCache
+from libs.infocache import shareinfo
 from libs.flexing import FlexiNG
 
 __author__ = 'wei.yao@huanuo-nokia.com'
@@ -55,11 +54,10 @@ def read_block(logfile,blkname):
 def run(logfile):
 
     check_info = []
-	
-    shareinfo = InfoCache()
+    
     ng = shareinfo.get('ELEMENT')
     ngversion = ng.version
-	
+
     if ng.match_version(target_version): 
         check_info.append(u"- NG version: " + ngversion['major'] + u" 在支持版本列表中. \n")
     else:
@@ -67,9 +65,9 @@ def run(logfile):
 
     loglines = file(logfile).readlines()
     logtxt = read_block(logfile,'pcc_rule')
-	
+    
     status = CheckStatus.UNCHECKED
-	
+    
     pat=pats_stat['pcc-rule-cmd']
     r=pat.search(logtxt)
     if r:
@@ -81,11 +79,11 @@ def run(logfile):
             check_info.append(u'请检查PCC RULE的log是否已收集.')
             result.load(status=status,info=check_info,error=error)
         return result  
-		
+        
     pat_rulename = pats_stat['pcc-rule-name']
     pat_disable = pats_stat['filter-state-disable']
     pat_enable = pats_stat['filter-state-enable']
-	
+    
     line_count = len(loglines)
     line = 0
     while (line < line_count):
@@ -104,7 +102,7 @@ def run(logfile):
                 status = CheckStatus.FAILED
                 line = line + 1
         line = line + 1
-		
-		
+        
+        
     result.load(status=status,info=check_info,error=error)
     return result

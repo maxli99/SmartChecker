@@ -138,6 +138,7 @@ def run_modules(checklist,logfile):
     report.template_path = CONFIG.template_path
     report.template_name = checklist.templates['report']
 
+    
     #print("Running check modules...")
     for idx,m in enumerate(checklist.modules):
         _result = m.run(logfile)
@@ -145,7 +146,7 @@ def run_modules(checklist,logfile):
         results.append(_result)
 
     timestamp=time.strftime("%Y-%m-%d %H:%M")
-    hostname = shareinfo['ELEMENT'].hostname
+    hostname = shareinfo['ELEMENT'].hostname    
     _report = template.render(locals())
     msgbuf.append(_report)
 

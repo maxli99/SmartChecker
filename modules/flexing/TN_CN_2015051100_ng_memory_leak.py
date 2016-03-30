@@ -119,7 +119,7 @@ def run(logfile, *args,**kwargs):
     error = ''
     
     ng = shareinfo['ELEMENT']
-    debugmsg(ng)
+    debugmsg("NG info:%s" % ng)
     # check the NG version first.
     if not ng.version:  # not version info found.
         #status = CheckStatus.UNKNOWN

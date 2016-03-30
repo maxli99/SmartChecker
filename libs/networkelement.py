@@ -3,13 +3,19 @@
 __version__ = '0.6'
 __author__  = 'jun1.liu@nokia.com'
 
+from collections import defaultdict
+
 class NetworkElement(object):
     """Abstract Class parse and stroe basic infomation of network Element   
     """
     def __init__(self,hostname='',logfile=None):
         self.logfile = logfile
         self._data = {}
-        self._data['hostname'] = hostname
+        if hostname:
+            self._data['hostname'] = hostname
+        else:
+            self._data['hostname'] = 'UNKOWN'
+
         if logfile:
             self.parse_log(logfile)
 
@@ -21,7 +27,7 @@ class NetworkElement(object):
     def _load_data(self, data,namelist=None):
         """load the needed data from the data dict
         """
-        if not data:
+        if data is None:
             data = {k:'' for k in namelist}
         if namelist:
             for name in namelist:
@@ -29,7 +35,7 @@ class NetworkElement(object):
                     self._data[name] = data[name]
         else:
             self._data.update(data)
-            
+
         return self._data
 
     def get(self,key):

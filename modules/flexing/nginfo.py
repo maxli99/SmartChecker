@@ -28,7 +28,7 @@ DEBUG = shareinfo.get('DEBUG')
 info_template="""FlexiNG Info:
  - hostname: %(hostname)s
  -  version: %(version)s
- - hardware: 
+ - hardware: AB%(hardware)s
 """
 ##
 
@@ -39,12 +39,14 @@ def run(logfile):
     """The 'run' function is a mandatory fucntion. and it must return a ResultInfo.
     """
     info = []
-    ng = FlexiNG()  
-    ng.parse_log(logfile)
-       
+    ng = FlexiNG(logfile=logfile)  
+    #ng.parse_log(logfile)
+
     shareinfo.set('ELEMENT',ng)
     
-    info.append(info_template % ng._data)
+    _data = ng._data.copy()
+    _data['hardware'] = ng.version.get('hardware','?')
+    info.append(info_template % _data)
     result.update(status=CheckStatus.PASSED,info=info,errmsg="")
    
     return result

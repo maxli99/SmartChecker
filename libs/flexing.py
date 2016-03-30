@@ -50,10 +50,13 @@ class FlexiNG(NetworkElement):
         return match_flag
 
     def __repr__(self):
-        hardware = "AB%s" % self._data['version']['hardware']
+        try:
+            _hwver = self._data['version'].get('hardware','?')
+        except Exception as e:
+            _hwver = '?'
         _data = self._data.copy()
-        _data['hardware'] = hardware
-        return "FlexiNG(hostname:%(hostname)s, hardware:%(hardware)s)" % _data
+        _data['hardware'] = "AB%s" % _hwver
+        return "FlexiNG(%(hostname)s, HW=%(hardware)s)" % _data
 
 def _get_ng_version(loglines):
     """This function will parse the NG version info from logfile.
@@ -66,7 +69,7 @@ def _get_ng_version(loglines):
     
     """
     version = None
-    version_pat = re.compile("_NG([\d\._]+)_r(\d+)_AB(\d+)")
+    version_pat = re.compile("_NG([\w\d\._]+)_r(\d+)_AB(\d+)")
     
     if not loglines:
         return None
@@ -82,7 +85,7 @@ def _get_ng_version(loglines):
 def _get_ng_hostname_version(loglines):
     names = ['hostname','version']
     pat_host = re.compile("fsLogicalNetworkElemId: (\w+)")
-    pat_version = re.compile("fsStaticDataDelivery: R_NG([\d\._]+)_r(\d+)_AB(\d+)")
+    pat_version = re.compile("fsStaticDataDelivery: R_NG([\w\d\._]+)_r(\d+)_AB(\d+)")
 
     h_flag=v_flag=False
     hostname = ''
@@ -98,30 +101,30 @@ def _get_ng_hostname_version(loglines):
             v_flag = True
 
         if h_flag and v_flag:
-            break
+            break      
     return dict(zip(names,(hostname,version)))
 
 
+## phaseout this function at 3/28
+# def get_ng_version(configlog):
+#     """This function will parse the NG version info from logfile.
+#     Input    config logfile
+#     return  a tuple include (major_version, release_version, hardware_version)
+#     example: ('3.2', '123445', '2')
+#     """
+#     version = None
+#     version_pat = re.compile("_NG([\d\._]+)_r(\d+)_AB(\d+)")
 
-def get_ng_version(configlog):
-    """This function will parse the NG version info from logfile.
-    Input    config logfile
-    return  a tuple include (major_version, release_version, hardware_version)
-    example: ('3.2', '123445', '2')
-    """
-    version = None
-    version_pat = re.compile("_NG([\d\._]+)_r(\d+)_AB(\d+)")
+#     try:
+#         log = ''.join(file(configlog).readlines())
+#     except IOError,e:
+#         print("IOError: %s" % e)
+#         exit(1)
+#     check = version_pat.search(log)
 
-    try:
-        log = ''.join(file(configlog).readlines())
-    except IOError,e:
-        print("IOError: %s" % e)
-        exit(1)
-    check = version_pat.search(log)
-
-    if check:
-        version = check.groups()
-    return version
+#     if check:
+#         version = check.groups()
+#     return version
 
 def get_hw_info(configlog):
     hwinfo = HardwareInfo()
