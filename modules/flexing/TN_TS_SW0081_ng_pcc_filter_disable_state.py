@@ -57,8 +57,7 @@ def run(logfile):
     check_info = []
 	
     shareinfo = InfoCache()
-    ng = FlexiNG()
-    ng = shareinfo.get('FlexiNG')
+    ng = shareinfo.get('ELEMENT')
     ngversion = ng.version
 	
     if ng.match_version(target_version): 

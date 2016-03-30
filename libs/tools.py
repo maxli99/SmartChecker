@@ -30,7 +30,6 @@ class MessageBuffer(object):
         _lines = map(to_unicode,self.buffer)
         utextblock = concatenation.join(_lines)
 
-
         if self.template:
             print(template % utextblock)
         else:
@@ -46,15 +45,16 @@ class MessageBuffer(object):
     def to_socket(self):
         pass
 
-    def output(self,mode='console',filename=None):
-        if mode == "console":
+    def output(self,mode=None,filename=None):
+        if not mode or mode == 'console':
             self.to_console()
+
         elif mode in ["server",'gui']:
             self.to_socket()
         elif mode == "file":
             self.to_file(filename)
 
-def read_cmdblock_from_log(loglines,startline=None,endline=None):
+def read_cmdblock_from_log(loglines,startline,endline):
     """read the command block from logfile.
 
     parameters:

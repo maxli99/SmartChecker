@@ -41,7 +41,7 @@ def run(logfile):
 
     ns = FlexiNS()  
     ns.parse_log(logfile) 
-    shareinfo.set('FlexiNS',ns)
+    shareinfo.set('ELEMENT',ns)
     
     result.status = CheckStatus.PASSED
     result.info = info_template % ns._data

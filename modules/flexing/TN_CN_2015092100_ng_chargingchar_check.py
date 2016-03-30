@@ -88,8 +88,7 @@ def run(logfile):
 	#	charging_index_status.append(u"- NG version: " +ngversion[0]+" (in target_version list). \n")
 	
 	shareinfo = InfoCache()
-	ng = FlexiNG()
-	ng = shareinfo.get('FlexiNG')
+	ng = shareinfo.get('ELEMENT')
 	ngversion = ng.version
 	
 	if ng.match_version(target_version): 

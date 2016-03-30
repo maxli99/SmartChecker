@@ -42,7 +42,7 @@ def run(logfile):
     ng = FlexiNG()  
     ng.parse_log(logfile)
        
-    shareinfo.set('FlexiNG',ng)
+    shareinfo.set('ELEMENT',ng)
     
     info.append(info_template % ng._data)
     result.update(status=CheckStatus.PASSED,info=info,errmsg="")

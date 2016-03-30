@@ -145,10 +145,11 @@ def run_modules(checklist,logfile):
         results.append(_result)
 
     timestamp=time.strftime("%Y-%m-%d %H:%M")
-    report = template.render(locals())
-    msgbuf.append(report)
+    hostname = shareinfo['ELEMENT'].hostname
+    _report = template.render(locals())
+    msgbuf.append(_report)
 
-    if not SILENT:
+    if not SILENT and template_file[-2:] =='md':
         msgbuf.output(CONFIG.runmode)
     
     if SAVE_OUTPUT:

@@ -17,6 +17,9 @@ class InfoCache(object):
     def get(self,key):
         return self._cache.get(key,None)
  
+    def clear(self):
+        InfoCache._cache = {}
+
     def __getitem__(self,key):
         return self.get(key)
     

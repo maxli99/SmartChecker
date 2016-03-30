@@ -22,8 +22,8 @@ example:
         ##
         om_names = ['hostname','c_num','location']
         pat = re.compile("(\d+)\s+(\w+)\s+(\d+)\s+(\d+)\s+(\w+)\s+(\w+)")
-        
-        self._load_data(om_names,_get_om_config(loglines))
+   
+        self._load_data(_get_om_config(loglines),om_names)
 
     def match_version(self,versions):
         nsversion = self.version.get('BU','')
@@ -37,15 +37,15 @@ example:
         return False
 
     def __repr__(self):
-        return "FlexiNSObj:<%(hostname)s,%(c_num)s>" % self._data
+        return "FlexiNS(hostname:%(hostname)s,C_NUM:%(c_num)s)" % self._data
  
 
 def _get_ns_version(loglines):
     """This function will parse the FlexiNS version info from log lines.
-Arguments:
-    loglines   log lines
-Return:
-    return  a dict include package's status and id info or an empty dict.
+    Arguments:
+        loglines   log lines
+    Return:
+        return  a dict include package's status and id info or an empty dict.
     
     example: {'BU': 'N5 1.17-5', 'FB': 'N5 1.17-5', 'NW': 'N4 1.19-2', 'UT': 'N4 1.19-2'}
     
@@ -59,12 +59,12 @@ Return:
 
 def _get_om_config(loglines):
     """extract the om config from the loglines 
-Arguments:
-    loglines  log lines for analysis.
-Return:
-    a dict include the config_names: ['conn','type','sw_level','cnum','hostname','location']
+    Arguments:
+        loglines  log lines for analysis.
+    Return:
+        a dict include the config_names: ['conn','type','sw_level','cnum','hostname','location']
     example: 
-    {'cnum': '400248', 'hostname': 'NCMME30BNK', 'sw_level': '5', 'location': 'NC_HGT3F_M03', 'type': 'DX220', 'conn': '000'}
+        {'cnum': '400248', 'hostname': 'NCMME30BNK', 'sw_level': '5', 'location': 'NC_HGT3F_M03', 'type': 'DX220', 'conn': '000'}
     """
     config_names = ['conn','type','sw_level','c_num','hostname','location']
     pat = re.compile("(\d+)\s+(\w+)\s+(\d+)\s+(\d+)\s+(\w+)\s+(\w+)")
@@ -102,6 +102,3 @@ def get_ns_version(configlog):
 		print("IOError: %s" % e)
 		return 'UNKNOWN'
 		
-if __name__ == "__main__":
-	nsversion = get_ns_version('..\\log\\test_ALL_NS_TN_check.log')
-	print nsversion

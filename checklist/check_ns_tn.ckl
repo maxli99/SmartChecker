@@ -20,7 +20,7 @@ paths:
 ## 指定需要运行的检查模块名 
 modules_name:
     - nsinfo.py
-    - nsversion.py
+    #- nsversion.py
     - TN_CN_20150728_smmu_hand_check.py
     - TN_CN_20151013_ns_mme_cause_code_mapping.py
     - TN_CN_20151124_IPDU_FreeMem.py

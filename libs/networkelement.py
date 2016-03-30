@@ -18,13 +18,19 @@ class NetworkElement(object):
         """
         pass
 
-    def _load_data(self, namelist, data):
+    def _load_data(self, data,namelist=None):
         """load the needed data from the data dict
         """
-        for name in namelist:
-            if name in data:
-                self._data[name] = data[name]
-
+        if not data:
+            data = {k:'' for k in namelist}
+        if namelist:
+            for name in namelist:
+                if name in data:
+                    self._data[name] = data[name]
+        else:
+            self._data.update(data)
+            
+        return self._data
 
     def get(self,key):
         return self._data.get(key,None)

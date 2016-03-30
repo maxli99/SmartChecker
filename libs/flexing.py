@@ -6,20 +6,22 @@ version_names = ('major','release','hardware')
 
 class FlexiNG(NetworkElement):
     """Class parse and stroe basic infomation of FlexiNG
-example:
-    ns = FlexiNG()
-    ns.parse_log("log/nginfo.log")
+    example:
+        ns = FlexiNG()
+        ns.parse_log("log/nginfo.log")
 
-    print ng.version    
+        print ng.version    
     """
 
     def parse_log(self,logfile):
         loglines = file(logfile).readlines()
-        self._data['version'] = _get_ng_version(loglines)
+        #self._data['version'] = _get_ng_version(loglines)
 
-        hostname,version = _get_ng_hostname_version(loglines)
-        self._data['hostname'] = hostname
-        self._data['version'] = version
+        # hostname,version = _get_ng_hostname_version(loglines)
+        # self._data['hostname'] = hostname
+        # self._data['version'] = version
+        _hostver = _get_ng_hostname_version(loglines)
+        self._load_data(_hostver)
         ##extract the hostnme
 
 
@@ -48,16 +50,19 @@ example:
         return match_flag
 
     def __repr__(self):
-        return "FlexiNSObj:<%(hostname)s, %(version)s>" % self._data
+        hardware = "AB%s" % self._data['version']['hardware']
+        _data = self._data.copy()
+        _data['hardware'] = hardware
+        return "FlexiNG(hostname:%(hostname)s, hardware:%(hardware)s)" % _data
 
 def _get_ng_version(loglines):
     """This function will parse the NG version info from logfile.
-parameters:
-    loglines    config log lines
-return:
-    return  a tuple include (major_version, release_version, hardware_version)
-    
-    example: {'major': 3.2', 'release': '123445', 'hardware':'2'}
+    parameters:
+        loglines    config log lines
+    return:
+        return  a tuple include (major_version, release_version, hardware_version)
+        
+        example: {'major': 3.2', 'release': '123445', 'hardware':'2'}
     
     """
     version = None
@@ -94,7 +99,7 @@ def _get_ng_hostname_version(loglines):
 
         if h_flag and v_flag:
             break
-    return hostname,version
+    return dict(zip(names,(hostname,version)))
 
 
 
@@ -122,6 +127,3 @@ def get_hw_info(configlog):
     hwinfo = HardwareInfo()
     return hwinfo
 
-if __name__ == "__main__":
-    hw = get_hw_info('fake')
-    print hw

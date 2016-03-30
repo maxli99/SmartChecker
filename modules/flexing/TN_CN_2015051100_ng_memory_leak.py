@@ -2,12 +2,12 @@
 u"""由于有NG3.x 版本SAEGW的AS/SAB存在内存泄露的问题，导致发生终端用户上网困难等多种症状非常多样，
 需要对SAE经常检查内存是否泄露。
 
-适用版本：NG3.1, NG3.2
+适用版本：NG3.1, NG3.2, NG15（未明确）
 """
 import re
 from libs.checker import CheckStatus,ResultInfo
 from libs.infocache import shareinfo
-from libs.tools import MessageBuffer
+from libs.tools import MessageBuffer,debugmsg
 
 __author__ = 'jun1.liu@nokia.com'
 __date__   = '20160315'
@@ -34,6 +34,8 @@ criteria      = u"""
 ## Optional variables 
 pat_memfail = re.compile("ssh ([\w\d-]+) showstat\|.*?mem_alloc_failed_for_linear_filters = (\d+)",re.DOTALL)
 pat_memallo = re.compile("info ([\w\d-]+) featuremem.*FASTPATH_MALLOC dynamic allocated bytes \[chunks\]: (\d+)/(\d+)")
+pat_hicut   = re.compile("aa")
+
 target_version = ['3.1','3.2','15']
 logline_format = "    - %s\n"
 
@@ -45,6 +47,7 @@ check_commands = [
     ('ssh {{node}} showstat|grep shm_gwup_proxy.gwup.sa.sa_rule.filter.interr.mem_alloc_failed_for_linear_filters',
      '#show the memory alloc failed counter of {{node}}'),
     ('#@jinja {% endfor %}',"#jinja template statement"),
+    ('show config fsClusterId=ClusterRoot fsFragmentId=FlexiNG fsFragmentId=Internal',"#check the hitcut setting")
     
 ]
 
@@ -64,6 +67,14 @@ def check_memory_fail_counter(loglines):
     
     return status,info.buffer,error
 
+def hicut_setting(loglines):
+    """return the hicut setting.
+    """
+    for line in loglines:
+        r = pat_hicut.search(line)
+        if r:
+            return r.groups()[0]
+            
 def check_memory_allocation(loglines):
     status = CheckStatus.UNKNOWN
     flag_fail = False
@@ -107,8 +118,8 @@ def run(logfile, *args,**kwargs):
     info = []
     error = ''
     
-    ng = shareinfo['FlexiNG']
-
+    ng = shareinfo['ELEMENT']
+    debugmsg(ng)
     # check the NG version first.
     if not ng.version:  # not version info found.
         #status = CheckStatus.UNKNOWN
