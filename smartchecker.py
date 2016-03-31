@@ -14,7 +14,7 @@ examples:
    smartchecker -r checklist.ckl logfile  --saveto report_sae01.html --silent
 """
 __programname__ = 'Smartchecker'
-__version__     = '0.82'
+__version__     = '0.9'
 
 import sys,os, argparse,time
 from libs.configobject import ConfigObject
