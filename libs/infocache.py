@@ -2,6 +2,15 @@
 
 class InfoCache(object):
     """A singleton Class can store the information shared in global/modules.
+    Usage:
+    from infocache import shareinfo
+
+    shareinfo.set('version','NG15')
+    shareinfo.get('version')    
+    shareinfo['version'] = 'new value'
+    version in shareinfo   #True
+    print shareinfo
+
     """
     _cache = {}
 

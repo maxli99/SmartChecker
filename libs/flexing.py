@@ -28,11 +28,13 @@ class FlexiNG(NetworkElement):
         self._load_data(_hostver)
         ##extract the hostnme
 
-
     def match_version(self,major=None,release=None,hardware=None):
-        """match_version(major=['3.2'], release=['r23456'])
+        """ Check if the element's versio match the specified version number.
 
-        return (marjor_flag,release_flag,hardware_flag)
+        >>> match_version(major=['3.2'], release=['r23456'])  #match major and release
+        >>> ng.match_version(major=['3.2'])     #only match the major.
+
+        return {'major':True, 'release':False, 'hardware':False}
         """
         match_flag  = {'major':False, 'release':False, 'hardware':False}
         major = major or []

@@ -10,11 +10,11 @@ from libs.flexing import FlexiNG
 ##--------------------------------------------
 module_id = 'fngbase.2016030500'
 tag       = ['flexins','base']
-priority  = 'normal'
-name      = "FlexiNG basic info collecting"
+priority  = 'default'   # default,normal,major,critical
+name      = "FlexiNG basic configuration and info collecting"
 desc      = __doc__
-criteria  = "FNG basic info collecting."
-result    = ResultInfo(name)
+criteria  = "Configurations were recognized successfully."
+result    = ResultInfo(name,priority=priority)
 
 
 ## Optional variables
@@ -40,7 +40,9 @@ def run(logfile):
     """
     info = []
     ng = FlexiNG(logfile=logfile)  
-    #ng.parse_log(logfile)
+    if ng.hostname == "UNKNOWN" and not hasattr(ng,'version'):
+        print "Can't find the host info in log"
+        exit(1)
 
     shareinfo.set('ELEMENT',ng)
     

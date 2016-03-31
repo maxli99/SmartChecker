@@ -38,7 +38,7 @@ criteria  = u"""发生问题的前提条件：
 
 注意：本报告仅显示第三项内容的检查结果。
 """
-result = ResultInfo(name)
+result = ResultInfo(name,priority=priority)
 error = ''
 ##--------------------------------------------
 

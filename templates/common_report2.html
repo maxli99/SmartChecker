@@ -133,7 +133,7 @@
             {% set JINJA_HTML_STATUS = "检测异常" %}
             {% endif %}
               <td>{{ loop.index }}</td>
-              <td>{{ result.name }}</td>
+              <td align="left"><span class="label label-{{label_state[result.priority]}}">{{result.priority}}</span> {{ result.name }}</td>
               <td>{{ JINJA_HTML_STATUS }}</td>
             </tr>
             <tr>

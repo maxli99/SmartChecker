@@ -146,7 +146,8 @@ def run_modules(checklist,logfile):
         results.append(_result)
 
     timestamp=time.strftime("%Y-%m-%d %H:%M")
-    hostname = shareinfo['ELEMENT'].hostname    
+    hostname = shareinfo['ELEMENT'].hostname 
+    label_state = {'critical':'danger','major':'warning','normal':'info','default':'default'}  
     _report = template.render(locals())
     msgbuf.append(_report)
 

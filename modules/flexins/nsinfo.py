@@ -9,11 +9,11 @@ from libs.flexins import FlexiNS
 ##--------------------------------------------
 module_id = 'fnsbase.2016030500'
 tag       = ['flexins','base']
-priority  = 'normal'
+priority  = 'default'
 name      = "FlexiNS basic info collecting"
 desc      = __doc__
 criteria  = "FNS basic info collecting."
-result    = ResultInfo(name)
+result    = ResultInfo(name,priority=priority)
 
 
 ## Optional variables
@@ -38,14 +38,17 @@ info_template="""FlexiNS Info:
 def run(logfile):
     """The 'run' function is a mandatory fucntion. and it must return a ResultInfo.
     """
+    errmsg = ""
 
-    ns = FlexiNS()  
-    ns.parse_log(logfile) 
+    ns = FlexiNS(logfile=logfile)
+    if ns.hostname == "UNKNOWN" and not hasattr(ns,'version'):
+        print "Can't find the host info in log"
+        exit(1)
+
     shareinfo.set('ELEMENT',ns)
-    
-    result.status = CheckStatus.PASSED
-    result.info = info_template % ns._data
-    result.errmsg = ""
-    
+    status = CheckStatus.PASSED
+    info = info_template % ns._data
+
+    result.update(status=status,info=[info],errmsg=errmsg)
     return result
     

@@ -14,7 +14,6 @@ example:
 
     print ns.version    
     """
-
     def parse_log(self,logfile):
         loglines = file(logfile).readlines()
         self._data['version'] = _get_ns_version(loglines)
@@ -37,7 +36,12 @@ example:
         return False
 
     def __repr__(self):
-        return "FlexiNS(hostname:%(hostname)s,C_NUM:%(c_num)s)" % self._data
+        if 'c_num' in self._data:
+            _reprtxt = "FlexiNS(hostname:%(hostname)s,C_NUM:%(c_num)s)"
+        else:
+            _reprtxt = "FlexiNS(hostname:%(hostname)s)"
+
+        return _reprtxt % self._data
  
 
 def _get_ns_version(loglines):

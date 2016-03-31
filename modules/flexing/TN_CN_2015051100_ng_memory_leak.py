@@ -114,7 +114,7 @@ def check_memory_allocation(loglines):
 def run(logfile, *args,**kwargs):
     "this function execute the check steps and return "
     loglines = file(logfile).readlines()
-    result = ResultInfo(name)
+    result = ResultInfo(name,priority=priority)
     info = []
     error = ''
     

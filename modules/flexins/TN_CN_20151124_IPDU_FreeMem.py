@@ -13,11 +13,11 @@ from libs.checker import ResultInfo,CheckStatus
 ##-----------------------------------------------------
 #check_id = '20160308.TN20151013'
 module_id = 'TN-China-20151124'
-tag = ['flexins','china']
-priority = 'critical'
-name = "TN_CN_20151124_IPDU_FreeMem"
-desc = __doc__
-criteria = u"""\
+tag       = ['flexins','china']
+priority  = 'critical'
+name      = "TN_CN_20151124_IPDU_FreeMem"
+desc      = __doc__
+criteria  = u"""\
 (1)检查NS/MME软件版本为 ['N5 1.19-3','N5 1.17-5'] 或者更高版本.
 (2) IPDU FREE MEMORY < 20%. 或者 
     IPDU 单元1143 告警 或者 
@@ -171,7 +171,7 @@ def returnNotMatchItemInList(List_two,ItemName):
 
 ## Mandatory function: run
 def run(logfile):
-	result = ResultInfo(name)
+	result = ResultInfo(name,priority=priority)
 	info   = []
 	errmsg = ''
 	Ns_version_Patt=r"\s*\S+\s+BU\s+\S+\s+(\w+\d+\s*\S+)\s+Y\s+Y\s*$"

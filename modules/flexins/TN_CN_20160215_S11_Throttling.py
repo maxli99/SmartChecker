@@ -34,17 +34,17 @@ from libs.infocache import shareinfo
 from libs.tools import debugmsg as simple_debug
 
 __author__ = 'maxli'
-__email__ = 'max.1.li@nokia.com'
-__date__ = '20160315'
+__email__  = 'max.1.li@nokia.com'
+__date__   = '20160315'
 
 # Mandatory variables
 # -----------------------------------------------------
 module_id = 'fnsbase.201603281030'
-tag = ['flexins', 'china', 'S11', 'Throttling']
-priority = 'Normal'
-name = "TN_CN_20160212_S11_Throttling"
-desc = __doc__
-criteria = u'''
+tag       = ['flexins', 'china', 'S11', 'Throttling']
+priority  = 'normal'
+name      = "TN_CN_20160212_S11_Throttling"
+desc      = __doc__
+criteria  = u'''
 （1）MME软件版本为“N5 1.19-3”或高于该版本
 （2）在“-ASWDIR/FNSINI/LNX968NX.INI”文件中，将参数“S11_THROTTLING_ENABLED”设置为0
 '''
@@ -123,7 +123,7 @@ def run(logfile):
     Returns:
         { libs.checker.ResultInfo }
     """
-    result = ResultInfo(name)
+    result = ResultInfo(name,priority=priority)
     info = []
     errmsg = ''
 

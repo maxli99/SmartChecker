@@ -23,7 +23,7 @@ priority  = 'critical'
 name      = "Check PCC rule filter in disabled state"
 desc      = __doc__
 criteria  = u"There is PCC rule filter in DISABLE status"
-result    = ResultInfo(name)
+result    = ResultInfo(name,priority=priority)
 error     = ''
 ##--------------------------------------------
 

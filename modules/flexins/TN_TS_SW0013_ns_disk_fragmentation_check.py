@@ -23,16 +23,16 @@ from libs.flexins import get_ns_version
 ## Mandatory variables 
 ##--------------------------------------------
 module_id = '20160228.01'
-tag  = ['flexins','china']
-priority = 'critical'
-name = u"TN_TS_SW0013_CI2 FNS MME/SGSN 磁盘碎片率检查"
-desc = __doc__
-criteria = u"""
+tag       = ['flexins','china']
+priority  = 'major'
+name      = u"TN_TS_SW0013_CI2 FNS MME/SGSN 磁盘碎片率检查"
+desc      = __doc__
+criteria  = u"""
 （1）检查MME/SGSN版本为 ['N5 1.19-3','N5 1.17-5'] 或者更高版本。
 （2）检查OMU，MCHU的硬盘碎片率是否大于60%。大于为FAILED，小于则为PASSED。
 （3）如果log中没有相应的指令log，结果为UNKNOWN。
 """
-result = ResultInfo(name)
+result = ResultInfo(name,priority=priority)
 error = ''
 shareinfo = InfoCache() 
 ##--------------------------------------------

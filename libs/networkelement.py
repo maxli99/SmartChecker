@@ -8,19 +8,16 @@ from collections import defaultdict
 class NetworkElement(object):
     """Abstract Class parse and stroe basic infomation of network Element   
     """
-    def __init__(self,hostname='',logfile=None):
+    def __init__(self,hostname='UNKNOWN',logfile=None):
         self.logfile = logfile
         self._data = {}
-        if hostname:
-            self._data['hostname'] = hostname
-        else:
-            self._data['hostname'] = 'UNKOWN'
+        self._data['hostname'] = hostname
 
         if logfile:
             self.parse_log(logfile)
 
     def parse_log(self,logfile):
-        """parse the log and extract the info save to self._data.
+        """Extract the data from log and store it to self._data.
         """
         pass
 

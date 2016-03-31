@@ -1,5 +1,19 @@
 Release Note
 ====================
+* v0.820, 2016/3/31
+
+  + 当输出模板为html格式时，--silent缺省是打开的
+  + shareinfo 使用方法更新
+
+        from InfoCache import shareinfo
+  
+        ng=shareinfo.get('ELEMENT')
+    
+  + 报告增加重要程度的显示。需要在每个模块的修改：
+
+        result = ResultInfo(name,priority=priority) 
+    
+    
 * v0.800, 2016/3/13
   
   + 模块支持中文字符。

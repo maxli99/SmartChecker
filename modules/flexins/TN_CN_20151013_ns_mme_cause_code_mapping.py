@@ -15,11 +15,11 @@ from libs.checker import ResultInfo,CheckStatus
 ##-----------------------------------------------------
 #check_id = '20160308.TN20151013'
 module_id = 'TN-China-20151013'
-tag = ['flexins','china']
-priority = 'intermediate'
-name = "TN-China-20151013-ns_mme_cause_code_mapping"
-desc = __doc__
-criteria = u"""(1)检查NS/MME软件版本为 ['N5 1.19-3','N5 1.17-5'] 或者更高版本
+tag       = ['flexins','china']
+priority  = 'normal'
+name      = "TN-China-20151013-ns_mme_cause_code_mapping"
+desc      = __doc__
+criteria  = u"""(1)检查NS/MME软件版本为 ['N5 1.19-3','N5 1.17-5'] 或者更高版本
 (2)开启功能开关PRFILE002:2244-MME_CC_MAPPING_ENABLED.
 (3)新建CAUSE CODE SETS 满足下面条件,如:EPCEMM和EPCESM：
     - EPCEMM,TYPE=EMM,PROC=ATTREJ,INTCAUSE=142 To EXTERNAL CAUSE=15
@@ -106,7 +106,7 @@ def returnNotMatchItemInList(List_two,ItemName):
 
 ## Mandatory function: run
 def run(logfile):
-	result = ResultInfo(name)
+	result = ResultInfo(name,priority=priority)
 	info   = []
 	errmsg = ''
 	errid = 1

@@ -162,9 +162,10 @@ class ResultInfo(object):
     """
     strformat = " Status: %(status)s\n   Info:\n%(info)s\n  error:%(error)s"
     keys = ['status','info','error']
-    def __init__(self,name):
+    def __init__(self,name,priority=''):
         self.name = name
         self.criteria = ''
+        self.priority = priority
         self.data = {'status' : CheckStatus.UNKNOWN,
                       'info'   : '',
                       'error'  : '',

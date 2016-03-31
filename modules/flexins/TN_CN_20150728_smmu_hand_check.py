@@ -20,7 +20,7 @@ name = "SMMU GRNPRB hand checking"
 desc = __doc__
 criteria = u''' 检查SMMU GRNPRB hand group 2 的hand数，50为通过
 '''
-result = ResultInfo(name)
+result = ResultInfo(name,priority=priority)
 #error = ''
 ##--------------------------------------------
 
