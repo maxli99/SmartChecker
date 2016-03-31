@@ -3,7 +3,7 @@
 # @Author: maxli
 # @Date:   2016-03-10 14:10:40
 # @Last Modified by:   Max Li
-# @Last Modified time: 2016-03-30 17:53:46
+# @Last Modified time: 2016-03-31 12:58:06
 
 u'''
 FlexiNS/MME S11 Throttling 检查
@@ -92,7 +92,7 @@ def is_throttling_on(logs):
     pattern = re.compile("\s*S11_THROTTLING_ENABLED\s*=\s*(\d){1}")
     if len(logs) == 0:
         debugmsg("can not get the s11 throttling related command in the log file")
-        raise Exception(u"日志文件中无法找到需要检测的信息，请确所认收集日志是是否执行“ZIBT:,,LNX968NX,INI,,,,A,;”。")
+        raise Exception(u'日志文件中无法找到需要检测的信息，请确所认收集日志是是否执行“ZDDE:IPDU,:"cat /opt/mme/conf/mmeGTPLBS-0x0968.ini",:;”。')
     for cmd_result in logs[0].result:
         matched = pattern.match(cmd_result)
         if matched:
@@ -157,6 +157,7 @@ def run(logfile):
         logs = logspt.get_log(
             "DDE:IPDUcat /opt/mme/conf/mmeGTPLBS-0x0968.ini", fuzzy=True)
     except Exception as e:
+        info.append(u"日志文件无法加载，请检查命令参数是否正确！\n")
         errmsg = u"日志文件无法加载，请检查命令参数是否正确！"
         result.status = CheckStatus.UNKNOWN
     else:
@@ -164,6 +165,7 @@ def run(logfile):
             result.status, extra_info = is_throttling_on(logs)
             info.extend(extra_info)
         except Exception as e:
+            info.append("%s\n" % e.args[0])
             errmsg = e.args[0]
             result.status = CheckStatus.UNKNOWN
     result.update(info=info, error=errmsg)

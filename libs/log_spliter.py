@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Author: maxli
 # @Date:   2015-08-20 12:37:09
-# @Last Modified by:   maxli
-# @Last Modified time: 2016-03-01 17:13:03
+# @Last Modified by:   Max Li
+# @Last Modified time: 2016-03-31 12:53:17
 
 import os
 import sys
@@ -169,7 +169,7 @@ class FlexiNSSpliter(SpliterBase):
         current_result = []
         start_flag = False
         for log_line in log_lines:
-            log_line = log_line.replace("\r", "")
+            log_line = log_line.rstrip("\r\n\t ")
             # command stop
             if re.match(self.__command_stop_patten, log_line):
                 current_command_set = self.__get_current_command_set(log_line)
