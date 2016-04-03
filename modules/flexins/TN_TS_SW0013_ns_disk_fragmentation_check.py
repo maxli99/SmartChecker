@@ -14,10 +14,9 @@ u"""
 
 import re
 from libs.checker import ResultInfo,CheckStatus
-from libs.infocache import InfoCache
 from libs.flexins import FlexiNS
 from libs.flexins import get_ns_version
-#from libs.flexins import get_ns_version
+from libs.infocache import shareinfo
 
 
 ## Mandatory variables 
@@ -34,8 +33,6 @@ criteria  = u"""
 """
 result = ResultInfo(name,priority=priority)
 error = ''
-shareinfo = InfoCache() 
-##--------------------------------------------
 
 
 ##--------------------------------------------
@@ -61,17 +58,7 @@ def read_block(logfile,blkname):
 
     return ''.join(loglines)
 
-##--------------------------------------------
-## Mandatory function: log_collection
-##--------------------------------------------
-
-def log_collection():
-    cmds = ['ZDDE:OMU:"ZMA:W0,F3,,,,,","ZMA:W1,F3,,,,,","ZGSC:,00FC";',
-            'ZDDE:MCHU:"ZMA:W0,F3,,,,,","ZMA:W1,F3,,,,,","ZGSC:,00FC";',
-            ]
-    for cmd in cmds:
-        print cmd
-        
+ 
 ##--------------------------------------------
 ## Mandatory function: run
 ##--------------------------------------------    
@@ -80,24 +67,12 @@ def run(logfile):
     fragment_status={name:'' for name in pats_fragment}
     
     # Check NS Version
-    nsversion=get_ns_version(logfile).strip()
-    #
-    shareinfo = InfoCache()
+
     ns = shareinfo.get('ELEMENT')
-    if not ns:
+    if not ns.version:
         ns_status="No version info was found."
     else:
         nsversion = ns.version['BU']
-    
-    #if nsversion == 'UNKNOWN':  
-    #    fragment_status['nsversion']=u"    - NS version 无法确定. \n"    
-    #elif nsversion not in target_version:
-    #    if nsversion > target_version[len(target_version)-1]:
-    #        fragment_status['nsversion']=u"    - NS version: " +nsversion+u" 高于目前支持版本. \n"
-    #    else:
-    #        fragment_status['nsversion']=u"    - NS version: " +nsversion+u" 不在支持版本清单里. \n"
-    #else:
-    #    fragment_status['nsversion']=u"    - NS version: " +nsversion+u" 在支持版本清单里. \n"
     
         if ns.match_version(target_version):
             fragment_status['nsversion']=u"    - NS version: " + nsversion + u" 在支持版本清单里. \n"    
@@ -123,6 +98,6 @@ def run(logfile):
     #print fragementstatus_str, fragment_status
     if status == CheckStatus.UNCHECKED:
         status = CheckStatus.UNKNOWN
-    result.load(status=status,info=[fragmentstatus_str % fragment_status],error=error)
+    result.update(status=status,info=[fragmentstatus_str % fragment_status],error=error)
     return result
     

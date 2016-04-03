@@ -146,7 +146,11 @@ def run_modules(checklist,logfile):
         results.append(_result)
 
     timestamp=time.strftime("%Y-%m-%d %H:%M")
-    hostname = shareinfo['ELEMENT'].hostname 
+    element = shareinfo.get('ELEMENT',None)
+    if not element:
+        print("No hostname and version info found in the log. quit.") 
+        sys.exit(1)
+    hostname = element.hostname
     label_state = {'critical':'danger','major':'warning','normal':'info','default':'default'}  
     _report = template.render(locals())
     msgbuf.append(_report)
