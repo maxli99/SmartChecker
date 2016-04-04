@@ -9,17 +9,26 @@ from collections import defaultdict
 
 log_patterns = {'FlexiNG' : re.compile("fsclish"),
                 'FlexiNS' : re.compile("COMMAND EXECUTED")}
+class LogFileError(Exception):
+    pass
 
 class LogFile:
     """Handling the logfile for analysis
     """
-    def __init__(self,filename=''):
+    def __init__(self,filename):
         _path,_name = os.path.split(filename)
         self.path = _path
-        self.filename = _name
+        self.filename = None
 
-        if filename:
+        if filename and filename.endswith(".log"):
             self.fp = file(filename)
+            self.filename = _name            
+        else:
+            self.fp = None
+
+    @property   
+    def state(self):
+        return bool(self.fp)
 
     def loglines(self):
         return self.fp.readlines()
@@ -32,4 +41,5 @@ class LogFile:
                 return True
         return False
 
-
+    def __repr__(self):
+        return "LogFile(%s)" % self.filename

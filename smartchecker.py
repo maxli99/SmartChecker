@@ -14,7 +14,7 @@ examples:
    smartchecker -r checklist.ckl logfile  --saveto report_sae01.html --silent
 """
 __programname__ = 'Smartchecker'
-__version__     = '0.9'
+__version__     = '0.92'
 
 import sys,os, argparse,time,re
 from libs.configobject import ConfigObject
@@ -127,7 +127,7 @@ def check_logfile(checklist,logfile):
     """run the check modules in console mode
     """
     log=LogFile(logfile)
-    if not log.match(checklist.netype):
+    if not log.state or not log.match(checklist.netype):
         errmsg = "The %s does not match the element type in checklist:%s" % (logfile,checklist.netype)
         return None, errmsg
 
@@ -187,7 +187,7 @@ def check_logdir(checklist,logdir):
         #change the path: /path/log/project/xxx to project_xxx
         cur_dirname = dirpath.replace(logdir,"").strip(os.path.sep).replace(os.path.sep,'_')
         SAVE_OUTPUT = "%s_%%(hostname)s.%%(template_type)s" % cur_dirname
-        for fname in files:
+        for fname in filter(lambda f:f.endswith('.log'), files):
             filename = os.path.join(dirpath,fname)
             print "Analysising logfile: %s..." % filename,
             result, _errmsg = check_logfile(checklist,filename)

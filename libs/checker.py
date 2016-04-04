@@ -38,6 +38,10 @@ def ignore_files(filename):
 ###############################################################
 # Class CheckStatus
 ###############################################################
+class CheckModuleError(Exception):
+    pass
+class BasicInfoMissing(CheckModuleError):
+    pass
 class CheckStatus(object):
     PASSED = 'PASSED'      # check result is passed
     FAILED = 'FAILED'      # check result is failed

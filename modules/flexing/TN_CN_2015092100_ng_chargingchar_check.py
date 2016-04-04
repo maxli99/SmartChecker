@@ -76,23 +76,18 @@ def run(logfile):
     charging_index_status=[]
     status = CheckStatus.UNCHECKED
     
-    # check the NG version first.
-    #ngversion=get_ng_version(logfile)
-    
-    #if not ngversion:  # not version info found.
-    #    charging_index_status.append(u"- NG version can't be determindated. \n")
-    #elif ngversion[0] not in target_version:
-    #    charging_index_status.append(u"- NG version: " +ngversion[0]+" (Not in the target_version list). \n")
-    #else:
-    #    charging_index_status.append(u"- NG version: " +ngversion[0]+" (in target_version list). \n")
-    
+    # check the NG version first.   
     ng = shareinfo.get('ELEMENT')
-    ngversion = ng.version
-    
-    if ng.match_version(target_version): 
-        charging_index_status.append(u"- NG version: " + ngversion['major'] + u" 在支持版本列表中. \n")
+    if not ng.version:  # not version info found.
+        #status = CheckStatus.UNKNOWN
+        charging_index_status.append(u"- NG version can't be determindated.")
     else:
-        charging_index_status.append(u"- NG version: " + ngversion['major'] + u" 不在支持版本列表中.. \n")
+        match = ng.match_version(major=target_version)
+        
+        if match['major']: 
+            charging_index_status.append(u"- NG version: " + ng.version['major'] + u" 在受影响的版本列表中. \n")
+        else:
+            charging_index_status.append(u"- NG version: " + ng.version['major'] + u" 不在受影响版本列表中. \n")
     
     # Get every session-profile-block
     session_profile_block=[]

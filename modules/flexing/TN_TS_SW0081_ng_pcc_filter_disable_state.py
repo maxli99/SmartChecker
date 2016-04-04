@@ -56,12 +56,16 @@ def run(logfile):
     check_info = []
     
     ng = shareinfo.get('ELEMENT')
-    ngversion = ng.version
-
-    if ng.match_version(target_version): 
-        check_info.append(u"- NG version: " + ngversion['major'] + u" 在支持版本列表中. \n")
+    if not ng.version:  # not version info found.
+        #status = CheckStatus.UNKNOWN
+        check_info.append(u"- NG version can't be determindated.")
     else:
-        check_info.append(u"- NG version: " + ngversion['major'] + u" 不在支持版本列表中.. \n")
+        match = ng.match_version(major=target_version)
+        
+        if match['major']: 
+            check_info.append(u"- NG version: " + ng.version['major'] + u" 在受影响的版本列表中. \n")
+        else:
+            check_info.append(u"- NG version: " + ng.version['major'] + u" 不在受影响版本列表中. \n")
 
     loglines = file(logfile).readlines()
     logtxt = read_block(logfile,'pcc_rule')

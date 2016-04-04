@@ -53,6 +53,10 @@ check_commands = [
 
 ##----------------------------------------
 
+def has_node(memlist,node):
+    "return True if node is in memlist"
+    return node in [_node for _node, _ in memlist]
+    
 def check_memory_fail_counter(loglines):
     _logblk=''.join(loglines)
     status = CheckStatus.UNKNOWN
@@ -89,15 +93,18 @@ def check_memory_allocation(loglines):
             mem = int(r2.groups()[1])/1024.0/1024.0
             node = r2.groups()[0]
             node_type = re.sub('[\d+-]','',node)
-            _mem[node_type].append((node,mem))
             #print "mem allocated!",node,mem,node_type,mem_threshold[node_type]
+            if has_node(_mem[node_type],node):
+                print "%s already exisit,pop out:%s" % (node,_mem[node_type][-2:])
+                _mem[node_type].pop()                
+            _mem[node_type].append((node,mem))
             if mem > mem_threshold[node_type]:
                 flag_fail = CheckStatus.FAILED
                 info.append('%s memory is closing to full: %.5s MB' %(node, mem))
             else:
                 flag_passed = CheckStatus.PASSED
                 info.append("%s memory: %s" %(node,mem))
-
+    print "len of mem:",len(_mem['AS'])
     status = (flag_fail or flag_passed) or CheckStatus.UNKNOWN
     
     if status == CheckStatus.UNKNOWN:
