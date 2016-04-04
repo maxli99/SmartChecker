@@ -12,18 +12,10 @@ class FlexiNG(NetworkElement):
 
         print ng.version    
     """
-
     def parse_log(self,logfile):
-        try:
-            loglines = file(logfile).readlines()
-        except IOError as e:
-            print "Error happen. there is no such file:",logfile
-            exit(1)
-        #self._data['version'] = _get_ng_version(loglines)
 
-        # hostname,version = _get_ng_hostname_version(loglines)
-        # self._data['hostname'] = hostname
-        # self._data['version'] = version
+        loglines = file(logfile).readlines()
+
         _hostver = _get_ng_hostname_version(loglines)
         self._load_data(_hostver)
         ##extract the hostnme

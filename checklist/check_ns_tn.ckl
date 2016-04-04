@@ -2,6 +2,9 @@
 ## 本checklist数据使用YAML标记语言来描述
 ## 本checklist仅用作测试及示例
 
+#本checklist适用网元类型
+netype: FlexiNS
+
 #简要说明，可选字段
 description: 本checklist用于对FlexiNS 进行部分TN检查
 

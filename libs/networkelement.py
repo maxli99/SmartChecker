@@ -12,7 +12,8 @@ class NetworkElement(object):
         self.logfile = logfile
         self._data = {}
         self._data['hostname'] = hostname
-
+        self.checkresult = None
+        
         if logfile:
             self.parse_log(logfile)
 
@@ -45,7 +46,7 @@ the version could be a list include multi version id. or a string of version id.
         pass
 
     def __repr__(self):
-        return "NetworkElementObj:<%s>" % self.hostname
+        return "NetworkElement:<%s>" % self.hostname
 
     @property
     def hostname(self):

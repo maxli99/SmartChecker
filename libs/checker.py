@@ -105,7 +105,10 @@ class CheckList(object):
     @property
     def templates(self):
         return self.info.get('templates',{})
-
+    @property
+    def netype(self):
+        return self.info.get('netype','UNKNOWN')
+    
     @property
     def paths(self):
         return self.info.get('paths',{})
@@ -127,7 +130,8 @@ class CheckList(object):
         self.modules = ImportCheckModules(self)
 
         return self.modules
-
+    def __repr__(self):
+        return "CheckList(%(filename)s)" % self.__dict__
 def ImportCheckModules(checklist):
     """Import the modules and return the modules list.
     """
@@ -241,8 +245,11 @@ class ResultInfo(object):
 class ResultList(object):
     """this class store all the check results.
     """
-    def __init__(self):
+    def __init__(self,hostname=''):
         self._results = []
+        self.hostname = hostname
+        self.report_filename = ''
+        self.template_type = ''
 
     def append(self,obj):
         self._results.append(obj)

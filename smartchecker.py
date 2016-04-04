@@ -16,12 +16,13 @@ examples:
 __programname__ = 'Smartchecker'
 __version__     = '0.9'
 
-import sys,os, argparse,time
+import sys,os, argparse,time,re
 from libs.configobject import ConfigObject
 from libs.checker import ImportCheckModules,ResultList,CheckList
 from libs.reportor import CheckReport, JinjaTemplate
 from libs.tools import MessageBuffer,debugmsg
 from libs.infocache import shareinfo
+from libs.logfile import LogFile
 
 default_config = {
 'output_format' : "reading",
@@ -122,15 +123,21 @@ def show_module_info(checklist,logfile=None):
 
     return 0
 
-def run_modules(checklist,logfile):
+def check_logfile(checklist,logfile):
     """run the check modules in console mode
     """
+    log=LogFile(logfile)
+    if not log.match(checklist.netype):
+        errmsg = "The %s does not match the element type in checklist:%s" % (logfile,checklist.netype)
+        return None, errmsg
+
     results = ResultList()
     output_format = CONFIG.output_format
-    err_flag = 0
+    errmsg = ""
     jinja = JinjaTemplate(CONFIG.template_path)
 
     template_file = REPORT_TEMPLATE or checklist.templates['report']
+    template_type = template_file.split('.')[-1]
     template = jinja.template(template_file)
     msgbuf = MessageBuffer()
 
@@ -138,6 +145,7 @@ def run_modules(checklist,logfile):
     report.template_path = CONFIG.template_path
     report.template_name = checklist.templates['report']
 
+    results.template_type = template_type
     
     #print("Running check modules...")
     for idx,m in enumerate(checklist.modules):
@@ -146,27 +154,71 @@ def run_modules(checklist,logfile):
         results.append(_result)
 
     timestamp=time.strftime("%Y-%m-%d %H:%M")
-    element = shareinfo.get('ELEMENT',None)
+    element = shareinfo.get('ELEMENT')
     if not element:
-        print("No hostname and version info found in the log. quit.") 
-        sys.exit(1)
+        errmsg="No hostname and version info found in the log. quit."
+        return None,errmsg
+
     hostname = element.hostname
     label_state = {'critical':'danger','major':'warning','normal':'info','default':'default'}  
     _report = template.render(locals())
     msgbuf.append(_report)
 
-    if not SILENT and template_file[-2:] =='md':
+    if not SILENT and template_type =='md':
         msgbuf.output(CONFIG.runmode)
-    
-    if SAVE_OUTPUT:
-        save_output_to_file(msgbuf,SAVE_OUTPUT)
 
-    return err_flag
+    if SAVE_OUTPUT:
+        report_filename = SAVE_OUTPUT % locals()
+        save_output_to_file(msgbuf,report_filename)
+    else:
+        report_filename = '.'.join((hostname,template_type))
+        save_output_to_file(msgbuf,report_filename)
+
+    results.report_filename = report_filename
+
+    return results , errmsg
+
+
+def check_logdir(checklist,logdir):
+    global SAVE_OUTPUT
+    resultlist = []
+    errmsg = []
+    for dirpath, _ ,files in os.walk(logdir):
+        #change the path: /path/log/project/xxx to project_xxx
+        cur_dirname = dirpath.replace(logdir,"").strip(os.path.sep).replace(os.path.sep,'_')
+        SAVE_OUTPUT = "%s_%%(hostname)s.%%(template_type)s" % cur_dirname
+        for fname in files:
+            filename = os.path.join(dirpath,fname)
+            print "Analysising logfile: %s..." % filename,
+            result, _errmsg = check_logfile(checklist,filename)
+            if result:
+                print("SUCCESS!") 
+                print("Save report to: %s" % result.report_filename)
+                resultlist.append(result)
+            else:
+                print("ERROR!")
+                errmsg.append(_errmsg)
+            print 
+
+    return resultlist,errmsg
+
+def check_log(checklist,logname):
+    resultlist = []
+    #the given logname is a dir
+    if os.path.isdir(logname):
+        resultlist,errmsg = check_logdir(checklist,logname)
+    else:
+        resultlist,errmsg = check_logfile(checklist,logname)
+
+    if not resultlist:
+        print "\nERROR: %s" % errmsg
+    else:
+        print "\nSave the %s success report to path '%s'" % (len(resultlist),checklist.paths['reports'])
 
 if __name__ == "__main__":
 
-    do_action = {'show' : show_module_info,
-                 'run'  : run_modules,
+    do_action = {'show'     : show_module_info,
+                 'run'      : check_log,
                 }
     
     #parse the arguments and options.

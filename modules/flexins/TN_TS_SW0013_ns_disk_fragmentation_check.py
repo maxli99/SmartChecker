@@ -73,7 +73,6 @@ def run(logfile):
         ns_status="No version info was found."
     else:
         nsversion = ns.version['BU']
-    
         if ns.match_version(target_version):
             fragment_status['nsversion']=u"    - NS version: " + nsversion + u" 在支持版本清单里. \n"    
         else:
@@ -98,6 +97,8 @@ def run(logfile):
     #print fragementstatus_str, fragment_status
     if status == CheckStatus.UNCHECKED:
         status = CheckStatus.UNKNOWN
+    
+
     result.update(status=status,info=[fragmentstatus_str % fragment_status],error=error)
     return result
     
