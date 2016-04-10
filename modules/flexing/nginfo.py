@@ -22,6 +22,8 @@ result    = ResultInfo(name,priority=priority)
 check_commands = [
     ('#'*60,"Please use `ngexec` to execute below commands:"),
     ('@bash\nldapsearch "fsLogicalNetworkElemId=*"',"list the hostname & version info. must be run in shell mode not fsclish"),
+    ('@fsclish',"#switch to fsclish commands"),
+    ("show config fsClusterId=ClusterRoot fsFragmentId=FlexiNG fsFragmentId=Internal","#show Hicut configuration"),
 ]
 shareinfo = InfoCache()
 DEBUG = shareinfo.get('DEBUG')

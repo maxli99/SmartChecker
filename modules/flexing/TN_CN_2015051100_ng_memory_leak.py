@@ -34,7 +34,7 @@ criteria      = u"""
 ## Optional variables 
 pat_memfail = re.compile("ssh ([\w\d-]+) showstat\|.*?mem_alloc_failed_for_linear_filters = (\d+)",re.DOTALL)
 pat_memallo = re.compile("info ([\w\d-]+) featuremem.*FASTPATH_MALLOC dynamic allocated bytes \[chunks\]: (\d+)/(\d+)")
-pat_hicut   = re.compile("aa")
+pat_hicut   = re.compile("fngDpiHicut:\s+(\d+)")
 
 target_version = ['3.1','3.2','15']
 logline_format = "    - %s\n"
@@ -47,6 +47,7 @@ check_commands = [
     ('ssh {{node}} showstat|grep shm_gwup_proxy.gwup.sa.sa_rule.filter.interr.mem_alloc_failed_for_linear_filters',
      '#show the memory alloc failed counter of {{node}}'),
     ('#@jinja {% endfor %}',"#jinja template statement"),
+    ('@fsclish','#below command should be executed in fsclish'),
     ('show config fsClusterId=ClusterRoot fsFragmentId=FlexiNG fsFragmentId=Internal',"#check the hitcut setting")
     
 ]
@@ -95,16 +96,21 @@ def check_memory_allocation(loglines):
             node_type = re.sub('[\d+-]','',node)
             #print "mem allocated!",node,mem,node_type,mem_threshold[node_type]
             if has_node(_mem[node_type],node):
-                print "%s already exisit,pop out:%s" % (node,_mem[node_type][-2:])
-                _mem[node_type].pop()                
+                #print "%s already exisit,pop out:%s" % (node,_mem[node_type][-2:])
+                _mem[node_type].pop()
+                
             _mem[node_type].append((node,mem))
             if mem > mem_threshold[node_type]:
                 flag_fail = CheckStatus.FAILED
                 info.append('%s memory is closing to full: %.5s MB' %(node, mem))
             else:
                 flag_passed = CheckStatus.PASSED
-                info.append("%s memory: %s" %(node,mem))
-    print "len of mem:",len(_mem['AS'])
+    
+    # add node's memory info to msgbuf.
+    for ntype in ['AS','SAB']:
+        for node,mem in _mem[ntype]:
+            info.append("%s memory: %s" %(node,mem))
+            
     status = (flag_fail or flag_passed) or CheckStatus.UNKNOWN
     
     if status == CheckStatus.UNKNOWN:
@@ -146,5 +152,14 @@ def run(logfile, *args,**kwargs):
     ## check function 2
     status,_info,error = check_memory_allocation(loglines)
     info.append(''.join(_info))
+    
+    ## check Hicut setting
+    #hicut = ng.config.get('hicut')
+    hicut = hicut_setting(loglines)
+    if hicut == '1':
+        status = CheckStatus.FAILED
+        error = '- The Hicut feature is still enable: fngDpiHicut=1'
+    else:
+        info.append("- The Hicut feature is disable: fngDpiHicut=0")
     result.update(status=status,info=info,error=error)
     return result

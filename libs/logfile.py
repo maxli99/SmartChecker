@@ -7,20 +7,31 @@ import os
 import re
 from collections import defaultdict
 
+LOGFILE_POSTFIX = ['.log','.txt']
+
 log_patterns = {'FlexiNG' : re.compile("fsclish"),
                 'FlexiNS' : re.compile("COMMAND EXECUTED")}
+
 class LogFileError(Exception):
     pass
+
+def istextfile(filename):
+    for postfix in LOGFILE_POSTFIX:
+        if filename.endswith(postfix):
+            return True
+    return False
 
 class LogFile:
     """Handling the logfile for analysis
     """
+
     def __init__(self,filename):
         _path,_name = os.path.split(filename)
         self.path = _path
         self.filename = None
 
-        if filename and filename.endswith(".log"):
+        _postfix = filename.split('.')[-1]
+        if filename and istextfile(filename):
             self.fp = file(filename)
             self.filename = _name            
         else:

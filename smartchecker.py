@@ -213,7 +213,11 @@ def check_log(checklist,logname):
     if not resultlist:
         print "\nERROR: %s" % errmsg
     else:
-        print "\nSave the %s success report to path '%s'" % (len(resultlist),checklist.paths['reports'])
+        if isinstance(resultlist,list):
+            reports_counter = len(resultlist)
+        else:
+            reports_counter = 1
+        print "\nSave the %s success report to path '%s'" % (reports_counter,checklist.paths['reports'])
 
 if __name__ == "__main__":
 

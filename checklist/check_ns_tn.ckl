@@ -23,10 +23,9 @@ paths:
 ## 指定需要运行的检查模块名 
 modules_name:
     - nsinfo.py
-    #- nsversion.py
     - TN_CN_20150728_smmu_hand_check.py
     - TN_CN_20151013_ns_mme_cause_code_mapping.py
     - TN_CN_20151124_IPDU_FreeMem.py
     - TN_CN_20160215_S11_Throttling.py
-    - TN_TS_SW0013_ns_disk_fragmentation_check.py
+    #- TN_TS_SW0013_ns_disk_fragmentation_check.py
     
