@@ -1,8 +1,11 @@
+# -*- coding: utf-8 -*-
 import re
 from hwparser import HardwareInfo
 from networkelement import NetworkElement
+from tools import MessageLogger
 
 version_names = ('major','release','hardware')
+logger = MessageLogger('flexing')
 
 class FlexiNG(NetworkElement):
     """Class parse and stroe basic infomation of FlexiNG
@@ -101,28 +104,6 @@ def _get_ng_hostname_version(loglines):
         if h_flag and v_flag:
             break      
     return dict(zip(names,(hostname,version)))
-
-
-## phaseout this function at 3/28
-# def get_ng_version(configlog):
-#     """This function will parse the NG version info from logfile.
-#     Input    config logfile
-#     return  a tuple include (major_version, release_version, hardware_version)
-#     example: ('3.2', '123445', '2')
-#     """
-#     version = None
-#     version_pat = re.compile("_NG([\d\._]+)_r(\d+)_AB(\d+)")
-
-#     try:
-#         log = ''.join(file(configlog).readlines())
-#     except IOError,e:
-#         print("IOError: %s" % e)
-#         exit(1)
-#     check = version_pat.search(log)
-
-#     if check:
-#         version = check.groups()
-#     return version
 
 def get_hw_info(configlog):
     hwinfo = HardwareInfo()

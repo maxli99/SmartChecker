@@ -13,7 +13,7 @@ from libs.log_spliter import LogSpliter, LOG_TYPE_FLEXI_NS
 
 ## Mandatory variables
 ##--------------------------------------------
-module_id = 'fns2016030720'
+module_id = 'NSTNCN_20150728'
 tag  = ['flexing','china']
 priority = 'critical'
 name = "SMMU GRNPRB hand checking"

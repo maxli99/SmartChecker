@@ -1,6 +1,15 @@
 # -*- coding: utf-8 -*-
+"""This module is the unitive entrypoint from tools import.
+
+form tools import MessageBuffer, MessageMail
+from tools import *
+"""
 import sys,codecs
 from infocache import shareinfo
+
+## below united import for other modules
+from logger import MessageLogger
+#from yaml2dotdict import YAMLObject
 
 def to_unicode(line):
     """translate the string line to unicode.
@@ -13,7 +22,8 @@ def to_unicode(line):
 def debugmsg(msg):
     if shareinfo.get('DEBUG'):
         print(msg) 
-
+        
+        
 class MessageBuffer(object):
     """Store the information for sending to differnt destination later.
     """
@@ -31,7 +41,7 @@ class MessageBuffer(object):
         utextblock = concatenation.join(_lines)
 
         if self.template:
-            print(template % utextblock)
+            print(self.template % utextblock)
         else:
             #print("typeof:utextblock",type(utextblock),"sysencoding:",sys.stdout.encoding)
             #unicode, cp936/utf-8
@@ -66,20 +76,22 @@ def read_cmdblock_from_log(loglines,startline,endline):
         an empty string('')  if command was not found.
 
     """
+    blocks = []
     blocklines = [] 
     flag_start = False
-    #loglines = file(logfile).readlines()
 
     for line in loglines:
         if flag_start:
             blocklines.append(line)
             if endline in line:
-                break
+                blocks.append("".join(blocklines))
+                blocklines = []
+                flag_start = False
+                continue
         elif startline in line:
             flag_start = True
             blocklines.append(line)
-            #print "start line found!"
 
-    return ''.join(blocklines)            
+    return "".join(blocks)         
 
    

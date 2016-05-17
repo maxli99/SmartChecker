@@ -24,7 +24,7 @@ __author__ = "richard.hu@nokia.com"
 
 ## Mandatory variables 
 ##--------------------------------------------
-module_id = '20160304.01'
+module_id = 'NGTNCN_20150921'
 tag       = ['flexing','china']
 priority  = 'critical'
 name      = u"校验Session Profile中的Charging character配置"

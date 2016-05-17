@@ -14,7 +14,7 @@ from libs.checker import ResultInfo,CheckStatus
 ## Mandatory variables 
 ##-----------------------------------------------------
 #check_id = '20160308.TN20151013'
-module_id = 'TN-China-20151013'
+module_id = 'NSTNCN_20151013'
 tag       = ['flexins','china']
 priority  = 'normal'
 name      = "TN-China-20151013-ns_mme_cause_code_mapping"

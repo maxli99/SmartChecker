@@ -17,7 +17,7 @@ __author__ = 'wei.yao@huanuo-nokia.com'
 
 ## Mandatory variables
 ##--------------------------------------------
-module_id = 'tn_ts_sw0081'
+module_id = 'NGTNTS_SW0081'
 tag       = ['flexing','china']
 priority  = 'critical'
 name      = "Check PCC rule filter in disabled state"

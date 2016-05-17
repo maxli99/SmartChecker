@@ -12,7 +12,7 @@ from libs.checker import ResultInfo,CheckStatus
 ## Mandatory variables 
 ##-----------------------------------------------------
 #check_id = '20160308.TN20151013'
-module_id = 'TN-China-20151124'
+module_id = 'NSTNCN_20151124'
 tag       = ['flexins','china']
 priority  = 'critical'
 name      = "TN_CN_20151124_IPDU_FreeMem"

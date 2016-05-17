@@ -14,7 +14,7 @@ __date__   = '20160315'
 
 ## Mandatory variables 
 ##--------------------------------------------
-module_id = 'NG20150518.01'
+module_id = 'NGTNCN_20150511'
 name      = "FlexiNG(NG3.x) AS/SAB Memory leak Check"
 version   = '1.0'
 desc      = __doc__

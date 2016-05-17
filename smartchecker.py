@@ -20,7 +20,7 @@ import sys,os, argparse,time,re
 from libs.configobject import ConfigObject
 from libs.checker import ImportCheckModules,ResultList,CheckList
 from libs.reportor import CheckReport, JinjaTemplate
-from libs.tools import MessageBuffer,debugmsg
+from libs.tools import MessageBuffer,MessageLogger
 from libs.infocache import shareinfo
 from libs.logfile import LogFile
 
@@ -38,10 +38,12 @@ config_file = 'checker.conf'
 if os.path.exists(config_file):  #read the config file if it's exists.
     CONFIG.read(config_file)
 
-DEBUG    = False
-SILENT   = False
+DEBUG           = False
+SILENT          = False
 REPORT_TEMPLATE = None
-SAVE_OUTPUT = None
+SAVE_OUTPUT     = None
+
+logger = MessageLogger('SmartChecker')
 
 def args_parse():
     global DEBUG,SILENT,REPORT_TEMPLATE,SAVE_OUTPUT
@@ -63,8 +65,10 @@ def args_parse():
                         help="turn off the output to stdout.")    
     parser.add_argument('-t','--template',
                         help="template for report output.")
+    parser.add_argument('-l','--log2file', action="store_true",
+                        help="output the log info to file.")    
     parser.add_argument('-c','--commands',
-                        help="template for report output.")
+                        help="generate the commands for collecting log.")
 
     args = parser.parse_args()
 
@@ -111,8 +115,10 @@ def show_module_info(checklist,logfile=None):
         if hasattr(m,'check_commands'):
             cmdlist.extend(m.check_commands)
 
-    #info=template.render(modules=modules,cmdlist=cmdlist,checklist=checklist)
-    info=template.render(locals())
+    _info=template.render(locals())
+    template = Jinjia.template()(_info)
+    #ne_hardware = 
+    info = template.render(ne_hardware)
     msgbuf.append(info)
 
     if not SILENT:
@@ -150,7 +156,7 @@ def check_logfile(checklist,logfile):
     #print("Running check modules...")
     for idx,m in enumerate(checklist.modules):
         _result = m.run(logfile)
-        _result.criteria = m.criteria    
+        _result.loadinfo(m)
         results.append(_result)
 
     timestamp=time.strftime("%Y-%m-%d %H:%M")
@@ -174,7 +180,10 @@ def check_logfile(checklist,logfile):
         report_filename = '.'.join((hostname,template_type))
         save_output_to_file(msgbuf,report_filename)
 
+    results.hostname = hostname
     results.report_filename = report_filename
+
+    logger.info("Result: %s, Failed:%s" % (results.stats_dict(),results.stats_detail('FAILED')))
 
     return results , errmsg
 
@@ -189,16 +198,15 @@ def check_logdir(checklist,logdir):
         SAVE_OUTPUT = "%s_%%(hostname)s.%%(template_type)s" % cur_dirname
         for fname in filter(lambda f:f.endswith('.log'), files):
             filename = os.path.join(dirpath,fname)
-            print "Analysising logfile: %s..." % filename,
             result, _errmsg = check_logfile(checklist,filename)
             if result:
-                print("SUCCESS!") 
-                print("Save report to: %s" % result.report_filename)
+                logger.info("Analysising logfile: %s... SUCCESS!" % filename)
+                logger.info("Save report to: %s" % result.report_filename)
                 resultlist.append(result)
             else:
-                print("ERROR!")
+                logger.info("Analysising logfile: %s...ERROR!" % filename)
                 errmsg.append(_errmsg)
-            print 
+            
 
     return resultlist,errmsg
 
@@ -211,13 +219,13 @@ def check_log(checklist,logname):
         resultlist,errmsg = check_logfile(checklist,logname)
 
     if not resultlist:
-        print "\nERROR: %s" % errmsg
+        logger.error("\nERROR: %s" % errmsg)
     else:
         if isinstance(resultlist,list):
             reports_counter = len(resultlist)
         else:
             reports_counter = 1
-        print "\nSave the %s success report to path '%s'" % (reports_counter,checklist.paths['reports'])
+        logger.info("Save the %s success report to path '%s'" % (reports_counter,checklist.paths['reports']))
 
 if __name__ == "__main__":
 
@@ -228,7 +236,17 @@ if __name__ == "__main__":
     #parse the arguments and options.
     parser,args = args_parse()
     shareinfo.set('DEBUG',args.debug)
-    debugmsg(args)
+    if args.debug:
+        logger.setLevel('DEBUG')
+    else:
+        logger.setLevel('INFO')
+
+    if args.log2file:
+        _logfile = CONFIG.get('checker_logfile','/tmp/checker.log')
+        logger.addFileHandler(_logfile)
+
+    logger.debug(args)
+    CONFIG.logger = logger
 
     #checklsit was speicifiied. 
     checklist_file = args.run or args.show

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Author: maxli
 # @Date:   2016-03-10 14:10:40
@@ -39,7 +38,7 @@ __date__   = '20160315'
 
 # Mandatory variables
 # -----------------------------------------------------
-module_id = 'fnsbase.201603281030'
+module_id = 'NSTNCN_20160215'
 tag       = ['flexins', 'china', 'S11', 'Throttling']
 priority  = 'normal'
 name      = "TN_CN_20160212_S11_Throttling"

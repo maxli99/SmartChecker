@@ -136,6 +136,8 @@ class CheckList(object):
         return self.modules
     def __repr__(self):
         return "CheckList(%(filename)s)" % self.__dict__
+
+
 def ImportCheckModules(checklist):
     """Import the modules and return the modules list.
     """
@@ -170,15 +172,16 @@ class ResultInfo(object):
     """
     strformat = " Status: %(status)s\n   Info:\n%(info)s\n  error:%(error)s"
     keys = ['status','info','error']
-    def __init__(self,name,priority=''):
+    def __init__(self,name, **kwargs):
         self.name = name
-        self.criteria = ''
-        self.priority = priority
+        self.module_id = kwargs.get('module_id','')
+        self.criteria = kwargs.get('criteria','')
+        self.priority = kwargs.get('priority','Major')
+
         self.data = {'status' : CheckStatus.UNKNOWN,
                       'info'   : '',
                       'error'  : '',
                     }
-
 
     def setvalue(self,key,value):
         if key not in ResultInfo.keys:
@@ -225,6 +228,12 @@ class ResultInfo(object):
         self.update(**kwargs)
         self._encode_to_unicode()
 
+    def loadinfo(self,module):
+        """load basic info of module"""
+        fields=['module_id','priority','tag']
+        for key in fields:
+            setattr(self,key,module.__dict__.get(key,''))
+
     def dump(self,oformat='reading'):
         if oformat == 'reading':
             data = self.data.copy()
@@ -245,6 +254,9 @@ class ResultInfo(object):
         """
         strbuf = []
 
+    def __repr__(self):
+        return "ResultInfo:%s=%s" % (self.module_id,self.data['status'])
+
 
 class ResultList(object):
     """this class store all the check results.
@@ -261,6 +273,7 @@ class ResultList(object):
     def __len__(self):
         return len(self._results)
 
+    @property
     def stats(self):
         return Counter([r.data['status'] for r in self._results])
 
@@ -270,5 +283,16 @@ class ResultList(object):
             status[k] = v
         return status
 
+    def stats_detail(self,status=None):
+        """returen the detail stats info. including the check items.
+        """
+        if not status:
+            return self._results
+        modules = [s.module_id for s in self._results if s.status==status]
+        return modules
+
     def __iter__(self):
         return iter(self._results)
+
+    def __repr__(self):
+        return "ResultList:%s, %s" % (self.hostname,self.stats)

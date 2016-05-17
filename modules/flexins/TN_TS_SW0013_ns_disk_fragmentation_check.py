@@ -21,7 +21,7 @@ from libs.infocache import shareinfo
 
 ## Mandatory variables 
 ##--------------------------------------------
-module_id = '20160228.01'
+module_id = 'NSTNTS_SW0013'
 tag       = ['flexins','china']
 priority  = 'major'
 name      = u"TN_TS_SW0013_CI2 FNS MME/SGSN 磁盘碎片率检查"

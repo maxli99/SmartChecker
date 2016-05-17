@@ -1,10 +1,12 @@
+# -*- coding: utf-8 -*-
 import re
-from tools import read_cmdblock_from_log
+from tools import read_cmdblock_from_log,MessageLogger
 from networkelement import NetworkElement, extract_data
 
 __version__ = "v0.5"
 
 command_end_mark = "COMMAND EXECUTED"
+logger = MessageLogger('flexins')
 
 class FlexiNS(NetworkElement):
     """Class parse and stroe basic infomation of FlexiNS
@@ -16,9 +18,11 @@ example:
     """
     def parse_log(self,logfile):
         loglines = file(logfile).readlines()
+        print "logfiles:",logfile
+
         self._data['version'] = _get_ns_version(loglines)
 
-        ##
+
         om_names = ['hostname','c_num','location']
         pat = re.compile("(\d+)\s+(\w+)\s+(\d+)\s+(\d+)\s+(\w+)\s+(\w+)")
    
@@ -57,9 +61,12 @@ def _get_ns_version(loglines):
     pkgid_pat = re.compile("\s+(BU|FB|NW)\s+.*?\n\s+(\w\d [\d\.-]+)")
 
     logtxt = read_cmdblock_from_log(loglines,'WQO:CR;',command_end_mark)
-    version = dict(pkgid_pat.findall(logtxt))
-    
-    return version
+    pkgids = pkgid_pat.findall(logtxt)
+    if not pkgids:
+        logger.error("Package ID not found in log: %s")
+        return None
+
+    return dict(pkgids)
 
 def _get_om_config(loglines):
     """extract the om config from the loglines 
@@ -103,6 +110,6 @@ def get_ns_version(configlog):
 		return version
 				
 	except IOError,e:
-		print("IOError: %s" % e)
+		logger.info("IOError: %s" % e)
 		return 'UNKNOWN'
 		
