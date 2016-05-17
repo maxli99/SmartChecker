@@ -176,6 +176,7 @@ def check_logfile(checklist,logfile):
     if SAVE_OUTPUT:
         report_filename = SAVE_OUTPUT % locals()
         save_output_to_file(msgbuf,report_filename)
+        #logger.info("Save the %s success report to path '%s'" % (reports_counter,checklist.paths['reports']))
     else:
         report_filename = '.'.join((hostname,template_type))
         save_output_to_file(msgbuf,report_filename)
@@ -183,7 +184,9 @@ def check_logfile(checklist,logfile):
     results.hostname = hostname
     results.report_filename = report_filename
 
-    logger.info("Result: %s, Failed:%s" % (results.stats_dict(),results.stats_detail('FAILED')))
+    logger.info("Result: %s, %s, Failed:%s" % 
+                (results.hostname, results.stats_dict(),results.stats_detail('FAILED'))
+               )
 
     return results , errmsg
 
@@ -225,7 +228,13 @@ def check_log(checklist,logname):
             reports_counter = len(resultlist)
         else:
             reports_counter = 1
-        logger.info("Save the %s success report to path '%s'" % (reports_counter,checklist.paths['reports']))
+
+    _reportpath =  checklist.paths['reports'] 
+    if SAVE_OUTPUT:
+        _reportpath = os.path.split(SAVE_OUTPUT)[0]
+                
+    logger.info("Save the %s success report to path '%s'" % (reports_counter,_reportpath))
+    logger.info("Finished the checking.")
 
 if __name__ == "__main__":
 
