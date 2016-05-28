@@ -8,7 +8,7 @@ import sys,codecs
 from infocache import shareinfo
 
 ## below united import for other modules
-from logger import MessageLogger
+from messagelogger import MessageLogger
 #from yaml2dotdict import YAMLObject
 
 def to_unicode(line):

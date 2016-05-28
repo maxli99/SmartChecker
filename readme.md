@@ -23,6 +23,7 @@ and log of networkc elements and generate a report for the check result.
  
  * `error`，检查结果的错误信息，是一个list列表或字符串，包含检查过程中发生的错误信息。
 
+ 
 ### 调用入口 `run`函数
 
 ` run`函数是框架调用模块的入口，`logfile`为调用参数，传入log文件的文件名。
@@ -30,9 +31,13 @@ and log of networkc elements and generate a report for the check result.
 ### 检查模块变量说明
 
 * `module_id` 模块ID
-   格式：TN-<发行者>-<编号>
+   格式：<网元类型>TN<发行者>_<编号>.<子编号>
   
-  - 发行者为Global或China或Case
+  - 网元类型为：NG和NS，分别代表FlexiNG和FlexiNS
+  - 发行者为：
+    - TS， 表示由Global产品线发布的TN
+    - CN， 表示由中国care发布的TN
+    
   - Global TN的编号就是TN本身的序号，China TN的编号为日期，Case的变化为CaseID
 
 * `tag` 模块标签，一般为与检查模块相关的关键字，用于以后的分类和汇总

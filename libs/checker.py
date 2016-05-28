@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import os,yaml,re,json
-from subprocess import check_output, STDOUT,PIPE,CalledProcessError
+from subprocess import check_output,PIPE,CalledProcessError
 from collections import Counter
 from importlib import import_module
-from libs.tools import to_unicode
+#from libs.tools import to_unicode
 
 __version__ = "v1.0"
 MODULE_PATH = 'modules'
@@ -52,7 +52,7 @@ class CheckStatus(object):
 def validateResult(result):
     if hasattr(CheckStatus,result.upper):
         return result.upper()
-    return UNKNOWN
+    return CheckStatus.UNKNOWN
 
 ###############################################################
 # Class ShellModule
@@ -129,8 +129,8 @@ class CheckList(object):
     def import_modules(self,modules_filename=None):
         if modules_filename:
             self._modules_name = modules_filename
-        module_path = self.info['paths']['modules']
-        module_names = filter(ignore_files,self.info['modules_name'])
+        #module_path = self.info['paths']['modules']
+        #module_names = filter(ignore_files,self.info['modules_name'])
         self.modules = ImportCheckModules(self)
 
         return self.modules
@@ -152,13 +152,13 @@ def ImportCheckModules(checklist):
             mname = '.'.join([mpath,name[:-3]])
             #print "mname:",mpath,name[:-3]
             modules.append(import_module(mname))
-        elif os.path.isdir(os.path.join(path,name)):
-            # this name is a directory.
+        elif os.path.isdir(os.path.join(modulepath,name)):
+            # the name is a directory.
             continue
         else:
             # non-python script modules
             #print "name:",name
-            modules.append(ShellModule(name,path))
+            modules.append(ShellModule(name,modulepath))
 
     return modules
 
@@ -172,6 +172,7 @@ class ResultInfo(object):
     """
     strformat = " Status: %(status)s\n   Info:\n%(info)s\n  error:%(error)s"
     keys = ['status','info','error']
+    
     def __init__(self,name, **kwargs):
         self.name = name
         self.module_id = kwargs.get('module_id','')
@@ -230,14 +231,13 @@ class ResultInfo(object):
 
     def loadinfo(self,module):
         """load basic info of module"""
-        fields=['module_id','priority','tag']
+        fields=['module_id','priority','tag','criteria']
         for key in fields:
             setattr(self,key,module.__dict__.get(key,''))
 
     def dump(self,oformat='reading'):
         if oformat == 'reading':
             data = self.data.copy()
-            #data['info'] = "\n".join(data['info'])
             data['info'] = "\n".join(data['info'])
             return ResultInfo.strformat % data
 
@@ -252,10 +252,10 @@ class ResultInfo(object):
     def dumpstr(self,template=None):
         """
         """
-        strbuf = []
+        pass
 
     def __repr__(self):
-        return "ResultInfo:%s=%s" % (self.module_id,self.data['status'])
+        return "ResultInfo<module(%s)=%s>" % (self.module_id,self.data['status'])
 
 
 class ResultList(object):

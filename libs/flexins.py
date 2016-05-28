@@ -18,10 +18,8 @@ example:
     """
     def parse_log(self,logfile):
         loglines = file(logfile).readlines()
-        print "logfiles:",logfile
 
         self._data['version'] = _get_ns_version(loglines)
-
 
         om_names = ['hostname','c_num','location']
         pat = re.compile("(\d+)\s+(\w+)\s+(\d+)\s+(\d+)\s+(\w+)\s+(\w+)")

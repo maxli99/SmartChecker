@@ -2,27 +2,29 @@
 # -*- coding: utf-8 -*-
 """Nokia Smart Elements Health Checker
 
-SmartChecker will import and run all the health check modules listed in <checklist> file.
+this main program will import and run all the check modules listed in 
+<checklist> file.
 
 Usage:    
-    smartchecker <checklist> [logfile]
+    smartchecker <checklist> [logfile|logdir] [options]
 
 examples:
    smartchecker -s checklist.ckl
-   smartchecker -r checklist.ckl logfile   
+   smartchecker -r checklist.ckl logfile
    smartchecker -r checklist.ckl logfile  --saveto report_sae01.html
-   smartchecker -r checklist.ckl logfile  --saveto report_sae01.html --silent
+   smartchecker -r checklist.ckl logfile  --template bootstrap.html
 """
 __programname__ = 'Smartchecker'
 __version__     = '0.92'
 
-import sys,os, argparse,time,re
+import sys,os, argparse,time
 from libs.configobject import ConfigObject
 from libs.checker import ImportCheckModules,ResultList,CheckList
 from libs.reportor import CheckReport, JinjaTemplate
-from libs.tools import MessageBuffer,MessageLogger
+from libs.tools import MessageBuffer
 from libs.infocache import shareinfo
 from libs.logfile import LogFile
+from messagelogger import MessageLogger
 
 default_config = {
 'output_format' : "reading",
@@ -43,7 +45,12 @@ SILENT          = False
 REPORT_TEMPLATE = None
 SAVE_OUTPUT     = None
 
+#initilize the logging.
+logfile = CONFIG.get('checker_logfile','/tmp/smarchecker.log')
+rootlogger = MessageLogger()
+rootlogger.setLevel(CONFIG.get('logging_level','INFO'))
 logger = MessageLogger('SmartChecker')
+logger.addFileHandler(logfile)
 
 def args_parse():
     global DEBUG,SILENT,REPORT_TEMPLATE,SAVE_OUTPUT
@@ -77,13 +84,13 @@ def args_parse():
         sys.exit(1)
 
     if args.run and not args.logfile:
-        print("Need to specify a logfile!")
+        print("Need to specify a log filename or directory!")
         sys.exit(1)
 
     DEBUG   = args.debug
     SILENT  = args.silent
     REPORT_TEMPLATE = args.template
-    SAVE_OUTPUT     = args.saveto
+    SAVE_OUTPUT     = args.saveto or ""
 
     return parser, args
 
@@ -116,10 +123,10 @@ def show_module_info(checklist,logfile=None):
             cmdlist.extend(m.check_commands)
 
     _info=template.render(locals())
-    template = Jinjia.template()(_info)
+    template = jinja.template()(_info)
     #ne_hardware = 
-    info = template.render(ne_hardware)
-    msgbuf.append(info)
+    #info = template.render(ne_hardware)
+   # msgbuf.append(info)
 
     if not SILENT:
         msgbuf.output(CONFIG.runmode)
@@ -129,7 +136,7 @@ def show_module_info(checklist,logfile=None):
 
     return 0
 
-def check_logfile(checklist,logfile):
+def check_logfile(checklist,logfile, report_name_tmpl=None):
     """run the check modules in console mode
     """
     log=LogFile(logfile)
@@ -158,7 +165,7 @@ def check_logfile(checklist,logfile):
         _result = m.run(logfile)
         _result.loadinfo(m)
         results.append(_result)
-
+        
     timestamp=time.strftime("%Y-%m-%d %H:%M")
     element = shareinfo.get('ELEMENT')
     if not element:
@@ -173,52 +180,61 @@ def check_logfile(checklist,logfile):
     if not SILENT and template_type =='md':
         msgbuf.output(CONFIG.runmode)
 
-    if SAVE_OUTPUT:
-        report_filename = SAVE_OUTPUT % locals()
-        save_output_to_file(msgbuf,report_filename)
-        #logger.info("Save the %s success report to path '%s'" % (reports_counter,checklist.paths['reports']))
-    else:
-        report_filename = '.'.join((hostname,template_type))
-        save_output_to_file(msgbuf,report_filename)
+    if not report_name_tmpl:
+        report_name_tmpl = "report_%(hostname)s.%(template_type)s"
+
+    report_filename = report_name_tmpl % locals()
+    save_output_to_file(msgbuf,report_filename,path=SAVE_OUTPUT)
 
     results.hostname = hostname
     results.report_filename = report_filename
 
-    logger.info("Result: %s, %s, Failed:%s" % 
-                (results.hostname, results.stats_dict(),results.stats_detail('FAILED'))
-               )
+    logger.info("Result: %s, Failed:%s, Unknow:%s, Passed:%s" % 
+                (results.hostname,
+                 results.stats_detail('FAILED'),
+                 results.stats_detail('UNKNOWN'),
+                 results.stats_detail('PASSED'),
+                ))
+
 
     return results , errmsg
 
 
-def check_logdir(checklist,logdir):
-    global SAVE_OUTPUT
+def check_logdir(checklist,logdir,output_path=''):
     resultlist = []
     errmsg = []
+
     for dirpath, _ ,files in os.walk(logdir):
-        #change the path: /path/log/project/xxx to project_xxx
-        cur_dirname = dirpath.replace(logdir,"").strip(os.path.sep).replace(os.path.sep,'_')
-        SAVE_OUTPUT = "%s_%%(hostname)s.%%(template_type)s" % cur_dirname
+        #change the path: /path/log/project/xxx to report_project_xxx
+        cur_dirname = dirpath.replace(logdir,"report").strip(os.path.sep).replace(os.path.sep,'_')
+        output_file_tmpl = "%s_%%(hostname)s.%%(template_type)s" % cur_dirname
+        #print "SAVE OUTPUT2:", output_file_tmpl
         for fname in filter(lambda f:f.endswith('.log'), files):
-            filename = os.path.join(dirpath,fname)
-            result, _errmsg = check_logfile(checklist,filename)
+            logfilename = os.path.join(dirpath,fname)
+            result, _errmsg = check_logfile(checklist,logfilename, report_name_tmpl=output_file_tmpl)
             if result:
-                logger.info("Analysising logfile: %s... SUCCESS!" % filename)
+                logger.info("Analysising logfile: %s... SUCCESS!" % logfilename)
                 logger.info("Save report to: %s" % result.report_filename)
                 resultlist.append(result)
             else:
-                logger.info("Analysising logfile: %s...ERROR!" % filename)
+                logger.info("Analysising logfile: %s...ERROR!" % logfilename)
                 errmsg.append(_errmsg)
             
-
     return resultlist,errmsg
 
 def check_log(checklist,logname):
+    """Main entry to check the logfiles.
+    """
     resultlist = []
-    #the given logname is a dir
+
+    _reportpath =  checklist.paths['reports'] 
+    if SAVE_OUTPUT:
+        _reportpath = SAVE_OUTPUT
+
+    #the given logname is a dir name.
     if os.path.isdir(logname):
         resultlist,errmsg = check_logdir(checklist,logname)
-    else:
+    else: #the logname is a filename
         resultlist,errmsg = check_logfile(checklist,logname)
 
     if not resultlist:
@@ -229,11 +245,7 @@ def check_log(checklist,logname):
         else:
             reports_counter = 1
 
-    _reportpath =  checklist.paths['reports'] 
-    if SAVE_OUTPUT:
-        _reportpath = os.path.split(SAVE_OUTPUT)[0]
-                
-    logger.info("Save the %s success report to path '%s'" % (reports_counter,_reportpath))
+    logger.info("Save the %s success report to path '%s'" % (reports_counter, _reportpath))
     logger.info("Finished the checking.")
 
 if __name__ == "__main__":
@@ -251,7 +263,7 @@ if __name__ == "__main__":
         logger.setLevel('INFO')
 
     if args.log2file:
-        _logfile = CONFIG.get('checker_logfile','/tmp/checker.log')
+        _logfile = CONFIG.get('checker_logfile','/tmp/smartchecker.log')
         logger.addFileHandler(_logfile)
 
     logger.debug(args)
