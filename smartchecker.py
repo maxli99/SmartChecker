@@ -23,7 +23,7 @@ from libs.checker import ImportCheckModules,ResultList,CheckList
 from libs.reportor import CheckReport, JinjaTemplate
 from libs.tools import MessageBuffer
 from libs.infocache import shareinfo
-from libs.logfile import LogFile
+from libs.logfile import LogFile, istextfile
 from messagelogger import MessageLogger
 
 default_config = {
@@ -46,11 +46,16 @@ REPORT_TEMPLATE = None
 SAVE_OUTPUT     = None
 
 #initilize the logging.
-logfile = CONFIG.get('checker_logfile','/tmp/smarchecker.log')
+logfile = CONFIG.get('checker_logfile','/tmp/smartchecker.log')
+logging_level = CONFIG.get('logging_level','INFO')
 rootlogger = MessageLogger()
-rootlogger.setLevel(CONFIG.get('logging_level','INFO'))
+rootlogger.addFileHandler(logfile)
+rootlogger.setLevel(logging_level)
 logger = MessageLogger('SmartChecker')
-logger.addFileHandler(logfile)
+
+
+
+print "logging level", logger.getLevel(),logging_level
 
 def args_parse():
     global DEBUG,SILENT,REPORT_TEMPLATE,SAVE_OUTPUT
@@ -184,6 +189,7 @@ def check_logfile(checklist,logfile, report_name_tmpl=None):
         report_name_tmpl = "report_%(hostname)s.%(template_type)s"
 
     report_filename = report_name_tmpl % locals()
+    logger.info("Save report to: %s" % os.path.join(SAVE_OUTPUT,report_filename))
     save_output_to_file(msgbuf,report_filename,path=SAVE_OUTPUT)
 
     results.hostname = hostname
@@ -209,12 +215,12 @@ def check_logdir(checklist,logdir,output_path=''):
         cur_dirname = dirpath.replace(logdir,"report").strip(os.path.sep).replace(os.path.sep,'_')
         output_file_tmpl = "%s_%%(hostname)s.%%(template_type)s" % cur_dirname
         #print "SAVE OUTPUT2:", output_file_tmpl
-        for fname in filter(lambda f:f.endswith('.log'), files):
+        for fname in filter(istextfile, files):
             logfilename = os.path.join(dirpath,fname)
+            logger.debug("checking the logfile:%s" % logfilename)
             result, _errmsg = check_logfile(checklist,logfilename, report_name_tmpl=output_file_tmpl)
             if result:
                 logger.info("Analysising logfile: %s... SUCCESS!" % logfilename)
-                logger.info("Save report to: %s" % result.report_filename)
                 resultlist.append(result)
             else:
                 logger.info("Analysising logfile: %s...ERROR!" % logfilename)
@@ -230,22 +236,26 @@ def check_log(checklist,logname):
     _reportpath =  checklist.paths['reports'] 
     if SAVE_OUTPUT:
         _reportpath = SAVE_OUTPUT
+    logger.debug("The _reportpath is: %s" % _reportpath)
 
     #the given logname is a dir name.
     if os.path.isdir(logname):
+        logger.info("checking the log directory: %s" % logname)
         resultlist,errmsg = check_logdir(checklist,logname)
-    else: #the logname is a filename
+    else: #the logname is a filenameq
+        logger.info("checking the log file:" % logname)
         resultlist,errmsg = check_logfile(checklist,logname)
 
-    if not resultlist:
-        logger.error("\nERROR: %s" % errmsg)
+    if not resultlist and not errmsg:
+        logger.error("No log file was found in the logfile directory: %s" % _reportpath)
+
     else:
         if isinstance(resultlist,list):
             reports_counter = len(resultlist)
         else:
             reports_counter = 1
+        logger.info("Save the %s success report to path '%s'" % (reports_counter, _reportpath))
 
-    logger.info("Save the %s success report to path '%s'" % (reports_counter, _reportpath))
     logger.info("Finished the checking.")
 
 if __name__ == "__main__":
@@ -257,7 +267,7 @@ if __name__ == "__main__":
     #parse the arguments and options.
     parser,args = args_parse()
     shareinfo.set('DEBUG',args.debug)
-    if args.debug:
+    if args.debug or logging_level=='DEBUG':
         logger.setLevel('DEBUG')
     else:
         logger.setLevel('INFO')
