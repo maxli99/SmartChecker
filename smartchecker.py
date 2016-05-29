@@ -49,13 +49,10 @@ SAVE_OUTPUT     = None
 logfile = CONFIG.get('checker_logfile','/tmp/smartchecker.log')
 logging_level = CONFIG.get('logging_level','INFO')
 rootlogger = MessageLogger()
-rootlogger.addFileHandler(logfile)
+#rootlogger.addFileHandler(logfile)
 rootlogger.setLevel(logging_level)
 logger = MessageLogger('SmartChecker')
 
-
-
-print "logging level", logger.getLevel(),logging_level
 
 def args_parse():
     global DEBUG,SILENT,REPORT_TEMPLATE,SAVE_OUTPUT
@@ -240,10 +237,10 @@ def check_log(checklist,logname):
 
     #the given logname is a dir name.
     if os.path.isdir(logname):
-        logger.info("checking the log directory: %s" % logname)
+        logger.debug("checking the log directory: %s" % logname)
         resultlist,errmsg = check_logdir(checklist,logname)
     else: #the logname is a filenameq
-        logger.info("checking the log file:" % logname)
+        logger.debug("checking the log file: %s" % logname)
         resultlist,errmsg = check_logfile(checklist,logname)
 
     if not resultlist and not errmsg:
