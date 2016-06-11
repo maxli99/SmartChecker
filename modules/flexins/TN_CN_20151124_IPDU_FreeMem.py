@@ -287,7 +287,7 @@ def run(logfile):
 	else:
 		result.status = CheckStatus.PASSED
 
-	info=[line+'\n' for line in info]
+	#info=[line+'\n' for line in info]
 	result.update(info=info,error=errmsg)
 	return result
 

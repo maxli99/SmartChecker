@@ -99,11 +99,11 @@ def is_throttling_on(logs):
             debugmsg("current throtlling is set to [%s]" % throttling)
             if throttling == "0":
                 status = CheckStatus.PASSED
-                info.append(u"检查通过，S11 Throttling功能已经关闭\n")
+                info.append(u"检查通过，S11 Throttling功能已经关闭")
                 break
             else:
                 status = CheckStatus.FAILED
-                info.append(u"检查未通过，S11 Throttling功能处于开启状态，请尽快关闭该功能\n")
+                info.append(u"检查未通过，S11 Throttling功能处于开启状态，请尽快关闭该功能")
                 break
     if status == CheckStatus.UNKNOWN:
         debugmsg("the command output does not contain the required info, please check the log manually")
@@ -131,20 +131,20 @@ def run(logfile):
         ns_version = ""
         ns_version = shareinfo.get('ELEMENT').version['BU']
         debugmsg("get the ns version [%s]" % ns_version)
-        info.append(u"当前NS/MME软件版本是[%s]\n" % ns_version)
+        info.append(u"当前NS/MME软件版本是[%s]" % ns_version)
         if ns_version in target_versions:
             debugmsg("ns version is in the target versions")
-            info.append(u"当前NS/MME软件版本存在Throttling功能开启风险\n")
+            info.append(u"当前NS/MME软件版本存在Throttling功能开启风险")
         else:
             debugmsg("ns version is not in the target versions")
-            info.append(u"当前NS/MME软件版本不存在Throttling功能开启风险\n")
+            info.append(u"当前NS/MME软件版本不存在Throttling功能开启风险")
             result.status = CheckStatus.PASSED
             result.update(info=info, error=errmsg)
             return result
     except Exception as e:
         debugmsg("Can not get a correct ns version info from log, only got [%s]" % ns_version)
         result.status = CheckStatus.UNKNOWN
-        info.append(u"NS/MME软件版本是[%s]，无法准确判断版本信息，请人工核实。\n" % ns_version)
+        info.append(u"NS/MME软件版本是[%s]，无法准确判断版本信息，请人工核实。" % ns_version)
         errmsg = u'无法获取软件版本信息'
         result.update(info=info, error=errmsg)
         return result
@@ -156,7 +156,7 @@ def run(logfile):
         logs = logspt.get_log(
             "DDE:IPDUcat /opt/mme/conf/mmeGTPLBS-0x0968.ini", fuzzy=True)
     except Exception as e:
-        info.append(u"日志文件无法加载，请检查命令参数是否正确！\n")
+        info.append(u"日志文件无法加载，请检查命令参数是否正确")
         errmsg = u"日志文件无法加载，请检查命令参数是否正确！"
         result.status = CheckStatus.UNKNOWN
     else:

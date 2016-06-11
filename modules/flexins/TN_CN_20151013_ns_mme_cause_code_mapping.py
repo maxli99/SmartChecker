@@ -202,7 +202,7 @@ def run(logfile):
 			info.append(info_dic[check_Items][2].replace('- ','- !'))
 			result.status = CheckStatus.FAILED
 
-	info=[line+"\n" for line in info]
+	#info=[line+"\n" for line in info]
 	result.update(info=info,error=errmsg)
 	return result
 

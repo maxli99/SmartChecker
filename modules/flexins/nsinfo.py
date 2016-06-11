@@ -7,7 +7,7 @@ from libs.flexins import FlexiNS
 
 ## Mandatory variables 
 ##--------------------------------------------
-module_id = 'fnsbase.2016030500'
+module_id = 'fnsbase.nsinfo'
 tag       = ['flexins','base']
 priority  = 'default'
 name      = "FlexiNS basic info collecting"
@@ -49,6 +49,6 @@ def run(logfile):
     status = CheckStatus.PASSED
     info = info_template % ns._data
 
-    result.update(status=status,info=[info],errmsg=errmsg)
+    result.update(status=status,info=[info],error=errmsg)
     return result
     

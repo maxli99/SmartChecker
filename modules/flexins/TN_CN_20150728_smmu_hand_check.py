@@ -32,13 +32,10 @@ target_version = ['NS30', 'NS40', 'NS15']
 check_commands= [('ZDDE:SMMU,x:"ZL:9","ZLP:9,FAM","Z9H:404";','Show GRNPRB hand state,x is the unit id of SMMU.')]
 #match_start= 'HAND FO:PREV NEXT TIME     GR STATE    STABITS  JBUFFER      RCOMP FAM  PROC FO'
 patten = re.compile("^[0-9,A-F]{4} [0-9,A-F]{2} [0-9,A-F]{4}")
-smmu_info="SMMU-%s GRNPRB hand check %s\n"
+smmu_info="SMMU-%s GRNPRB hands number: %s"
 ##
 
 def read_block(logfile,blkname):
-    # loglines = file(logfile).readlines()
-    #
-    # return ''.join(loglines)
     logspliter=LogSpliter(type=LOG_TYPE_FLEXI_NS)
     logspliter.load(logfile)
     return logspliter.get_log(blkname,fuzzy=True)
@@ -86,7 +83,8 @@ def run(logfile):
 
         if status == CheckStatus.UNCHECKED:
             status = CheckStatus.UNKNOWN
-        rsult_info.append(smmu_info %(unit_index,status))
+        rsult_info.append(smmu_info %(unit_index,len(hands)))
+        
     if total_status==CheckStatus.UNKNOWN:
         error = "Can't find hand status in this log!"
     else:

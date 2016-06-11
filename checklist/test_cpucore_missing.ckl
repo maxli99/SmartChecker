@@ -3,7 +3,7 @@
 ## 本checklist仅用作测试及示例
 
 #简要说明，可选字段
-description: 检查GRNPRB hand group 里的hand数量，50位正常,详细说明请参考TN_CN_20150728.
+description: 检查FlexiNS的CPU Blade是否有丢核现象
 
 #本checklist适用网元类型
 netype: FlexiNS
@@ -11,7 +11,7 @@ netype: FlexiNS
 #模板变量，包含模块信息模板和检查报告模板。缺省
 templates:
    module_info: module_info.md
-   report: common_report.md
+   report: common_report2.html
 
 #相关路径信息
 paths:
@@ -23,5 +23,4 @@ paths:
 ## 指定需要运行的检查模块名
 modules_name:
     - nsinfo.py
-    - nsversion.py
-    - TN_CN_20150728_smmu_hand_check.py
+    - TN_CN_20160606_CPUCore_missing.py

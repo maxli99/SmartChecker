@@ -3,6 +3,8 @@ import os,yaml,re,json
 from subprocess import check_output,PIPE,CalledProcessError
 from collections import Counter
 from importlib import import_module
+from checkstatus import CheckStatus
+
 #from libs.tools import to_unicode
 
 __version__ = "v1.0"
@@ -42,13 +44,7 @@ class CheckModuleError(Exception):
     pass
 class BasicInfoMissing(CheckModuleError):
     pass
-class CheckStatus(object):
-    PASSED = 'PASSED'      # check result is passed
-    FAILED = 'FAILED'      # check result is failed
-    UNKNOWN = 'UNKNOWN'    # unknown stituation
-    RUNERR  = 'RUNERR'     # error in runtime
-    UNCHECKED = 'UNCHECKED'
-
+    
 def validateResult(result):
     if hasattr(CheckStatus,result.upper):
         return result.upper()
@@ -165,19 +161,19 @@ def ImportCheckModules(checklist):
 
 class ResultInfo(object):
     """Storing the information of the check result.
-
-    status,  PASSED/FAILED/UNKNOW/
-    info,    information.
-    error,   error information.
+    
+    status:  one of the CheckStatus: PASSED/FAILED/UNKNOWN
+    info:    a list contains the suplement messages.
+    error:   a list contain the error messages
     """
     strformat = " Status: %(status)s\n   Info:\n%(info)s\n  error:%(error)s"
     keys = ['status','info','error']
     
     def __init__(self,name, **kwargs):
         self.name = name
-        self.module_id = kwargs.get('module_id','')
-        self.criteria = kwargs.get('criteria','')
-        self.priority = kwargs.get('priority','Major')
+        self.module_id = kwargs.get('module_id', '')
+        self.criteria  = kwargs.get('criteria',  '')
+        self.priority  = kwargs.get('priority',  'Major')
 
         self.data = {'status' : CheckStatus.UNKNOWN,
                       'info'   : '',
@@ -221,8 +217,16 @@ class ResultInfo(object):
         self.data['error'] = self.data['error'] if isinstance(self.data['error'], unicode) else unicode(self.data['error'], "utf-8")
 
     def update(self,**kwargs):
+        # self.data.update(kwargs)
+        # self._encode_to_unicode()
+        for k,v in kwargs.items():
+            if isinstance(v,list):
+                v = '\n'.join(v)
+            if not isinstance(v,unicode):
+                v=unicode(v,'utf-8')
+            kwargs[k] = v
+                
         self.data.update(kwargs)
-        self._encode_to_unicode()
 
     def load(self,**kwargs):
         "obslated function, please use the update instead."
