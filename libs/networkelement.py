@@ -58,15 +58,14 @@ the version could be a list include multi version id. or a string of version id.
 
 def extract_data(datainfo,loglines):
     """return a dict include the data extract from the loglines.
-Arguments:
-    datainfo        a dict contains the data names,command and the patterns
-    command
-                    {'names':['BU','FB','NW','UT'],
+    Arguments:
+        datainfo:   a dict contains the data names,command and the patterns
+         command:   {'names':['BU','FB','NW','UT'],
                      'command': 'ZCWQ'
                      'pattern': re.compile("xxxx"),
                      'match_method': 'findall'
-Return:
-    a dict include the data with name.
+    Return:
+        a dict include the data with name.
     """
     logtxt = read_cmdblock_from_log(loglines,datainfo['command'])
 

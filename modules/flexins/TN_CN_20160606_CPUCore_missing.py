@@ -12,7 +12,6 @@ u"""
 """
 
 import re,sys
-sys.path.append("R:\\SmartChecker")
 from libs.checker import ResultInfo
 from libs.checker import CheckStatus
 from libs.infocache import shareinfo
@@ -27,8 +26,7 @@ name      = u"FlexiNS CPUBlade Core 核心数减少问题检查"
 desc      = __doc__
 criteria  = u"""
 （1）检查MME版本为 ['N5','N6'] 或者更高版本。
-（2）检查OMU，MCHU的硬盘碎片率是否大于60%。大于为FAILED，小于则为PASSED。
-（3）如果log中没有相应的指令log，结果为UNKNOWN。
+（2）检查IPDU/MMDU/CPPU板卡的CPU Core的数量。等于12则为PASSED，小于12为FAILED。
 """
 result = ResultInfo(name,module_id=module_id,priority=priority)
 error = ''
@@ -65,29 +63,18 @@ def caculate_cpu_cores(logfile):
         
     return core_nums
 
-def check_version(target_version):
-    version_status = (CheckStatus.VERSION_UNKNOWN,'')
-    ns = shareinfo.get('ELEMENT')
-    if not ns.version:
-        version_status=(CheckStatus.VERSION_UNKNOWN,"No version info was found.")
-    else:
-        nsversion = ns.version['BU']
-        if ns.match_version(target_version):
-            version_status=(CheckStatus.VERSION_MATCHED, u"- NS version: %s, 本检查适用于此版本" % nsversion) 
-        else:
-            version_status=(CheckStatus.VERSION_UNMATCHED,u"- NS version: %s, 本检查不适用与此版本。" % nsversion)
-    
-    return version_status
+
 ##--------------------------------------------
 ## Mandatory function: run
 ##--------------------------------------------    
 def run(logfile):
     status = CheckStatus.UNCHECKED 
     errmsg = []    
-    # Check NS Version
-    vstatus,msg = check_version(target_version)
-    print "versom check:",vstatus,msg
     
+    ns = shareinfo.get('ELEMENT')
+    # Check NS Version
+    vstatus,msg = ns.version_in_list(target_version)
+
     if vstatus == CheckStatus.VERSION_UNKNOWN:
         result.update(status=CheckStatus.UNKNOWN,info=[msg],error=error)
     
@@ -111,11 +98,4 @@ def run(logfile):
     elif vstatus == CheckStatus.VERSION_UNMATCHED:
         result.update(status=CheckStatus.PASSED,info=[msg],error=errmsg)
     
-    #print result.data
     return result
-
-
-if __name__ == "__main__":
-    logfile = sys.argv[1]
-    #print caculate_cpu_cores(logfile)
-    run(logfile)

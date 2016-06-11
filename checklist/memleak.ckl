@@ -1,8 +1,0 @@
-## Checklist for FlexiNG memory leak and leap second issue
-
-path: 'modules\flexing'
-templatefile: "templates/console.md"
-common_modules:
-    - fngbase.py
-modules:
-    - memory_leak.py

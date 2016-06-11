@@ -2,6 +2,7 @@
 import re
 from tools import read_cmdblock_from_log,MessageLogger
 from networkelement import NetworkElement, extract_data
+from checker import CheckStatus
 
 __version__ = "v0.5"
 
@@ -14,7 +15,8 @@ example:
     ns = FlexiNS()
     ns.parse_log("log/nsinfo.log")
 
-    print ns.version    
+    print ns.version
+    print ns.
     """
     def parse_log(self,logfile):
         loglines = file(logfile).readlines()
@@ -27,6 +29,11 @@ example:
         self._load_data(_get_om_config(loglines),om_names)
 
     def match_version(self,versions):
+        """check if the BU version match the target versions
+        
+        target_version: a list include some version info. example: ['N5','N6']  
+        
+        """
         nsversion = self.version.get('BU','')
         if isinstance(versions,list):
             for ver in versions:
@@ -37,6 +44,25 @@ example:
                 return True
         return False
 
+    def version_in_list(self,version_list):
+        """Check if the version in target versions list.
+        
+        Return:
+            (status, info)
+        
+        status: CheckStatus, one of [VERSION_UNKNOWN,VERSION_MATCHED,VERSION_UNMATCHED]
+          info: additional info.     
+        """
+        #nsversion = self.version.get('BU','')
+        if not self.version:
+            version_status=(CheckStatus.VERSION_UNKNOWN,"No version info was found.")
+        elif self.match_version(version_list):
+            version_status=(CheckStatus.VERSION_MATCHED, u"- NS version: %s, 本检查适用于此版本" % self.version['BU']) 
+        else:
+            version_status=(CheckStatus.VERSION_UNMATCHED,u"- NS version: %s, 本检查不适用与此版本。" % self.version['BU'])
+        
+        return version_status
+    
     def __repr__(self):
         if 'c_num' in self._data:
             _reprtxt = "FlexiNS(hostname:%(hostname)s,C_NUM:%(c_num)s)"
