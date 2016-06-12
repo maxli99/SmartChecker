@@ -1,0 +1,1443 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ENTER USERNAME < 
+
+ENTER USERNAME < SYSTEM
+
+ENTER PASSWORD < ***************
+
+Flexi NS  SHMME06BNK                2016-06-02  08:42:45
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                       WELCOME TO THE DX 200 SERIES DIALOGUE
+
+
+
+
+
+MAIN LEVEL COMMAND <___>
+< ZQNI;
+
+
+LOADING PROGRAM VERSION 12.7-0
+
+Flexi NS  SHMME06BNK                2016-06-12  15:56:33 PAGE      1
+
+CON  TYPE     SW  C-NUM   ID  NAME         LOCATION          CHA  STATE  CTYP
+ 
+000  DX220     5  397205      SHMME06BNK   SHQINZHOU         
+
+COMMAND EXECUTED
+
+
+O&M NETWORK HANDLING COMMAND <QN_>
+< ZWQO:CR;
+
+LOADING PROGRAM VERSION 14.29-0
+
+PACKAGES CREATED IN OMU:
+
+    SW-PACKAGE     STATUS   DIRECTORY           ENVIRONMENT          DEF  ACT
+                            PACKAGE-ID (REP-ID) DELIVERY
+                                                CD-ID
+
+    MME06FBK       FB       MME06FBK            N5 1.19-3             -    Y 
+                            N5 1.19-3           CID000NX 8.19-3   
+                                                          
+
+    N5011903       BU       N5_1_19_3           N5 1.19-3             Y    Y 
+                            N5 1.19-3           CID000NX 8.19-3   
+                                                          
+
+    FBUT0524       UT       FBUT0524            N5 1.19-3             -    Y 
+                            N5 1.19-3           CID000NX 8.19-3   
+                                                          
+
+    FB060525       UT       FB060525            N5 1.19-3             -    Y 
+                            N5 1.19-3           CID000NX 8.19-3   
+                                                          
+
+    FB160525       UT       FB160525            N5 1.19-3             -    Y 
+                            N5 1.19-3           CID000NX 8.19-3   
+                                                          
+
+
+COMMAND EXECUTED
+
+
+SOFTWARE PACKAGE ADMINISTRATION COMMAND <WQ_>
+< ZTPP
+
+
+LOADING PROGRAM VERSION 19.24-0
+
+/* DATA UNITS:
+
+  MEASUREMENT TYPE;           */
+
+TPP:;
+
+/*** SEMANTIC ERROR ***/ 
+/*** MISSING PARAMETER ***/ 
+
+
+/* GIVE MEASUREMENT TYPE:
+
+   MMMT ..... EPS MOBILITY MANAGEMENT TRANSACTION MEASUREMENT
+   SMMT ..... EPS SESSION MANAGEMENT TRANSACTION MEASUREMENT
+   MULM ..... EPS MMDU USER LEVEL MEASUREMENT
+   UMLM ..... EPS USER MME LEVEL MEASUREMENT
+   SMLM ..... EPS SECURITY MME LEVEL MEASUREMENT
+   SONM ..... EPS SELF ORGANIZING NETWORKS MEASUREMENT
+   S1ME ..... EPS S1 INTERFACE MEASUREMENT
+   S11M ..... EPS S11 GTP INTERFACE MEASUREMENT
+   S6AM ..... EPS S6A INTERFACE MEASUREMENT
+   PWSM ..... EPS PUBLIC WARNING SYSTEM MEASUREMENT
+   DNSM ..... EPS DNS MEASUREMENT
+   RIMM ..... EPS RIM TRANSFER MESSAGES MEASUREMENT
+   RTTM ..... EPS RTT MEASUREMENT
+   SCTP ..... EPS SCTP MEASUREMENT
+   NEUM ..... NETWORK ELEMENT USER MEASUREMENT
+   LCSM ..... EPS LOCATION SERVICES MEASUREMENT
+   SLSM ..... EPS SLS INTERFACE MEASUREMENT
+   GTPM ..... GTP BASED INTERFACE MEASUREMENT
+   SGSI ..... EPS SGS INTERFACE MEASUREMENT
+   SGSS ..... EPS SGS SCTP MANAGEMENT MEASUREMENT
+   DIAS ..... EPS DIAMETER SCTP MANAGEMENT MEASUREMENT
+   S102 ..... EPS S102 INTERFACE MEASUREMENT
+   TRAM ..... EPS TRACE MEASUREMENT
+   S11I ..... EPS S11 INTERFACE MEASUREMENT
+
+   PARAMETER IS OBLIGATORY                                   */
+
+TPP:MMMT;
+
+Flexi NS  SHMME06BNK                2016-06-02  08:43:00
+
+DISPLAY MME COUNTERS
+
+
+MM
+COUNTERS                                                         LAST      
+-------------------------------------------------------------------------------
+M50C000   EPS ATTACH SUCC                                        0000046313
+M50C001   EPS ATTACH FAIL                                        0000002924
+M50C002   EPS DETACH                                             0000034450
+M50C003   EPS PERIODIC TAU SUCC                                  0000036160
+M50C004   EPS PERIODIC TAU FAIL                                  0000000047
+M50C005   EPS TAU SUCC                                           0000621328
+M50C006   EPS TAU FAIL                                           0000005558
+M50C007   EPS SERVICE REQUEST SUCC                               0001902725
+M50C008   EPS SERVICE REQUEST FAIL                               0000005129
+M50C009   EPS X2HO NO SGW CHG SUCC                               0000732840
+M50C010   EPS X2HO NO SGW CHG FAIL                               0000000156
+M50C011   EPS PAGING PROCEDURE ATTEMPTS                          0000834376
+M50C012   EPS PAGING PROCEDURE SUCC                              0000683504
+M50C013   EPS PAGING PROCEDURE FAIL                              0000007837
+M50C014   EPS TO 3G GN ISHO SUCCESS                              0000000000
+M50C015   EPS TO 3G GN ISHO TRGT REJECT                          0000000004
+M50C017   EPS TO 3G GN ISHO ENB CANCEL                           0000000000
+M50C018   EPS TO 3G GN ISHO FAILURE                              0000000001
+M50C019   INTRAMME S1HO NO SGW CHG SUCC                          0000005965
+M50C020   INTRAMME S1HO NO SGW CHG FAIL                          0000000224
+M50C035   COMB TAU SUCCESSFUL                                    0000347599
+M50C036   COMB TAU FAILED                                        0000000829
+M50C037   COMB TAU IMSI ATTACH SUCCESS                           0000035320
+M50C038   COMB TAU IMSI ATTACH FAILED                            0000000594
+M50C039   COMB INTERSYS TAU OVER GN SUCC                         0000123267
+M50C040   COMB INTERSYS TAU OVER GN FAIL                         0000002985
+M50C041   INTERSYS TAU OVER GN SUCCESS                           0000127863
+M50C042   INTERSYS TAU OVER GN  FAILED                           0000003307
+M50C043   INTRAMME TAU NO SGW CHG SUCC                           0000439594
+M50C044   INTRAMME TAU NO SGW CHG FAIL                           0000001522
+M50C045   EPS COMB ATTACH SUCC                                   0000042413
+M50C046   EPS COMB ATTACH EPS SUCC                               0000000200
+M50C047   EPS COMB ATTACH EPS FAIL                               0000002472
+M50C048   EPS COMB ATTACH FAIL                                   0000002672
+M50C049   ESR MO ATTEMPTS                                        0000033013
+M50C050   ESR MT ATTEMPTS                                        0000027731
+M50C051   ESR MO EMERGENCY ATTEMPTS                              0000000004
+M50C052   EPS ATTACH SUCC UE APN                                 0000021829
+M50C053   EPS ATTACH SUCC UE APN OVERRDN                         0000000169
+M50C054   EPS ATTACH FAIL ESM INFO REQ                           0000000033
+M50C055   INTRAMME S1HO SGW CHG FAIL                             0000000000
+M50C056   INTRAMME S1HO SGW CHG SUCC                             0000000019
+M50C057   EPS X2HO SGW CHG SUCC                                  0000000001
+M50C058   INTRAMME TAU SGW CHG SUCC                              0000000040
+M50C059   MME OFFLOAD SUCCESSFUL                                 0000000000
+M50C060   MME OFFLOAD SUCCESSFUL ABNORMAL                        0000000000
+M50C061   MME OFFLOAD FAILED                                     0000000000
+M50C062   MME OFFLOAD FAILED ENB ERROR                           0000000000
+M50C063   MME OFFLOAD FAILED COLLISIONS                          0000000000
+M50C064   INTERMME TAU WO SGW CHG SUCC                           0000012558
+M50C065   INTERMME TAU OUT SUCC                                  0000045181
+M50C066   INTERMME S1HO WO SGW CHG SUCC                          0000000000
+M50C067   INTERMME S1HO OUT SUCC                                 0000012501
+M50C068   INTERMME TAU IN FAIL                                   0000000729
+M50C069   INTERMME TAU OUT FAIL                                  0000000055
+M50C070   INTERMME S1HO IN FAIL                                  0000000393
+M50C071   INTERMME S1HO OUT FAIL                                 0000001010
+M50C072   ATTACH IN WITH MME CHG SUCC                            0000000318
+M50C073   ATTACH IN WITH MME CHG FAIL                            0000000012
+M50C077   EPS ATTACH NAS 03 FAIL                                 0000000039
+M50C078   EPS ATTACH NAS 06 FAIL                                 0000000000
+M50C079   EPS ATTACH NAS 07 FAIL                                 0000000088
+M50C080   EPS ATTACH NAS 08 FAIL                                 0000000082
+M50C081   EPS TAU NAS 03 FAIL                                    0000000001
+M50C082   EPS TAU NAS 06 FAIL                                    0000000000
+M50C083   EPS TAU NAS 07 FAIL                                    0000000014
+M50C084   EPS TAU NAS 08 FAIL                                    0000000000
+M50C085   EPS PAGING 1ST ATTEMPT SUCC                            0000638491
+M50C086   EPS ATTACH ATTEMPT                                     0000004298
+M50C087   EPS CMB ATTACH ATTEMPT                                 0000048329
+M50C088   EPS ATTACH HSS RESTRIC FAIL                            0000000000
+M50C089   EPS ATTACH HSS NO ROAM FAIL                            0000000021
+M50C090   EPS ATTACH HSS NO RESPONSE FAIL                        0000000006
+M50C091   EPS ATTACH EIR NO RESP FAIL                            0000000000
+M50C092   EPS ATTACH IMEI BLOCKED FAIL                           0000000000
+M50C093   EPS ATTACH DNS NO NAME FOUND FAIL                      0000000010
+M50C094   EPS ATTACH GW CRE SESS FAIL                            0000000000
+M50C095   EPS ATTACH GW MD BEARER FAIL                           0000000001
+M50C096   EPS ATTACH INIT CNTX FAIL                              0000000009
+M50C097   EPS ATTACH UE SEC UNSUPP FAIL                          0000000000
+M50C098   EPS ATTACH AKA FAIL                                    0000001450
+M50C099   EPS ATTACH SMC FAIL                                    0000000025
+M50C100   EPS ATTACH UE NOT COMPLETE FAIL                        0000000018
+M50C101   EPS ATTACH LOCAL NO ROAM FAIL                          0000000000
+M50C102   EPS ATTACH COLLISION FAIL                              0000001046
+M50C103   EPS ATTACH PR UNSPEC FAIL                              0000000000
+M50C104   EPS TAU ATTEMPT                                        0000065214
+M50C105   EPS CMB TAU ATTEMPT                                    0000564658
+M50C106   EPS TAU HSS RESTRIC FAIL                               0000000000
+M50C107   EPS TAU HSS NO ROAM FAIL                               0000000002
+M50C108   EPS TAU HSS NO RESPONSE FAIL                           0000000000
+M50C109   EPS TAU EIR NO RESP FAIL                               0000000000
+M50C110   EPS TAU IMEI BLOCKED FAIL                              0000000000
+M50C111   EPS TAU DNS NO NAME FOUND FAIL                         0000000003
+M50C112   EPS TAU GW CRE SESS FAIL                               0000000068
+M50C113   EPS TAU GW MD BEARER FAIL                              0000000213
+M50C114   EPS TAU INIT CNTX FAIL                                 0000001239
+M50C115   EPS TAU UE SEC UNSUPP FAIL                             0000000002
+M50C116   EPS TAU AKA FAIL                                       0000000010
+M50C117   EPS TAU SMC FAIL                                       0000000004
+M50C118   EPS TAU LOCAL NO ROAM FAIL                             0000000015
+M50C119   EPS TAU COLLISION FAIL                                 0000000000
+M50C120   EPS TAU PR UNSPEC FAIL                                 0000032687
+M50C121   EPS TAU CNTX REQ FAIL                                  0000000446
+M50C122   EPS ATT REJ REST TAI HOME                              0000000000
+M50C123   EPS ATT REJ REST TAI ROAM                              0000000000
+M50C124   EPS TAU REJ REST TAI HOME                              0000000000
+M50C125   EPS TAU REJ REST TAI ROAM                              0000000000
+M50C126   EPS SERV REJ REST TAI HOME                             0000000000
+M50C127   EPS SERV REJ REST TAI ROAM                             0000000000
+M50C128   EPS EXT SERV REJ REST TAI HOME                         0000000000
+M50C129   EPS EXT SERV REJ REST TAI ROAM                         0000000000
+M50C130   EPS HANDOVER REJ REST TAI HOME                         0000000000
+M50C131   EPS HANDOVER REJ REST TAI ROAM                         0000000000
+M50C132   EPS INTERMME S1HO SGW CHG IN SUCC                      0000013231
+M50C133   EPS INTERMME TAU SGW CHG IN SUCC                       0000041273
+M50C134   EPS HO MME SELECTION FAIL                              0000000000
+M50C135   EPS HO FORWARD REL OUT FAIL                            0000000036
+M50C136   EPS HO SESSION CRE FAIL                                0000000006
+M50C137   EPS HO PREPARATION FAIL                                0000000167
+M50C138   EPS HO FORWARD REL IN FAIL                             0000000000
+M50C139   EPS HO EXEC TIMER OUT FAIL                             0000000021
+M50C140   EPS HO EXEC TIMER IN FAIL                              0000000268
+M50C141   EPS HO EXEC TIMER FAIL                                 0000000161
+M50C142   EPS HO BEARER MOD FAIL                                 0000000004
+M50C143   EPS HO CANCELLATION FAIL                               0000000098
+M50C144   EPS HO REL CANCELLED FAIL                              0000000117
+M50C145   EPS HO COLLISION PROC FAIL                             0000000915
+M50C146   EPS HO UNSPECIFIED PROC FAIL                           0000000000
+M50C147   EPS IS S3RAU OUT ATTEMPT                               0000000000
+M50C148   EPS IS S3RAU OUT FAIL                                  0000000000
+M50C149   EPS S3TAU WO SGW CHG SUCC                              0000000000
+M50C150   EPS S3TAU SGW CHG SUCC                                 0000000000
+M50C151   EPS S3TAU FAIL                                         0000000000
+M50C152   S10 S3 ID REQ PROC ATTEMPT                             0000000342
+M50C153   S10 S3 ID REQ PROC FAIL                                0000000082
+M50C154   S10 S3 ID RES PROC ATTEMPT                             0000000401
+M50C155   S10 S3 ID RES PROC FAIL                                0000000052
+M50C156   EPS IS S3HO OUT SUCC                                   0000000000
+M50C157   EPS IS S3HO OUT FAIL                                   0000000000
+M50C158   EPS HO SGSN SELECTION FAIL                             0000000000
+M50C159   EPS X2HO BEARER MOD FAIL                               0000000033
+M50C160   EPS X2HO SESSION CRE FAIL                              0000000000
+M50C161   EPS X2HO COLLISION PROC FAIL                           0000000020
+M50C162   EPS X2HO UNSPECIFIED PROC FAIL                         0000000103
+M50C163   EPS EMERGENCY ATTACH SUCC AUTHENTICATED                0000000000
+M50C164   EPS EMERGENCY ATTACH FAIL                              0000000000
+M50C165   EPS EMERGENCY ATTACH ATTEMPTS                          0000000000
+M50C166   EPS EMERGENCY ATTACH SUCC UNAUTHENTICATED              0000000000
+M50C167   EPS EMERGENCY ATTACH SUCC UICCLESS                     0000000000
+M50C168   EPS PAGING VOLTE ATT                                   0000000697
+M50C169   EPS PAGING VOLTE SUCC                                  0000000537
+M50C170   EPS PAGING VOLTE FAIL                                  0000000010
+M50C171   EPS TAU FAILURE DUE TA OR RA GROUP CHANGE              0000000000
+M50C172   EPS TA GROUP DETACHES                                  0000000000
+M50C173   EPS INTER SYSTEM S3HO WO SGW CHG IN SUCC               0000000000
+M50C174   EPS INTER SYSTEM S3HO SGW CHG IN SUCC                  0000000000
+M50C175   EPS INTER SYSTEM S3HO IN FAIL                          0000000000
+M50C176   EPS PAGING QUICK ENB ATTEMPT                           0000526276
+M50C177   EPS PAGING QUICK ENB SUCC                              0000476649
+M50C178   EPS PAGING ENB ATTEMPT                                 0000000280
+M50C179   EPS PAGING ENB SUCC                                    0000000221
+M50C180   EPS PAGING ENB GROUP ATTEMPT                           0000187697
+M50C181   EPS PAGING ENB GROUP SUCC                              0000144988
+M50C182   EPS PAGING TA ATTEMPT                                  0000087031
+M50C183   EPS PAGING TA SUCC                                     0000039238
+M50C184   EPS PAGING TA LIST ATTEMPT                             0000032959
+M50C185   EPS PAGING TA LIST SUCC                                0000022181
+M50C186   EPS PAGING PROCEDURE DURATION                          0112921180
+M50C187   EPS ABNORMAL ATTACH REJECTED                           0000000000
+M50C188   EPS ABNORMAL ATTACH DROPPED                            0000000000
+M50C189   EPS ABNORMAL SERV REQ REJECTED                         0000000000
+M50C190   EPS ABNORMAL SERV REQ DETACHED                         0000000000
+M50C191   EPS ABNORMAL SERV REQ DROPPED                          0000000000
+M50C192   EPS ATTACH WITH ODB REJECTED                           0000000000
+M50C193   EPS TAU WITH ODB REJECTED                              0000000000
+M50C194   EPS ATTACH NAS 05 FAIL                                 0000000000
+M50C195   EPS ATTACH NAS 07 USER FAIL                            0000000088
+M50C196   EPS ATTACH NAS 15 FAIL                                 0000001709
+M50C197   EPS ATTACH NAS 15 USER FAIL                            0000001689
+M50C198   EPS ATTACH NAS 19 FAIL                                 0000000069
+M50C199   EPS EXT SERVICE REQUEST ATTEMPT                        0000060748
+M50C200   EPS EXT SERVICE REQUEST SUCC                           0000060673
+M50C201   GN ISHO 3G TO EPS SUCC                                 0000000000
+M50C202   GN ISHO 3G TO EPS FAIL                                 0000000000
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+50000       EPS MM MEASUREMENT              00:15     2016-06-02   08:15:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:SMMT;
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:43:15
+
+DISPLAY MME COUNTERS
+
+
+SM
+COUNTERS                                                         LAST      
+-------------------------------------------------------------------------------
+M51C000   EPS DEF BEARER ACT SUCC                                0000181397
+M51C001   EPS DEF BEARER ACT FAIL                                0000000927
+M51C002   EPS DEF BEARER DEACT                                   0000180023
+M51C003   GW INIT BEARER MOD SUCCESS                             0000000395
+M51C004   GW INIT BEARER MOD FAILURE                             0000000018
+M51C005   GW INIT BEARER MOD FAIL UE                             0000000000
+M51C006   GW INIT BEARER MOD FAIL ENB                            0000000018
+M51C007   GW INIT BEARER MOD FAIL SGW                            0000000000
+M51C008   GW INIT BEARER MOD FAIL MME                            0000000000
+M51C009   HSS INIT BEARER MOD SUCCESS                            0000125888
+M51C010   HSS INIT BEARER MOD FAILURE                            0000003255
+M51C011   HSS INIT BEARER MOD FAIL UE                            0000000001
+M51C012   HSS INIT BEARER MOD FAIL ENB                           0000003254
+M51C013   HSS INIT BEARER MOD FAIL SGW                           0000000000
+M51C014   PDN PGWINIT DEACT SUCC                                 0000029013
+M51C015   PDN PGWINIT DEACT FAIL                                 0000000135
+M51C016   PDN MMEINIT DEACT SUCC                                 0000000159
+M51C017   PDN MMEINIT DEACT FAIL                                 0000000003
+M51C018   PDN UEINIT ACT SUCC                                    0000005364
+M51C019   PDN UEINIT ACT FAIL                                    0000000698
+M51C020   PDN UEINIT DEACT SUCC                                  0000004130
+M51C021   PDN UEINIT DEACT FAIL                                  0000000190
+M51C024   DDBEARER PGWINIT ACT SUCC                              0000000520
+M51C025   DDBEARER PGWINIT ACT FAIL                              0000000004
+M51C026   DDBEARER PGWINIT MOD SUCC                              0000000393
+M51C027   DDBEARER PGWINIT MOD FAIL                              0000000000
+M51C028   DDBEARER PGWINIT DEACT SUCC                            0000001114
+M51C029   DDBEARER MMEINIT DEACT SUCC                            0000003253
+M51C030   DDBEARER MMEINIT DEACT ABNORM                          0000000000
+M51C031   DDBEARER UEINIT ACT SUCC                               0000000000
+M51C032   DDBEARER UEINIT ACT FAIL                               0000000000
+M51C033   DDBEARER UEINIT MOD SUCC                               0000000000
+M51C034   DDBEARER UEINIT MOD FAIL                               0000000000
+M51C035   DDBEARER UEINIT DEACT SUCC                             0000000000
+M51C036   DDBEARER UEINIT DEACT FAIL                             0000000000
+M51C038   EPS DDBEARER REQ BY MME                                0000000521
+M51C039   EPS DDBEARER CONF BY UE                                0000000520
+M51C040   EPS DFBEARER S5 S8 REQ BY MME                          0000199792
+M51C041   EPS DFBEARER S5 S8 CONF BY SGW                         0000184199
+M51C042   EPS DDBEARER S5 S8 REQ BY MME                          0000000007
+M51C043   EPS DDBEARER S5 S8 CONF BY SGW                         0000000000
+M51C044   EMERGENCY PDN CONN SUCC                                0000000000
+M51C045   EMERGENCY PDN CONN FAIL                                0000000000
+M51C046   EMERGENCY DD BEARER ACT SUCC                           0000000000
+M51C047   EMERGENCY DD BEARER ACT FAIL                           0000000000
+M51C048   PDN ACT FOR VOLTE SUCC                                 0000001127
+M51C049   PDN ACT FOR VOLTE FAIL                                 0000000039
+M51C050   EPS DD BEARER ACT VOLTE SUCC                           0000000520
+M51C051   EPS DD BEARER ACT VOLTE FAIL                           0000000001
+M51C052   EPS BEARER REJ DUE QOS LIMIT                           0000000000
+M51C053   EPS DEF BEARER ACT VOLTE SUCC                          0000001127
+M51C054   EPS DEF BEARER ACT VOLTE FAIL                          0000000013
+M51C055   EPS DD BEARER PDN CONN ATTEMPT                         0000000000
+M51C056   EPS DD BEARER PDN CONN SUCC                            0000000000
+M51C057   EPS DD BEARER PDN CONN DISCARD                         0000000000
+M51C058   EPS ABNORMAL PDN REJECTED                              0000000038
+M51C059   EPS ABNORMAL PDN DETACHED                              0000000031
+M51C060   EPS ABNORMAL PDN DROPPED                               0000000015
+M51C061   EPS PDN CONN WITH ODB REJECTED                         0000000000
+M51C062   EPS ATT INC APN RCVD HOME                              0000000189
+M51C063   EPS ATT INC APN RCVD ROAM                              0000000003
+M51C064   EPS ATT APN REPLACED HOME                              0000000189
+M51C065   EPS ATT APN REPLACED ROAM                              0000000003
+M51C066   EPS PDN CON INC APN RCVD HOME                          0000000608
+M51C067   EPS PDN CON INC APN RCVD ROAM                          0000000002
+M51C068   EPS PDN CON APN REPLACED HOME                          0000000641
+M51C069   EPS PDN CON APN REPLACED ROAM                          0000000002
+M51C070   PDN UEINIT ACT ATTEMPT                                 0000006101
+M51C071   PDN UEINIT ACT NAS 08 FAIL                             0000000000
+M51C072   PDN UEINIT ACT NAS 27 FAIL                             0000000000
+M51C073   PDN UEINIT ACT NAS 28 FAIL                             0000000000
+M51C074   PDN UEINIT ACT NAS 29 FAIL                             0000000000
+M51C075   PDN UEINIT ACT NAS 31 FAIL                             0000000000
+M51C076   EPS BEARER RESOURCE ALLOC ATTEMPT                      0000000000
+M51C077   EPS BEARER RESOURCE ALLOC SUCC                         0000000000
+M51C078   EPS BEARER RESOURCE ALLOC NAS 30 FAIL                  0000000000
+M51C079   EPS BEARER RESOURCE ALLOC NAS 31 FAIL                  0000000000
+M51C080   EPS BEARER RESOURCE ALLOC NAS 33 FAIL                  0000000000
+M51C081   EPS BEARER RESOURCE ALLOC NAS 35 FAIL                  0000000000
+M51C082   PDN UEINIT ACT DNS FAIL                                0000000002
+M51C083   PDN UEINIT ACT GW CRE SESS FAIL                        0000000289
+M51C084   PDN UEINIT ACT GW MOD BEARER FAIL                      0000000000
+M51C085   PDN UEINIT ACT UNSPEC FAIL                             0000000121
+M51C086   CHANGE NOTIFICATION SUCCESSFUL                         0000000000
+M51C087   CHANGE NOTIFICATION FAIL                               0000000000
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+51000       EPS SM MEASUREMENT              00:15     2016-06-02   08:15:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:MULM;
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:43:38
+
+DISPLAY MME COUNTERS
+
+
+MU
+COUNTERS  MMDU-0                                                 LAST      
+-------------------------------------------------------------------------------
+M58C000             EPS MMDU EMM REG MIN                         0000082281
+M58C001             EPS MMDU EMM REG MAX                         0000082751
+M58C002&M58C003     EPS MMDU EMM REG AVG                         0000082547
+M58C004             EPS MMDU EMM DEREG MIN                       0000011195
+M58C005             EPS MMDU EMM DEREG MAX                       0000011243
+M58C006&M58C007     EPS MMDU EMM DEREG AVG                       0000011218
+M58C008             EPS BEARER ACTIVE NBR MAX                    0000085142
+M58C009             EPS BEARER DEDICATED NBR MAX                 0000000014
+M58C010&M58C011     EPS BEARER DEDICATED NBR AVG                 0000000006
+M58C012             EPS BEARER DEFAULT NBR MAX                   0000085134
+M58C013&M58C014     EPS BEARER DEFAULT NBR AVG                   0000084933
+M58C015             EPS VOLTE USER MAX                           0000000654
+M58C016&M58C017     EPS VOLTE USER AVG                           0000000647
+
+COUNTERS  MMDU-1                                                 LAST      
+-------------------------------------------------------------------------------
+M58C000             EPS MMDU EMM REG MIN                         0000082552
+M58C001             EPS MMDU EMM REG MAX                         0000082809
+M58C002&M58C003     EPS MMDU EMM REG AVG                         0000082631
+M58C004             EPS MMDU EMM DEREG MIN                       0000011153
+M58C005             EPS MMDU EMM DEREG MAX                       0000011201
+M58C006&M58C007     EPS MMDU EMM DEREG AVG                       0000011169
+M58C008             EPS BEARER ACTIVE NBR MAX                    0000085233
+M58C009             EPS BEARER DEDICATED NBR MAX                 0000000010
+M58C010&M58C011     EPS BEARER DEDICATED NBR AVG                 0000000006
+M58C012             EPS BEARER DEFAULT NBR MAX                   0000085226
+M58C013&M58C014     EPS BEARER DEFAULT NBR AVG                   0000085028
+M58C015             EPS VOLTE USER MAX                           0000000695
+M58C016&M58C017     EPS VOLTE USER AVG                           0000000687
+
+COUNTERS  MMDU-2                                                 LAST      
+-------------------------------------------------------------------------------
+M58C000             EPS MMDU EMM REG MIN                         0000082292
+M58C001             EPS MMDU EMM REG MAX                         0000082697
+M58C002&M58C003     EPS MMDU EMM REG AVG                         0000082481
+M58C004             EPS MMDU EMM DEREG MIN                       0000010991
+M58C005             EPS MMDU EMM DEREG MAX                       0000011063
+M58C006&M58C007     EPS MMDU EMM DEREG AVG                       0000011024
+M58C008             EPS BEARER ACTIVE NBR MAX                    0000085143
+M58C009             EPS BEARER DEDICATED NBR MAX                 0000000012
+M58C010&M58C011     EPS BEARER DEDICATED NBR AVG                 0000000006
+M58C012             EPS BEARER DEFAULT NBR MAX                   0000085132
+M58C013&M58C014     EPS BEARER DEFAULT NBR AVG                   0000084884
+M58C015             EPS VOLTE USER MAX                           0000000695
+M58C016&M58C017     EPS VOLTE USER AVG                           0000000685
+
+COUNTERS  MMDU-3                                                 LAST      
+-------------------------------------------------------------------------------
+M58C000             EPS MMDU EMM REG MIN                         0000082500
+M58C001             EPS MMDU EMM REG MAX                         0000082734
+M58C002&M58C003     EPS MMDU EMM REG AVG                         0000082612
+M58C004             EPS MMDU EMM DEREG MIN                       0000011088
+M58C005             EPS MMDU EMM DEREG MAX                       0000011126
+M58C006&M58C007     EPS MMDU EMM DEREG AVG                       0000011107
+M58C008             EPS BEARER ACTIVE NBR MAX                    0000085112
+M58C009             EPS BEARER DEDICATED NBR MAX                 0000000011
+M58C010&M58C011     EPS BEARER DEDICATED NBR AVG                 0000000006
+M58C012             EPS BEARER DEFAULT NBR MAX                   0000085106
+M58C013&M58C014     EPS BEARER DEFAULT NBR AVG                   0000084984
+M58C015             EPS VOLTE USER MAX                           0000000699
+M58C016&M58C017     EPS VOLTE USER AVG                           0000000692
+
+COUNTERS  MMDU-4                                                 LAST      
+-------------------------------------------------------------------------------
+M58C000             EPS MMDU EMM REG MIN                         0000083365
+M58C001             EPS MMDU EMM REG MAX                         0000083690
+M58C002&M58C003     EPS MMDU EMM REG AVG                         0000083550
+M58C004             EPS MMDU EMM DEREG MIN                       0000011221
+M58C005             EPS MMDU EMM DEREG MAX                       0000011255
+M58C006&M58C007     EPS MMDU EMM DEREG AVG                       0000011239
+M58C008             EPS BEARER ACTIVE NBR MAX                    0000086079
+M58C009             EPS BEARER DEDICATED NBR MAX                 0000000017
+M58C010&M58C011     EPS BEARER DEDICATED NBR AVG                 0000000010
+M58C012             EPS BEARER DEFAULT NBR MAX                   0000086072
+M58C013&M58C014     EPS BEARER DEFAULT NBR AVG                   0000085899
+M58C015             EPS VOLTE USER MAX                           0000000695
+M58C016&M58C017     EPS VOLTE USER AVG                           0000000685
+
+COUNTERS  MMDU-5                                                 LAST      
+-------------------------------------------------------------------------------
+M58C000             EPS MMDU EMM REG MIN                         0000082502
+M58C001             EPS MMDU EMM REG MAX                         0000082782
+M58C002&M58C003     EPS MMDU EMM REG AVG                         0000082642
+M58C004             EPS MMDU EMM DEREG MIN                       0000011254
+M58C005             EPS MMDU EMM DEREG MAX                       0000011304
+M58C006&M58C007     EPS MMDU EMM DEREG AVG                       0000011284
+M58C008             EPS BEARER ACTIVE NBR MAX                    0000085189
+M58C009             EPS BEARER DEDICATED NBR MAX                 0000000013
+M58C010&M58C011     EPS BEARER DEDICATED NBR AVG                 0000000008
+M58C012             EPS BEARER DEFAULT NBR MAX                   0000085181
+M58C013&M58C014     EPS BEARER DEFAULT NBR AVG                   0000085058
+M58C015             EPS VOLTE USER MAX                           0000000720
+M58C016&M58C017     EPS VOLTE USER AVG                           0000000708
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+58000       EPS MU MEASUREMENT              00:15     2016-06-02   08:15:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:UMLM;
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:43:55
+
+DISPLAY MME COUNTERS
+
+
+UMM
+COUNTERS                                                         LAST      
+-------------------------------------------------------------------------------
+M53C000             EPS MME ECM CONNECTED MIN                    0000062441
+M53C001             EPS MME ECM CONNECTED MAX                    0000064235
+M53C002&M53C003     EPS MME ECM CONNECTED AVG                    0000063441
+M53C004             EPS MME ECM IDLE MIN                         0000431773
+M53C005             EPS MME ECM IDLE MAX                         0000434498
+M53C006&M53C007     EPS MME ECM IDLE AVG                         0000433022
+M53C008             EPS MME EMM REG MIN                          0000495507
+M53C009             EPS MME EMM REG MAX                          0000497463
+M53C010             EPS MME EMM DEREG MIN                        0000066947
+M53C011             EPS MME EMM DEREG MAX                        0000067138
+M53C017             SRVCC PS AND CS HO 3G SUCC                   0000000000
+M53C018             SRVCC CS HO 3G SUCC                          0000000000
+M53C019             OVERLOAD CONTROL DROP PROC                   0000000000
+M53C020             SRVCC PS AND CS HO 3G FAIL                   0000000000
+M53C021             SRVCC CS HO 3G FAIL                          0000000000
+M53C022             SRVCC CS HO 2G SUCC                          0000000035
+M53C023             SRVCC CS HO 2G FAIL                          0000000005
+M53C024             SRVCC EME HO 3G SUCC                         0000000000
+M53C025             SRVCC EME HO 3G FAIL                         0000000000
+M53C026             SRVCC EME HO 2G SUCC                         0000000000
+M53C027             SRVCC EME HO 2G FAIL                         0000000000
+M53C028             SRVCC 3G CANCELLED                           0000000000
+M53C029             SRVCC 2G CANCELLED                           0000000000
+M53C030             SRVCC EME 3G CANCELLED                       0000000000
+M53C031             SRVCC EME 2G CANCELLED                       0000000000
+M53C032             EPS LICENSE REG FAIL                         0000000000
+M53C033             EPS LICENSE BEARER FAIL                      0000000000
+M53C034             EPS MME PURGE HSS OK SUCC                    0000000000
+M53C035             EPS MME PURGE HSS NOK SUCC                   0000000000
+M53C036             SUBSCRIBER MOVE IN SOURCE MME SUCC           0000000000
+M53C037             SUBSCRIBER MOVE IN SOURCE MME FAIL           0000000000
+M53C038             SUBSCRIBER MOVE IN TARGET MME RECEIVED       0000006510
+M53C039             SRVCC TO CDMA ATTEMPT                        0000000000
+M53C040             SRVCC EME TO CDMA ATTEMPT                    0000000000
+M53C041             LOCATION REPORTING CONTROL NOT STARTED       0000000000
+M53C042             LOCATION REPORTING CONTROL RESUMED           0000000000
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+53000       EPS UMM MEASUREMENT             00:15     2016-06-02   08:15:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:SMLM;
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:44:08
+
+DISPLAY MME COUNTERS
+
+
+SEC
+COUNTERS                                                         LAST      
+-------------------------------------------------------------------------------
+M54C000   EPS AUTH SUCC                                          0000145527
+M54C001   EPS AUTH FAIL BY UE                                    0000000046
+M54C002   EPS AUTH REJECT BY MME                                 0000000001
+M54C003   EPS SEC MODE PROC SUCC                                 0000145308
+M54C004   EPS SEC MODE PROC FAIL                                 0000000029
+M54C005   EPS IDENTITY REQUEST SUCC                              0000092153
+M54C006   EPS IDENTITY REQUEST FAIL                              0000000028
+M54C007   EPS AUTH 20 FAIL                                       0000000024
+M54C008   EPS AUTH 21 FAIL                                       0000000033
+M54C009   EPS AUTH 26 FAIL                                       0000000000
+M54C010   EPS NO RESPONSE FROM UE FAIL                           0000000003
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+54000       EPS SEC MEASUREMENT             00:15     2016-06-02   08:15:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:SONM;
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:44:27
+
+DISPLAY MME COUNTERS
+
+
+SONM
+COUNTERS                                                         LAST      
+-------------------------------------------------------------------------------
+M56C000   ENB CONF WITH SON REQ                                  0000001365
+M56C001   ENB CONF WITH SON REPL                                 0000000421
+M56C002   MME CONF WITH SON REQ                                  0000000439
+M56C003   MME CONF WITH SON REPL                                 0000000421
+M56C004   SENT CONF TUNNEL WITH SON REQ                          0000000929
+M56C005   SENT CONF TUNNEL WITH SON REPL                         0000000005
+M56C006   REC CONF TUNNEL WITH SON REQ                           0000000124
+M56C007   REC CONF TUNNEL WITH SON REPL                          0000000007
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+56000       SONM MEASUREMENT                00:15     2016-06-02   08:15:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:S1ME;
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:44:43
+
+DISPLAY MME COUNTERS
+
+
+S1ME
+COUNTERS                                                         LAST      
+-------------------------------------------------------------------------------
+M59C000   S1 S1AP MSG RCV                                        0011968561
+M59C001   S1 S1AP MSG SENT                                       0007693271
+M59C002   S1 S1AP MSG DECODE FAIL                                0000000003
+M59C003   S1 NAS MSG RCV                                         0003990553
+M59C004   S1 NAS MSG SENT                                        0001211106
+M59C005   S1 NAS MSG DECODE FAIL                                 0000000039
+M59C006   S1 NAS LPP MSG SENT                                    0000000000
+M59C007   S1 NAS LPP MSG RCV                                     0000000000
+M59C008   NAS CS SERVICE NTF SENT                                0000005763
+M59C009   S1AP NONUE ASSOC LPPA MSG SENT                         0000000000
+M59C010   S1AP NONUE ASSOC LPPA MSG RCV                          0000000000
+M59C011   S1AP LOCATION REPORT CTRL SENT                         0000000000
+M59C012   S1AP LOCATION REPORT CTRL FAIL                         0000000000
+M59C013   S1 CELL TRAFFIC TRACE MSG RCV                          0000000000
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+59000       S1ME MEASUREMENT                00:15     2016-06-02   08:15:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:S11M;
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:44:55
+
+DISPLAY MME COUNTERS
+
+
+S11M
+COUNTERS                                                         LAST      
+-------------------------------------------------------------------------------
+M60C000   S11 GTP2 MSG RCV                                       0006504029
+M60C001   S11 GTP2 MSG SENT                                      0006656521
+M60C002   S11 GTP2 MSG DECODE FAIL                               0000000000
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+60000       S11M MEASUREMENT                00:15     2016-06-02   08:15:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:S6AM;
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:45:08
+
+DISPLAY MME COUNTERS
+
+
+S6AM
+COUNTERS                                                         LAST      
+-------------------------------------------------------------------------------
+M61C000   S6A UPDATE LOCATION REQ SENT                           0000198810
+M61C001   S6A UPDATE LOCATION ANS RCV                            0000198797
+M61C002   S6A AUTH INFORMATION REQ SENT                          0000147457
+M61C003   S6A AUTH INFORMATION ANS RCV                           0000147451
+M61C004   S6A PURGE UE REQUEST SENT                              0000000000
+M61C005   S6A PURGE UE ANSWER RCV                                0000000000
+M61C006   S6A NOTIFY REQUEST SENT                                0000000394
+M61C007   S6A NOTIFY ANSWER RCV                                  0000000394
+M61C008   S6A CANCEL LOCATION REQ RCV                            0000068154
+M61C009   S6A CANCEL LOCATION ANS SENT                           0000068146
+M61C010   S6A INSERT SUBS DATA REQ RCV                           0000001487
+M61C011   S6A INSERT SUBS DATA ANS SENT                          0000001487
+M61C012   S6A DELETE SUBS DATA REQ RCV                           0000000005
+M61C013   S6A DELETE SUBS DATA ANS SENT                          0000000004
+M61C014   DIA CAPABILITY EXCH REQ SENT                           0000000000
+M61C015   DIA CAPABILITY EXCH ANS RCV                            0000000000
+M61C016   DIA DISCONNECT PEER ANS SENT                           0000000000
+M61C017   DIA DISCONNECT PEER REQ RCV                            0000000000
+M61C018   DIA DEVICE WATCH DOG REQ SENT                          0000000053
+M61C019   DIA DEVICE WATCH DOG ANS SENT                          0000000060
+M61C020   DIA DEVICE WATCH DOG REQ RCV                           0000000060
+M61C021   DIA DEVICE WATCH DOG ANS RCV                           0000000053
+M61C022   DIA SUCCESSFUL CONNECTIONS                             0000000000
+M61C023   DIA FAILED CONNECTIONS                                 0000000000
+M61C024   DIA UNKNOWN MSG RCV                                    0000000000
+M61C025   DIA TRANSPORT FAIL                                     0000000000
+M61C026   S6A UPDATE LOCATION ANS FAIL                           0000000496
+M61C027   S6A AUTH INFORMATION ANS FAIL                          0000001428
+M61C028   S6A PURGE UE ANS FAIL                                  0000000000
+M61C029   S6A NOTIFY ANS FAIL                                    0000000000
+M61C030   S6A RESET REQ RCV                                      0000000000
+M61C031   S6A RESET ANS SENT                                     0000000000
+M61C032   DIAMETER RESENT MESSAGES                               0000000000
+M61C033   DIAMETER REROUTED MESSAGES                             0000000000
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+61000       S6AM MEASUREMENT                00:15     2016-06-02   08:15:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:PWSM;
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:45:22
+
+DISPLAY MME COUNTERS
+
+
+PWSM
+COUNTERS                                                         LAST      
+-------------------------------------------------------------------------------
+M62C000   S1 WRITE REPLACE WARNING REQ                           0000000000
+M62C001   S1 WRITE REPLACE WARNING RES                           0000000000
+M62C002   SBC WRITE REPLACE WARNING REQ                          0000000000
+M62C003   SBC WRITE REPLACE WARNING CON                          0000000000
+M62C004   S1 KILL REQUEST                                        0000000000
+M62C005   S1 KILL RESPONSE                                       0000000000
+M62C006   SBC STOP WARNING REQUEST                               0000000000
+M62C007   SBC STOP WARNING CONFIRM                               0000000000
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+62000       PWSM MEASUREMENT                00:15     2016-06-02   08:15:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:DNSM;
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:46:00
+
+DISPLAY MME COUNTERS
+
+
+DNSM
+COUNTERS                                                         LAST      
+-------------------------------------------------------------------------------
+M63C000   DNS MME QUERY ATTEMPTS                                 0001477214
+M63C001   DNS MME QUERY SUCC                                     0001477170
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+63000       EPS DNS MEASUREMENT             00:15     2016-06-02   08:30:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:RIMM;
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:46:13
+
+DISPLAY MME COUNTERS
+
+
+RIMM
+COUNTERS                                                         LAST      
+-------------------------------------------------------------------------------
+M64C000   RIM GN MSG RCV                                         0000000000
+M64C001   RIM TARGET ENB NFOUND                                  0000000000
+M64C002   RIM GN MSG SENT                                        0000000000
+M64C003   RIM TARGET SGSN NFOUND                                 0000000000
+M64C004   RIM S3 MSG RCV                                         0000000000
+M64C005   RIM S3 MSG SENT                                        0000000000
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+64000       RIMM MEASUREMENT                00:15     2016-06-02   08:30:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:RTTM;
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:46:31
+
+DISPLAY MME COUNTERS
+
+
+RTTM
+COUNTERS                                                         LAST      
+-------------------------------------------------------------------------------
+M65C000             RTT ATTACH DUR MIN                           0000000020
+M65C001             RTT ATTACH DUR MAX                           0000001121
+M65C002&M65C003     RTT ATTACH DUR AVG                           0000000136
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+65000       EPS RTT MEASUREMENT             00:15     2016-06-02   08:30:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:SCTP;
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:46:53
+
+DISPLAY MME COUNTERS
+
+
+SCTP
+COUNTERS                                                         LAST      
+-------------------------------------------------------------------------------
+M66C000   S1 SCTP DATA CHUNK SENT                                0026705245
+M66C001   S1 SCTP DATA CHUNK RCV                                 0012070881
+M66C002   S1 SCTP DATA CHUNK RESENT                              0000160817
+M66C003   S1 SCTP CONGESTION DURATION                            0000000000
+M66C004   S1 SCTP CONGESTION                                     0000000000
+M66C005   S1 SCTP UNAVAILABLE DURATION                           0000001690
+M66C006   S1 SCTP UNAVAILABLE                                    0000000003
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+66000       EPS SCTP MEASUREMENT            00:15     2016-06-02   08:30:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:NEUM;
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:47:30
+
+DISPLAY NS COUNTERS
+
+
+NEU
+COUNTERS                                                         LAST      
+-------------------------------------------------------------------------------
+M67C000             NS ATTACHED USERS MAX                        0000896139
+M67C001&M67C002     NS ATTACHED USERS AVG                        0000895299
+M67C003             NS ATTACHED ROAMING USERS MAX                0000001399
+M67C004&M67C005     NS ATTACHED ROAMING USERS AVG                0000001383
+M67C006             NS DETACHED USERS MAX                        0000154311
+M67C007&M67C008     NS DETACHED USERS AVG                        0000153932
+M67C009             NS PURGE ATTEMPT                             0000000000
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+67000       NS NEU MEASUREMENT              00:15     2016-06-02   08:30:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< LCSM
+
+
+/*** COMMAND NOT FOUND ***/
+
+MAIN LEVEL COMMAND <___>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:LCSM
+
+LOADING PROGRAM VERSION 19.24-0
+
+/* SELECT DATA SOURCE:
+
+    MEM ............ MEMORY BUFFER
+    FIL ............ FILE
+
+   DEFAULT DATA SOURCE IS FILE      */
+
+TPP:LCSM,;
+
+Flexi NS  SHMME06BNK                2016-06-02  08:48:03
+
+DISPLAY MME COUNTERS
+
+
+LCS
+COUNTERS                                                         LAST      
+-------------------------------------------------------------------------------
+M68C000   PROV SUBS LOC SUCC                                     0000000015
+M68C001   PROV SUBS LOC SUCC ABNORMAL                            0000000000
+M68C002   PROV SUBS LOC FAIL                                     0000000001
+M68C003   LOC SERVICE REQ SUCC                                   0000000015
+M68C004   LOC SERVICE REQ FAIL                                   0000000001
+M68C005   LOC REP RSP SUCC                                       0000000000
+M68C006   LOC REP RSP FAIL                                       0000000000
+M68C007   S6A SUBS LOC SUCC                                      0000000000
+M68C008   S6A SUBS LOC ABNORMAL SUCC                             0000000000
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+68000       EPS LCSM MEASUREMENT            00:15     2016-06-02   08:30:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:SLSM;
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:48:21
+
+DISPLAY MME COUNTERS
+
+
+SLS
+COUNTERS                                                         LAST      
+-------------------------------------------------------------------------------
+M69C000   SLS CONN O INF MSG RCV                                 0000000000
+M69C001   SLS CONN O INF MSG SENT                                0000000000
+M69C002   SLS CONNECTIONLESS INF MSG RCV                         0000000000
+M69C003   SLS CONNECTIONLESS INF MSG SENT                        0000000000
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+69000       EPS SLSM MEASUREMENT            00:15     2016-06-02   08:30:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:GTPM;
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:48:35
+
+DISPLAY MME COUNTERS
+
+
+GTP BASED
+COUNTERS                                                           LAST      
+-------------------------------------------------------------------------------
+M70C000   GTP2 ECHO REQUEST MESSAGES SENT                          0000000000
+M70C001   GTP2 ECHO REQUEST MESSAGES RECEIVED                      0000000000
+M70C002   GTP2 ECHO RESPONSE MESSAGES SENT                         0000000000
+M70C003   GTP2 ECHO RESPONSE MESSAGES RECEIVED                     0000000000
+M70C004   S10/S3 CONTEXT REQUEST SENT                              0000039747
+M70C005   S10/S3 CONTEXT REQUEST RECEIVED                          0000043145
+M70C006   S10/S3 CONTEXT RESPONSE SENT                             0000043253
+M70C007   S10/S3 CONTEXT RESPONSE RECEIVED                         0000039657
+M70C008   S10/S3 CONTEXT ACKNOWLEDGE SENT                          0000039206
+M70C009   S10/S3 CONTEXT ACKNOWLEDGE RECEIVED                      0000042574
+M70C010   S10/S3 FORWARD RELOCATION REQUEST SENT                   0000012190
+M70C011   S10/S3 FORWARD RELOCATION REQUEST RECEIVED               0000013070
+M70C012   S10/S3 FORWARD RELOCATION RESPONSE SENT                  0000013054
+M70C013   S10/S3 FORWARD RELOCATION RESPONSE RECEIVED              0000012151
+M70C014   S10/S3 FORWARD ACCESS CONTEXT NOTIF SENT                 0000012112
+M70C015   S10/S3 FORWARD ACCESS CONTEXT NOTIF RECEIVED             0000012775
+M70C016   S10/S3 FORWARD ACCESS CONTEXT ACKNOWLEDGE SENT           0000012774
+M70C017   S10/S3 FORWARD ACCESS CONTEXT ACKNOWLEDGE RECEIVED       0000012111
+M70C018   S10/S3 FORWARD RELOCATION COMPLETE NOT SENT              0000012709
+M70C019   S10/S3 FORWARD RELOCATION COMPLETE NOT RECEIVED          0000011804
+M70C020   S10/S3 FORWARD RELOCATION COMPLETE ACKNOWLEDGE SENT      0000011798
+M70C021   S10/S3 FORWARD RELOCATION COMPLETE ACKNOWLEDGE RECEIVED  0000012709
+M70C022   S10/S3 RELOCATION CANCEL REQUEST SENT                    0000000036
+M70C023   S10/S3 RELOCATION CANCEL REQUEST RECEIVED                0000000328
+M70C024   S10/S3 RELOCATION CANCEL RESPONSE SENT                   0000000114
+M70C025   S10/S3 RELOCATION CANCEL RESPONSE RECEIVED               0000000059
+M70C026   S10/S3 IDENTIFICATION REQUEST SENT                       0000000311
+M70C027   S10/S3 IDENTIFICATION REQUEST RECEIVED                   0000000363
+M70C028   S10/S3 IDENTIFICATION RESPONSE SENT                      0000000357
+M70C029   S10/S3 IDENTIFICATION RESPONSE RECEIVED                  0000000307
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+70000       GTP BASED INTERFACE MEASUREMENT 00:15     2016-06-02   08:30:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:SGSI;
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:48:52
+
+DISPLAY MME COUNTERS
+
+
+SGSI
+COUNTERS                                                         LAST      
+-------------------------------------------------------------------------------
+M72C000   SGSAP PAGING REQ CSFB                                  0000034428
+M72C001   SGSAP PAGING REJECT CSFB                               0000000045
+M72C002   SGSAP PAGING REQ SMS                                   0000022723
+M72C003   SGSAP PAGING REJECT SMS                                0000000015
+M72C004   SGSAP PG RJ IMSI DT EPS                                0000000025
+M72C005   SGSAP PG RJ IMSI DT IMSI UNKNW                         0000000015
+M72C006   SGSAP PG RJ IMSI DT NEPS                               0000000006
+M72C007   SGSAP UE UNREACHABLE                                   0000000052
+M72C008   SGSAP PG RJ UNSPECIFIED                                0000000000
+M72C009   SGSAP PG RJ CS RJ BY USER                              0000000014
+M72C010   SGSAP SERVICE REQ CSFB                                 0000032275
+M72C011   SGSAP SERVICE REQ SMS                                  0000021661
+M72C012   SGSAP UPLINK UNITDATA                                  0000074932
+M72C013   SGSAP DOWNLINK UNITDATA                                0000075381
+M72C014   SGSAP UPLINK UNITDATA FAIL                             0000000000
+M72C015   SGSAP DOWNLINK UNITDATA FAIL                           0000000163
+M72C016   SGSAP LOCATION UPDATE REQUEST                          0000533919
+M72C017   SGSAP LOCATION UPDATE ACCEPT                           0000531211
+M72C018   SGSAP LOCATION UPDATE REJECT                           0000002732
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+72000       EPS SGSI MEASUREMENT            00:15     2016-06-02   08:30:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:SGSS;
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:49:01
+
+DISPLAY MME COUNTERS
+
+
+SGSS
+COUNTERS                                                         LAST      
+-------------------------------------------------------------------------------
+M73C000   SGS SCTP DATA CHUNK SENT                               0000797599
+M73C001   SGS SCTP DATA CHUNK RCV                                0000726169
+M73C002   SGS SCTP DATA CHUNK RESENT                             0000002194
+M73C003   SGS SCTP CONGESTION DURATION                           0000000000
+M73C004   SGS SCTP CONGESTION                                    0000000000
+M73C005   SGS SCTP UNAVAILABLE DURATION                          0000000000
+M73C006   SGS SCTP UNAVAILABLE                                   0000000000
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+73000       EPS SGSS MEASUREMENT            00:15     2016-06-02   08:30:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:DIAS;
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:49:11
+
+DISPLAY MME COUNTERS
+
+
+DIAS
+COUNTERS                                                         LAST      
+-------------------------------------------------------------------------------
+M74C000   DIA SCTP DATA CHUNK SENT                               0000000112
+M74C001   DIA SCTP DATA CHUNK RCV                                0000408838
+M74C002   DIA SCTP DATA CHUNK RESENT                             0000000024
+M74C003   DIA SCTP CONGESTION DURATION                           0000000000
+M74C004   DIA SCTP CONGESTION                                    0000000000
+M74C005   DIA SCTP UNAVAILABLE DURATION                          0000000000
+M74C006   DIA SCTP UNAVAILABLE                                   0000000000
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+74000       EPS DIAS MEASUREMENT            00:15     2016-06-02   08:30:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ENTER USERNAME < 
+
+ENTER USERNAME < SYSTEM
+
+ENTER PASSWORD < ***************
+
+Flexi NS  SHMME06BNK                2016-06-02  08:52:24
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                       WELCOME TO THE DX 200 SERIES DIALOGUE
+
+
+
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:S102;
+
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:52:49
+
+DISPLAY MME COUNTERS
+
+
+S102
+COUNTERS                                                         LAST      
+-------------------------------------------------------------------------------
+M75C000   A21 EVENT NOTIFICATION SUCC                            0000000000
+M75C001   A21 EVENT NOTIFICATION FAIL                            0000000000
+M75C002   S102 UPLINK TUNNELING SUCC                             0000000000
+M75C003   S102 UPLINK TUNNELING FAIL                             0000000000
+M75C004   S102 DOWNLINK TUNNELING SUCC                           0000000000
+M75C005   S102 DOWNLINK TUNNELING FAIL                           0000000000
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+75000       EPS S102 INTERFACE MEASUREMENT  00:15     2015-04-03   01:30:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:TRAM;
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:53:01
+
+/*** UNABLE TO DISPLAY MEASUREMENT DATA. READING OF MEASUREMENT FILE FAILED. ***/
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+
+
+MAIN LEVEL COMMAND <___>
+< TPP:S11I;
+
+LOADING PROGRAM VERSION 19.24-0
+
+Flexi NS  SHMME06BNK                2016-06-02  08:53:16
+
+DISPLAY MME COUNTERS
+
+
+S11I
+COUNTERS                                                         LAST      
+-------------------------------------------------------------------------------
+M77C000   S11 CREATE SESSION RSP GTP78 RCV                       0000000008
+M77C001   S11 CREATE SESSION RSP GTP92 RCV                       0000000012
+M77C002   S11 CREATE SESSION RSP GTP93 RCV                       0000000013
+
+===============================================================================
+MEASUREMENT PERIOD INFO                               LAST SAMPLE              
+SERIES      NAME                            PERIOD    START TIME               
+===============================================================================
+77000       EPS S11I MEASUREMENT            00:15     2016-06-02   08:30:00
+
+COMMAND EXECUTED
+
+
+FLEXI NS MEASUREMENT HANDLING COMMAND <TP_>
+< 
+/*** EXCESSIVE INPUT DELAY ***/
+
+END OF DIALOGUE SESSION
+
