@@ -18,6 +18,7 @@ __programname__ = 'Smartchecker'
 __version__     = '0.92'
 
 import sys,os, argparse,time
+import setsitenv
 from libs.configobject import ConfigObject
 from libs.checker import ImportCheckModules,ResultList,CheckList
 from libs.reportor import CheckReport, JinjaTemplate

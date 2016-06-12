@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
 u"""
  检查FlexiNS CPU Blade是否存在丢核现象
-    --
     --检查指令:
-        ZDDE:OMU:"ZMA:W0,F3,,,,,","ZMA:W1,F3,,,,,","ZGSC:,00FC";
-
-        如果磁盘碎片率大于60%,判断为偏高。
-    --检查指令可能会对硬盘有影响，执行后，请检查硬盘状态。
-        ZISI:,:WDU,;
-    --如果出现磁盘碎片率偏高的现象，请按照TN-Flexi_NS-SW0013-CI2中介绍修复。
+        ZDDE:{@UNIT_ID}:"cat /proc/cpuinfo | grep processor",;
+      
+      该指令列出当前的CPU core的情况。正常情况下，每块CPU板应该有12个CPU core
 """
 
 import re,sys
