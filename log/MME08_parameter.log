@@ -58,11 +58,11 @@ MAIN LEVEL COMMAND <___>
 
 LOADING PROGRAM VERSION 12.7-0
 
-Flexi NS  SHMME06BNK                2016-06-12  15:56:33 PAGE      1
+Flexi NS  SHMME08BNK                2016-06-12  15:56:33 PAGE      1
 
 CON  TYPE     SW  C-NUM   ID  NAME         LOCATION          CHA  STATE  CTYP
  
-000  DX220     5  397205      SHMME06BNK   SHQINZHOU         
+000  DX220     5  397205      SHMME08BNK   SHQINZHOU         
 
 COMMAND EXECUTED
 
@@ -78,7 +78,7 @@ PACKAGES CREATED IN OMU:
                             PACKAGE-ID (REP-ID) DELIVERY
                                                 CD-ID
 
-    MME06FBK       FB       MME06FBK            N5 1.19-3             -    Y 
+    MME08FBK       FB       MME08FBK            N5 1.19-3             -    Y 
                             N5 1.19-3           CID000NX 8.19-3   
                                                           
 
