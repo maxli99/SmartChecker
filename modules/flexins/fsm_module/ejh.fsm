@@ -1,0 +1,15 @@
+Value Filldown EJHCOMMAND (EJH)
+Value Filldown PARAMETERSET ([\w\s]+PARAMETERS:)
+Value PARAMETERDESC ([\w\s]+)
+Value PARAMETERNAME (\([\w\s]+\))
+Value PARAMETERVALUE (.+$)
+
+Start
+	^< [Z]*${EJHCOMMAND} -> parametersStats
+	
+parametersStats
+	^${PARAMETERSET} -> parametersStats
+	^${PARAMETERDESC}[.]+${PARAMETERNAME}\s+${PARAMETERVALUE} -> Record
+	^COMMAND EXECUTED -> End
+
+EOF

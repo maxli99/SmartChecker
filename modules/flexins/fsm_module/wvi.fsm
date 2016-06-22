@@ -1,0 +1,71 @@
+Value Filldown WVICOMMAND (WVI)
+Value PARAMETERCLASS (MOBILE COUNTRY CODE|MOBILE NETWORK CODE|EIR NUMBER|SGSN NUMBER|VLR NUMBER|MME CODE|MME GROUP ID|MME RELATIVE CAPACITY)
+Value PARAMETERVLAUE ((\d+\s+\S+\s+\w+)|(\d+))
+Value MCCPARAMETERNAME (MOBILE COUNTRY CODE)
+Value MCCPARAMETERVALUE (\d+)
+Value MNCPARAMETERNAME (MOBILE NETWORK CODE)
+Value MNCPARAMETERVALUE (\d+)
+Value EIRPARAMETER (EIR NUMBER)
+Value EIRNUMBERPARAMETERNAME (    NUMBER              NP        TON)
+Value EIRNUMBERPARAMETERVALUE (\s+\d+\s+\S+\s+\w+)
+Value SGSNPARAMETER (SGSN NUMBER)
+Value SGSNNUMBERPARAMETERNAME (    NUMBER              NP        TON)
+Value SGSNNUMBERPARAMETERVALUE (\s+\d+\s+\S+\s+\w+)
+Value VLRPARAMETER (VLR NUMBER)
+Value VLRNUMBERPARAMETERNAME (    NUMBER              NP        TON)
+Value VLRNUMBERPARAMETERVALUE (\s+\d+\s+\S+\s+\w+)
+
+
+Start
+	^< [Z]*${WVICOMMAND} -> NetworkStats
+	#^\s+${MNCPARAMETERNAME} -> MNCparametersStats
+	
+	
+NetworkStats
+	^ +${PARAMETERCLASS} -> MCCparametersStats
+	
+MCCparametersStats
+	#^ +${MCCPARAMETERVALUE} -> Record
+	^ +${PARAMETERVLAUE} -> Record
+	#^ +${MNCPARAMETERNAME} -> MNCparametersStats
+	^\s+${PARAMETERCLASS} -> MNCparametersStats
+	
+MNCparametersStats
+	#^\s+${MNCPARAMETERVALUE} -> Record
+	^\s+${PARAMETERVLAUE} -> Record
+	^\s+${PARAMETERCLASS} -> EIRparameterStats
+
+EIRparameterStats
+	#^ +${EIRNUMBERPARAMETERNAME}
+	#^ +${EIRNUMBERPARAMETERVALUE} -> Record
+	^\s+${PARAMETERVLAUE} -> Record
+	^\s+${PARAMETERCLASS} -> SGSNparameterStats
+
+SGSNparameterStats
+	#^ +${SGSNNUMBERPARAMETERNAME}
+	#^ +${SGSNNUMBERPARAMETERVALUE} -> Record
+	^\s+${PARAMETERVLAUE} -> Record
+	^\s+${PARAMETERCLASS} -> VLRparameterStats
+
+VLRparameterStats
+	#^ +${VLRNUMBERPARAMETERNAME}
+	#^ +${VLRNUMBERPARAMETERVALUE} -> Record
+	^\s+${PARAMETERVLAUE} -> Record
+	^\s+${PARAMETERCLASS} -> MMECparameterStats
+	
+MMECparameterStats
+	^\s+${PARAMETERVLAUE} -> Record
+	^\s+${PARAMETERCLASS} -> MMEGIparameterStats
+	
+MMEGIparameterStats
+	^\s+${PARAMETERVLAUE} -> Record
+	^\s+${PARAMETERCLASS} -> MMERCparameterStats
+	
+MMERCparameterStats
+	^\s+${PARAMETERVLAUE} -> Record
+	^COMMAND EXECUTED -> End
+	
+
+	
+
+EOF

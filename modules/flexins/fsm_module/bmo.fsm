@@ -1,0 +1,15 @@
+Value Filldown BMOCOMMAND (BMO)
+Value Filldown PARAMETERSET ([\w\s]+PARAMETERS:)
+Value PARAMETERDESC ([\w\d\-\s]+)
+Value PARAMETERNAME (\([\w\s]+\))
+Value PARAMETERVALUE (.+$)
+
+Start
+	^< [Z]*${BMOCOMMAND} -> parametersStats
+	
+parametersStats
+	^${PARAMETERSET} -> parametersStats
+	^${PARAMETERDESC}[.]+${PARAMETERNAME}\s+${PARAMETERVALUE} -> Record
+	^COMMAND EXECUTED -> End
+
+EOF

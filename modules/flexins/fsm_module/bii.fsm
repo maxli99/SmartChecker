@@ -1,0 +1,15 @@
+Value Filldown BIICOMMAND (BII)
+Value Filldown PARAMETERSET ([\w\s]+PARAMETERS:)
+Value PARAMETERDESC ([\w\s]+)
+Value PARAMETERNAME (\([\w\s]+\))
+Value PARAMETERVALUE ([\w\d\s]+$)
+
+Start
+	^< [Z]*${BIICOMMAND} -> parametersStats
+	
+parametersStats
+	^${PARAMETERSET} -> parametersStats
+	^${PARAMETERDESC}[.]+${PARAMETERNAME}\s+${PARAMETERVALUE} -> Record
+	^COMMAND EXECUTED -> End
+
+EOF

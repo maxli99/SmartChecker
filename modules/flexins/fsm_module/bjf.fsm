@@ -1,0 +1,16 @@
+Value Filldown BJFCOMMAND (BJF)
+Value Filldown PARAMETERSET ([\w\s]+PARAMETERS:)
+Value PARAMETERDESC ([\w\s]+)
+Value PARAMETERNAME (\([\w\s]+\)\:)
+Value PARAMETERVALUE ([\w\d\-\s]+$)
+
+Start
+	^< [Z]*${BJFCOMMAND} -> parametersStats
+	#^${PARAMETERSET} -> parametersStats
+	
+parametersStats
+	^${PARAMETERSET} -> parametersStats
+	^${PARAMETERDESC}[.]+${PARAMETERNAME}\s+${PARAMETERVALUE} -> Record
+	^COMMAND EXECUTED -> End
+
+EOF
