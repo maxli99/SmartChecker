@@ -8,8 +8,9 @@ from jinja2.exceptions import TemplateNotFound
 class JinjaTemplate(object):
     """A generator of Jinja Template
 Usage:
-    jinja = JinjiaTemplate()
-    temp = jinja.template('template_name')
+    tmpl = JinjiaTemplate()
+    tmpl.load(filename=template_filename)
+    tmpl.load('template_str')
     tmpl.render()
     """
     def __init__(self,path='./'):
@@ -19,17 +20,23 @@ Usage:
         self.env=Environment(loader=self.loader,
                              extensions=self.extensions)
         
-    def template(self,filename=None):
+    def load(self,template_string=None,filename=None):
         if filename:
-            return self.env.get_template(filename)
+            self.template = self.env.get_template(filename)
+        elif template_string:
+            self.template = Template(template_string)
         else:
-            return Template
-    
+            self.template = Template('')
+            
+        return self.template
+        
     def setenv(self, loader='',ext=[]):
         loader = loader or self.loader
         ext = ext or self.extensions
         self.env=Environment(loader=loader,externsions=ext)
     
+    def render(self, **kwargs):
+        return self.template.render(**kwargs)
     
 class CheckReport(object):
     """Class generate report with multi formats.

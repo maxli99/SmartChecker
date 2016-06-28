@@ -101,7 +101,7 @@ def save_output_to_file(msgbuf,filename,path=None):
     output_path = path or CONFIG.reports_path
     msgbuf.output('file',os.path.join(output_path,filename))
 
-def show_module_info(checklist,logfile=None):
+def show_module_info(checklist,args):
     """show the information of given modules. if CONFIG.module_info_file is set,
     save the modules info to a file.
     parameters:
@@ -111,13 +111,15 @@ def show_module_info(checklist,logfile=None):
 
     msgbuf = MessageBuffer()
     cmdlist = []
-    jinja = JinjaTemplate(CONFIG.template_path)
+    template = JinjaTemplate(CONFIG.template_path)
 
     if 'module_info' in checklist.templates:
-        template = jinja.template(checklist.templates['module_info'])
+        _template_file = args.template or checklist.templates['module_info']
+        
+    if not _template_file:
+        template.load(CONFIG.show_modules_template)
     else:
-        template = jinja.template()(CONFIG.show_modules_template)
-
+        template.load(filename=_template_file)
 
     modules = checklist.modules
 
@@ -125,17 +127,14 @@ def show_module_info(checklist,logfile=None):
         if hasattr(m,'check_commands'):
             cmdlist.extend(m.check_commands)
 
-    _info=template.render(locals())
-    template = jinja.template()(_info)
-    #ne_hardware = 
-    #info = template.render(ne_hardware)
-   # msgbuf.append(info)
+    _info=template.render(**locals())
+    msgbuf.append(_info)
 
-    if not SILENT:
+    if not args.silent:
         msgbuf.output(CONFIG.runmode)
     
-    if SAVE_OUTPUT:
-        save_output_to_file(msgbuf,SAVE_OUTPUT)
+    if args.saveto:
+        save_output_to_file(msgbuf,args.saveto)
 
     return 0
 
@@ -150,11 +149,11 @@ def check_logfile(checklist,logfile, report_name_tmpl=None):
     results = ResultList()
     output_format = CONFIG.output_format
     errmsg = ""
-    jinja = JinjaTemplate(CONFIG.template_path)
+    template = JinjaTemplate(CONFIG.template_path)
 
     template_file = REPORT_TEMPLATE or checklist.templates['report']
     template_type = template_file.split('.')[-1]
-    template = jinja.template(template_file)
+    template.load(filename=template_file)
     msgbuf = MessageBuffer()
 
     report = CheckReport()
@@ -177,7 +176,7 @@ def check_logfile(checklist,logfile, report_name_tmpl=None):
 
     hostname = element.hostname
     label_state = {'critical':'danger','major':'warning','normal':'info','default':'default'}  
-    _report = template.render(locals())
+    _report = template.render(**locals())
     msgbuf.append(_report)
 
     if not SILENT and template_type =='md':
@@ -264,6 +263,7 @@ if __name__ == "__main__":
     
     #parse the arguments and options.
     parser,args = args_parse()
+    print args
     shareinfo.set('DEBUG',args.debug)
     if args.debug or logging_level=='DEBUG':
         logger.setLevel('DEBUG')
@@ -293,5 +293,9 @@ if __name__ == "__main__":
         parser.print_help()
         sys.exit(1)
 
-    command = (args.run and 'run') or (args.show and 'show') or 'run'
-    do_action[command](checklist,args.logfile)
+    # command = (args.run and 'run') or (args.show and 'show') or 'run'
+    # do_action[command](checklist,args.logfile)
+    if args.run:
+        check_log(checklist,args.logfile)
+    elif args.show:
+        show_module_info(checklist,args)

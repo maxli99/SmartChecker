@@ -32,7 +32,8 @@ class MessageBuffer(object):
         self.size = size
         self.lineformat = lineformat
         self.template = template    #template for message.
-
+        self.outsteam = sys.stdout
+        
     def append(self,txt):
         self.buffer.append(self.lineformat % txt)
 
@@ -51,7 +52,7 @@ class MessageBuffer(object):
         _lines = map(to_unicode,self.buffer)
         with codecs.open(filename,'wb','utf-8') as fp:
             fp.writelines(_lines)
-
+        
     def to_socket(self):
         pass
 
@@ -63,7 +64,13 @@ class MessageBuffer(object):
             self.to_socket()
         elif mode == "file":
             self.to_file(filename)
-
+    
+    def write(self,filename=None):
+        if filename:
+            self.to_file(filename=filename)
+        else:
+            self.to_console()
+            
 def read_cmdblock_from_log(loglines,startline,endline):
     """read the command block from logfile.
 
