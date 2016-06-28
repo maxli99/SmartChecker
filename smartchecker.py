@@ -41,7 +41,6 @@ config_file = 'checker.conf'
 if os.path.exists(config_file):  #read the config file if it's exists.
     CONFIG.read(config_file)
 
-DEBUG           = False
 SILENT          = False
 REPORT_TEMPLATE = None
 SAVE_OUTPUT     = None
@@ -56,7 +55,7 @@ logger = MessageLogger('SmartChecker')
 
 
 def args_parse():
-    global DEBUG,SILENT,REPORT_TEMPLATE,SAVE_OUTPUT
+    global SILENT,REPORT_TEMPLATE,SAVE_OUTPUT
     parser = argparse.ArgumentParser(version=" v".join([__programname__,__version__]))
     
     parser.usage = __doc__
@@ -255,15 +254,10 @@ def check_log(checklist,logname):
 
     logger.info("Finished the checking.")
 
-if __name__ == "__main__":
-
-    do_action = {'show'     : show_module_info,
-                 'run'      : check_log,
-                }
-    
+if __name__ == "__main__":   
     #parse the arguments and options.
     parser,args = args_parse()
-    print args
+
     shareinfo.set('DEBUG',args.debug)
     if args.debug or logging_level=='DEBUG':
         logger.setLevel('DEBUG')
@@ -293,8 +287,6 @@ if __name__ == "__main__":
         parser.print_help()
         sys.exit(1)
 
-    # command = (args.run and 'run') or (args.show and 'show') or 'run'
-    # do_action[command](checklist,args.logfile)
     if args.run:
         check_log(checklist,args.logfile)
     elif args.show:

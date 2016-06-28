@@ -1,0 +1,20 @@
+module_name: TN_CN_20160626_just4test.py
+module_path: modules/flexins
+ne_type:     flexins
+description: |
+  检查FlexiNS CPU Blade是否存在丢核现象
+    - 检查指令:
+        ZDDE:{@UNIT_ID}:"cat /proc/cpuinfo | grep processor",;
+      
+      该指令列出当前的CPU core的情况。正常情况下，每块CPU板应该有12个CPU core
+##--------------------------------------------------------------------------------
+name:           FlexiNS CPU Blade Core 核心数减少问题检查      
+module_id:      NSTNCN_20160606
+priority:       minor
+target_version: [N5,N6]
+tags:           [china,flexins]
+
+criteria: |
+ （1）检查MME版本为 ['N5','N6'] 或者更高版本。
+ （2）检查IPDU/MMDU/CPPU板卡的CPU Core的数量。等于12则为PASSED，小于12为FAILED。
+ （3）if the core number is 8, please check if the blade is an old hardware release.
