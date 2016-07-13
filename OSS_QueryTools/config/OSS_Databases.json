@@ -1,0 +1,12 @@
+{
+    "database":[
+        {
+            "name":"MME_database",
+            "ip":"127.0.0.1",
+            "port":"51063",
+            "db":"oss",
+            "user":"omc",
+            "password":"omc"
+        }
+    ]
+}
