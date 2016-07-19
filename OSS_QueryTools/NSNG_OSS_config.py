@@ -1,16 +1,24 @@
+import yaml
 import json
 
 class NSNG_OSS_config(object):
     def __init__(self):
-        with open('config/OSS_Tables_column.json','r') as file_table:
-            self.NSNG_OSS_tables_views = json.load(file_table)        
 
-        with open('config/OSS_Databases.json','r') as file_databases:
-            self.NSNG_OSS_database = json.load(file_databases)
+        #with open('config/OSS_Tables_column.json','r') as file_table:
+        #    self.NSNG_OSS_tables_views = json.load(file_table)        
+        with open('config/OSS_Tables_column.yaml','r') as file_table:
+            self.NSNG_OSS_tables_views = yaml.load(file_table)        
 
-        with open('config/OSS_NSNG.json','r') as file_ne:
-            self.NSNG_OSS_NE = json.load(file_ne)
+        #with open('config/OSS_Databases.json','r') as file_databases:
+        #    self.NSNG_OSS_database = json.load(file_databases)
+        with open('config/OSS_Databases.yaml','r') as file_databases:
+            self.NSNG_OSS_database = yaml.load(file_databases)
 
+        #with open('config/OSS_NSNG.json','r') as file_ne:
+            #    self.NSNG_OSS_NE = json.load(file_ne)
+        with open('config/OSS_NSNG.yaml','r') as file_ne:
+            self.NSNG_OSS_NE = yaml.load(file_ne)
+        
 if __name__ == "__main__":
     nsng_oss_configs = NSNG_OSS_config()
     #print 'NSNG_OSS_tables_views:' + str(nsng_oss_configs.NSNG_OSS_tables_views)

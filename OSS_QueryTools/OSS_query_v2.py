@@ -22,7 +22,7 @@ class QueryOptions(object):
         self.stoptimemm = ''                # 查询的结束时间（'30'(分钟)）
         self.stoptimeall = ''               # 查询的开始时间（'1030'(小时+分钟)）
         self.selectperiod = '15'            # 查询的时间间隔（'15'/'60'(15分钟/每小时))
-        self.selectunittype = 'NE'          # 查询的统计粒度（'NE'(MME)/'TAC','NE'(SAEGW)/'Session')
+        self.selectunittype = 'MME'         # 查询的统计粒度（'MME/TA_ID/SAEGW/SSPROF_ID')
         self.selectcounters = ''            # 查询的Counters（'EPS_EME_ATTACH_FAIL',填入网管数据库里的对应Counter的列名）
         self.reportfilename = ''            # 查询后输出的文件名 ('xxxx.json')
         self.localsave = '1'                # 查询数据是否需要输出到本地文件('0'/'1')
@@ -81,9 +81,9 @@ class QueryOptions(object):
             self.starttimemm = startdatetimeall[11:13] 
             self.starttimeall = startdatetimeall[11:15]
         if (self.selectperiod == None or self.selectperiod == ''):
-	        self.selectperiod='60'
+	        self.selectperiod='15'
         if (self.selectunittype == None or self.selectunittype == ''):
-	        self.selectunittype='NE'
+	        self.selectunittype='MME'
         if (self.selectcounters == None or self.selectcounters == ''):
 	        self.selectcounters=''
         if (self.localsave == None or self.localsave == ''):
@@ -98,9 +98,12 @@ class QueryOptions(object):
             fnstopdate = self.stopdate.replace("/","")
             if (not os.path.exists("./Reports/")):
                 os.makedirs(r"./Reports/")
-            self.reportfilename = "NESta_" + self.selectelement + '_' + fnstartdate + self.starttimeall + "_" + fnstopdate + self.stoptimeall + "_" + self.selectperiod + "_" + self.selectunittype + ".json"
+            if (self.selectcounters.find('ALARM')>=0):
+                self.reportfilename = "NEAlarm_" + self.selectelement + '_' + fnstartdate + self.starttimeall + "_" + fnstopdate + self.stoptimeall + "_" + self.selectperiod + "_" + self.selectunittype + ".json"
+            else:
+                self.reportfilename = "NESta_" + self.selectelement + '_' + fnstartdate + self.starttimeall + "_" + fnstopdate + self.stoptimeall + "_" + self.selectperiod + "_" + self.selectunittype + ".json"
         
-        print "Report File Name: " + self.reportfilename
+        print "Report File Name: " + './Reports/' + self.reportfilename
         
         if (lenofargs<7):
             QueryOptionsString = 'Now query options: \n' 
@@ -126,9 +129,9 @@ def printusage(UsageString,info):
     print "-d (Stop Date    :2015/04/02)"
     print "-t (Stop Time    :0600)"
     print "-e (Element      :SHMME03BNK/ALL)"
-    print "-c (Counter      :SUCC_COMBINED_ATTACH)"
+    print "-c (Counter      :SUCC_COMBINED_ATTACH/ALARM)"
     print "-p (Period       :15/60)"
-    print "-u (Unittype     :Type NE/TAC/session)"
+    print "-u (Unittype     :Type MME/TA_ID/SAEGW/SSPROF_ID)"
     print "-l (Localsave    :0/1 (Not/Yes)"
     print "-R (ReportName   :'Report_xxxx.json')"
 
@@ -152,6 +155,9 @@ def getTables_config(nsng_oss_tables_views,column_name_list):
     request_column_list = column_name_list.split(',')
     return_column_list = []
     return_table_name = ''
+
+    if (request_column_list[0]=='ALARM'):
+        request_column_list[0] = 'ALARM_TYPE'
     for table in nsng_oss_tables_views['NE_OSS_table_view']:
         for column in table['tables']['columns']['column']:
             if column in request_column_list:
@@ -161,38 +167,116 @@ def getTables_config(nsng_oss_tables_views,column_name_list):
             break
     return return_column_list,return_table_name
 
-def getSQLstring(table_name,column_list,queryoptions):
+def getAlarmSQLstring(table_name,column_list,queryoptions):
     SelectString = ''
     FromString = ''
     WhereString = ''
+    OrderString = ''
+
+    # Generate Select String
+    SelectString = '''
+select objects.CO_GID ,
+objects.CO_NAME,
+DN,alarm_number,alarm_time,cancel_time,alarm_status,
+alarm_type,severity,
+text,
+fx_alarm.SUPPLEMENTARY_INFO
+'''
+    # Generate From String
+    FromString = '\nfrom ' + table_name + ' , UTP_COMMON_OBJECTS objects '
+
+    # Generate Where String
+    WhereString = """
+where 
+NE_GID = objects.CO_GID and ( NE_GID=objects.CO_GID and objects.CO_OC_ID=3766 )
+"""
+    # Counters maybe contain alarm_number like 'ALARM,3604,2101'
+    if (len(queryoptions.selectcounters.split(',')) > 1):
+        alarm_numbers =  ','.join(queryoptions.selectcounters.split(',')[1:])
+        WhereString = WhereString + " and alarm_number in (" + alarm_numbers + ") "
+    if (queryoptions.selectelement != 'ALL'):
+        WhereString = WhereString + "and objects.CO_NAME = '" + queryoptions.selectelement + "' " 
+    WhereString = WhereString + "and to_char(alarm_time,\'yyyy/mm/dd/hh24mi\')>=\'"+queryoptions.startdate+"/"+queryoptions.starttimeall+"\' and to_char(alarm_time,\'yyyy/mm/dd/hh24mi\')<=\'"+queryoptions.stopdate+"/"+queryoptions.stoptimeall + "\' \n"
+
+    OrderString = OrderString + """
+order by objects.CO_GID , alarm_type desc ,severity asc
+    """
+
+    return SelectString + FromString + WhereString + OrderString
+
+def getStatSQLstring(table_name,column_list,queryoptions):
+    SelectString = ''
+    FromString = ''
+    WhereString = ''
+    GroupString = ''
 
     # Generate Select String
     SelectString = '''
 select
 objects.CO_NAME,
 to_char(period_start_time,'yyyy/mm/dd') Sdate,
-to_char(period_start_time,'hh24:mi') Stime,
 '''
-    if (queryoptions.selectunittype=='NE'):
-        SelectString = SelectString + "'ALL' as ElementType,\n"
+    if (queryoptions.selectperiod=='15'):
+        SelectString = SelectString + "to_char(period_start_time,'hh24:mi') Stime,\n"
     else:
-        SelectString = SelectString + queryoptions.selectunittype + " as ElementType,\n"
+        SelectString = SelectString + "to_char(period_start_time,'hh24') Stime,\n"
 
-    SelectString = SelectString + queryoptions.selectcounters + '\n'
+    if (queryoptions.selectunittype=='MME' or queryoptions.selectunittype=='SAEGW'):
+        SelectString = SelectString + "'ALL' as ElementType "
+    else:
+        SelectString = SelectString + queryoptions.selectunittype + " as ElementType "
+    
+    selectcounters = queryoptions.selectcounters.split(',')
+    for selectcounter in selectcounters:
+        SelectString = SelectString + ',\nsum(' + selectcounter +')'
 
     # Generate From String
-    FromString = 'from ' + table_name + ' g , UTP_COMMON_OBJECTS objects '
+    FromString = '\nfrom ' + table_name + ' g , UTP_COMMON_OBJECTS objects '
 
     # Generate Where String
-    WhereString = """
+    # if unit type is MME or TAC, the stat table should use fins_id as id, otherwise use fing_id
+    if (queryoptions.selectunittype == 'MME' or queryoptions.selectunittype == 'TAC'):
+        WhereString = """
 where 
 g.FINS_ID=objects.CO_GID 
 """
+    else:
+        WhereString = """
+where 
+g.FING_ID=objects.CO_GID 
+"""
     if (queryoptions.selectelement != 'ALL'):
-        WhereString = WhereString + " and objects.co_name = '" + queryoptions.selectelement + "'" 
-    WhereString = WhereString + " and to_char(g.period_start_time,\'yyyy/mm/dd/hh24mi\')>=\'"+queryoptions.startdate+"/"+queryoptions.starttimeall+"\' and to_char(g.period_start_time,\'yyyy/mm/dd/hh24mi\')<=\'"+queryoptions.stopdate+"/"+queryoptions.stoptimeall + "\' "
+        WhereString = WhereString + " and objects.co_name = '" + queryoptions.selectelement + "' " 
+    WhereString = WhereString + " and to_char(g.period_start_time,\'yyyy/mm/dd/hh24mi\')>=\'"+queryoptions.startdate+"/"+queryoptions.starttimeall+"\' and to_char(g.period_start_time,\'yyyy/mm/dd/hh24mi\')<=\'"+queryoptions.stopdate+"/"+queryoptions.stoptimeall + "\' \n"
 
-    return SelectString + FromString + WhereString
+    if (queryoptions.selectperiod=='60'):
+        if(queryoptions.selectunittype=='MME' or queryoptions.selectunittype=='SAEGW'):
+            GroupString = """
+group by to_char(period_start_time,'yyyy/mm/dd'), to_char(period_start_time,'hh24'),
+objects.co_name
+order by objects.co_name , to_char(period_start_time,'yyyy/mm/dd'), to_char(period_start_time,'hh24')
+"""
+        else:
+            GroupString = """
+group by to_char(period_start_time,'yyyy/mm/dd'), to_char(period_start_time,'hh24'),
+objects.co_name,""" + queryoptions.selectunittype + """
+order by objects.co_name , to_char(period_start_time,'yyyy/mm/dd'), to_char(period_start_time,'hh24')
+"""
+    else:
+        if(queryoptions.selectunittype=='MME' or queryoptions.selectunittype=='SAEGW'):
+            GroupString = """
+group by to_char(period_start_time,'yyyy/mm/dd'), to_char(period_start_time,'hh24:mi'),
+objects.co_name
+order by objects.co_name , to_char(period_start_time,'yyyy/mm/dd'), to_char(period_start_time,'hh24:mi')
+"""
+        else:
+            GroupString = """
+group by to_char(period_start_time,'yyyy/mm/dd'), to_char(period_start_time,'hh24:mi'),
+objects.co_name,ElementType,""" + queryoptions.selectunittype + """
+order by objects.co_name , to_char(period_start_time,'yyyy/mm/dd'), to_char(period_start_time,'hh24:mi')
+"""
+
+    return SelectString + FromString + WhereString + GroupString
 
 def write_column(reportfile,x):
     firstcolumn = 1
@@ -284,25 +368,43 @@ def GenerateQueryData(queryoptions):
 
     result = ''
     # Get oss config 
-    nsng_oss_configs = NSNG_OSS_config()
+    try:
+        nsng_oss_configs = NSNG_OSS_config()
+    except Exception, e:
+        return None , 'Get OSS Config Exception: ' + str(e.message)
+
     nsng_oss_tables_views = nsng_oss_configs.NSNG_OSS_tables_views
     nsng_oss_database = nsng_oss_configs.NSNG_OSS_database
     nsng_oss_ne = nsng_oss_configs.NSNG_OSS_NE
     
     # Get Database config
-    database_name = getDatabaseName(nsng_oss_ne,queryoptions.selectelement)
-    if (database_name == ''):
-        result = 'Can not get the database name according to the element name(' + queryoptions.selectelement + ')'
-        
+    try:
+        database_name = getDatabaseName(nsng_oss_ne,queryoptions.selectelement)
+        if (database_name == ''):
+            result = 'Can not get the database name according to the element name(' + queryoptions.selectelement + ')'
+            return None , result
+    except Exception , e:
+        result = '\nGet Database name Exception :' + str(e.message)
+        return None , result
+
     print 'database_name: ' + database_name
 
-    database = getDatabase_config(nsng_oss_database,database_name)
-    if (database == {}):
-        result = 'Can not get the database config according to the database name(' + database_name + ')'
-        
+    try:
+        database = getDatabase_config(nsng_oss_database,database_name)
+        if (database == {}):
+            result = 'Can not get the database config according to the database name(' + database_name + ')'
+            return None , result
+    except Exception , e:
+        result = '\nGet Database config Exception :' + str(e.message)
+        return None , result
+
     # Get Tables Views config
-    column_list,table_name = getTables_config(nsng_oss_tables_views,queryoptions.selectcounters)
-    
+    try:
+        column_list,table_name = getTables_config(nsng_oss_tables_views,queryoptions.selectcounters)
+    except Exception , e:
+        result = '\nGet Tables/Views config Exception :' + str(e.message)
+        return None , result
+
     # Get Database Connection
     # db = cx_Oracle.connect('omc', 'omc', '127.0.0.1:51063/oss')
     try:
@@ -313,8 +415,10 @@ def GenerateQueryData(queryoptions):
 
     # Get SQL
     try:
-        SQLstring = getSQLstring(table_name,column_list,queryoptions)
-        SQLstring = SQLstring
+        if (queryoptions.selectcounters.find('ALARM')<0):
+            SQLstring = getStatSQLstring(table_name,column_list,queryoptions)
+        else:
+            SQLstring = getAlarmSQLstring(table_name,column_list,queryoptions)
         print '\nSQLstring:' + SQLstring
         cursor=db.cursor()
         cursor.execute(SQLstring)
@@ -340,5 +444,5 @@ if __name__ == "__main__":
         sys.exit(1)
     queryresult , result = GenerateQueryData(queryoptioninfo)
     if (result != ''):
-        print result + ' , please check parameter or contact the code developer.'  
+        print '\n' + result + ' , please check parameter or contact the code developer.'  
 

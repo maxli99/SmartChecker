@@ -8,7 +8,7 @@
 ## 模块介绍
 - NSNG_OSS_config.py
 
-    该脚本主要是定义下列class，在初始化时分别载入三个json配置文件来定义和网管数据库相关的配置信息。这三个json文件内容会在后面详细介绍。
+    该脚本主要是定义下列class，在初始化时分别载入三个yaml配置文件(在当前目录的config子目录下）来定义和网管数据库相关的配置信息。这三个yaml文件内容会在后面详细介绍。
 
 
     class NSNG_OSS_config(object):
@@ -41,8 +41,8 @@
         self.stoptimemm = ''                # 查询的结束时间（'30'(分钟)）
         self.stoptimeall = ''               # 查询的开始时间（'1030'(小时+分钟)）
         self.selectperiod = '15'            # 查询的时间间隔（'15'/'60'(15分钟/每小时))
-        self.selectunittype = 'NE'          # 查询的统计粒度（'NE'(MME)/'TAC','NE'(SAEGW)/'Session')
-        self.selectcounters = ''            # 查询的Counters（'EPS_EME_ATTACH_FAIL',填入网管数据库里的对应Counter的列名）
+        self.selectunittype = 'NE'          # 查询的统计粒度（'MME'/'TA_ID','SAEGW'/'SSPROF_ID')
+        self.selectcounters = ''            # 查询的Counters（'EPS_EME_ATTACH_FAIL',填入网管数据库里的对应Counter的列名;如果是查询ALARM数据库，请输入'ALARM'(表示查询所有告警)或者'ALARM,3604,2101'(指定告警号))
         self.reportfilename = ''            # 查询后输出的文件名 ('xxxx.json')
         self.localsave = '1'                # 查询数据是否需要输出到本地文件('0'/'1')
 
@@ -52,77 +52,69 @@
 保存到dict变量并作为调用GenerateQueryData函数的返回值，可实现该模块的API接口。
 前者调用GenerateReportFile完成json文件保存，后者调用GenerateReportData产生dict对象。
             
-- OSS_Databases.json
+- config/OSS_Databases.yaml
 
-    该文件包括数据库连接建立所需的参数。其中name是数据库连接的名字，在后面介绍的OSS_NSNG.json中作为MME/SAEGW的数据库指定的标识。
+    该文件包括数据库连接建立所需的参数。其中name是数据库连接的名字，在后面介绍的OSS_NSNG.yaml中作为MME/SAEGW的数据库指定的标识。
 
 
-    {
-        "database":[
-            {
-                "name":"MME_database",
-                "ip":"127.0.0.1",
-                "port":"51063",
-                "db":"oss",
-                "user":"omc",
-                "password":"omc"
-            }
-        ]
-    }
+    database:
+    - {db: oss, ip: 127.0.0.1, name: MME_database, password: omc, port: '51063', user: omc}
+    - {db: oss, ip: 127.0.0.1, name: SAEGW_database, password: omc, port: '51063', user: omc}
 
 
 
 
-- OSS_NSNG.json
 
-    该文件的目的是针对某一些项目上不同的网元可能会连接至不同的网管数据库的情况。其中name是数据库连接的名字，对应前面介绍的OSS_Databases.json中的name字段。
+- config/OSS_NSNG.yaml
 
-
-    {
-        "NE":[
-            {
-                "name":"SHMME03BNK",
-                "database":"MME_database"
-            }
-        ]
-    }   
+    该文件的目的是针对某一些项目上不同的网元可能会连接至不同的网管数据库的情况。其中name是数据库连接的名字，对应前面介绍的OSS_Databases.yaml中的name字段。
 
 
-- OSS_Tables_column.json
+    NE:
+    - {database: MME_database, name: SHMME03BNK}
+    - {database: MME_database, name: SHMME04BNK}
+    - {database: MME_database, name: SHMME05BNK}
+    - {database: MME_database, name: SHMME06BNK}
+    - {database: MME_database, name: SHMME07BNK}
+    - {database: MME_database, name: SHMME08BNK}
+    - {database: MME_database, name: SHMME09BNK}
+    - {database: MME_database, name: SHMME10BNK}
+    - {database: SAEGW_database, name: SHSAEGW03BNK}
+    - {database: SAEGW_database, name: SHSAEGW04BNK}
+    - {database: SAEGW_database, name: SHSAEGW05BNK}
+    - {database: SAEGW_database, name: SHSAEGW06BNK}
+    - {database: SAEGW_database, name: SHSAEGW07BNK}
+    - {database: SAEGW_database, name: SHSAEGW08BNK}
+    - {database: SAEGW_database, name: SHSAEGW09BNK}
+    - {database: SAEGW_database, name: SHSAEGW10BNK}
+    - {database: SAEGW_database, name: SHSAEGW11BNK}
+    - {database: SAEGW_database, name: SHSAEGW12BNK}   
+
+
+- config/OSS_Tables_column.yaml
 
     该文件的目的的提供网管数据库中每个跟测量有关的表格或视图（目前都是视图）的列信息。用于匹配查询参数中提供的Counter。在代码中通过Counter可以找到相应的Table或View的名称，建立SQL语句。
 
     
-    {
-        "NE_OSS_table_view": [
-            {
-                "tables": {
-                    "name": "PCOFNS_PS_MMMT_TA_RAW",
-                    "columns": {
-                        "column": [
-                            "EPS_EME_ATTACH_SUCC_AUTH",
-                            "EPS_EME_ATTACH_FAIL",
-                            "EPS_EME_ATTACH_ATTEMPT",
-                            "EPS_EME_ATTACH_SUCC_UNAUTH",
-                            "EPS_EME_ATTACH_SUCC_UICCLESS",
-                            "EPS_PAGING_VOLTE_ATTEMPT",
-                            "EPS_PAGING_VOLTE_SUCC",
-                            "EPS_PAGING_VOLTE_FAIL",
-                            ...
-                            ...
-                            ...
-                            "EPS_ATTACH_NAS_03_FAIL",
-                            "EPS_ATTACH_NAS_06_FAIL",
-                            "EPS_ATTACH_NAS_07_FAIL",
-                            "EPS_ATTACH_NAS_08_FAIL"
-                        ]
-                    }
-                }
-            },
-            ...
-            ...
-            ...
-    }
+    NE_OSS_table_view:
+    - tables:
+        columns:
+            column: [EPS_EME_ATTACH_SUCC_AUTH, EPS_EME_ATTACH_FAIL, EPS_EME_ATTACH_ATTEMPT,
+                EPS_EME_ATTACH_SUCC_UNAUTH, EPS_EME_ATTACH_SUCC_UICCLESS, EPS_PAGING_VOLTE_ATTEMPT,
+                EPS_PAGING_VOLTE_SUCC, EPS_PAGING_VOLTE_FAIL, EPS_TAU_FAIL_DUE_TA_RA_GRP_CHG,
+                ...]
+        name: PCOFNS_PS_MMMT_TA_RAW
+    - tables:
+        columns:
+            column: [PDN_UEINIT_ACT_GW_MOD_BR_FAIL, PDN_UEINIT_ACT_UNSPEC_FAIL, FINS_ID,
+                MCC_ID, MNC_ID, TA_ID, PERIOD_START_TIME, PERIOD_DURATION, CHANGE_NOTIFY_FAIL,
+                EPS_DDBEARER_PDN_CONN_ATTEMPT, EPS_DDBEARER_PDN_CONN_SUCC, EPS_DDBEARER_PDN_CONN_DISCARD,
+                ...]
+        name: PCOFNS_PS_SMMT_TA_RAW    
+    ...
+    ...
+    ...
+    
 
 ## 使用说明
 * 工具使用方式
@@ -131,23 +123,30 @@
 
 1. 执行python脚本
 
-Usage:  OSS_query_v2.py -D2015/04/03 -T0400 -d2015/04/03 -t0500 -eSHMME03BNK -cSUCC_COMBINED_ATTACH -p60 -uNE -l1 -RNESta_ALL_201607132351_201607140021_15_NE.json
+Usage:  OSS_query_v2.py -D2016/07/19 -T0400 -d2016/07/19 -t0500 -eSHMME03BNK -cEPS_ATTACH_ATTEMPT,EPS_COMBINED_ATTACH_ATTEMPT -p60 -uMME -l1
 
 其中命令行参数的解释如下：
 
-    -D (Start Date   :2015/04/02)                       # 缺省值为当天日期
-    -T (Start Time   :0500)                             # 缺省值为当前时间的前30m
-    -d (Stop Date    :2015/04/02)                       # 缺省值为当天日期
-    -t (Stop Time    :0600)                             # 缺省值为当前时间
+    -D (Start Date   :2016/07/19)                       # 缺省值为当天日期
+    -T (Start Time   :0400)                             # 缺省值为当前时间的前30m
+    -d (Stop Date    :2016/07/19)                       # 缺省值为当天日期
+    -t (Stop Time    :0500)                             # 缺省值为当前时间
     -e (Element      :SHMME03BNK/ALL)                   # 缺省值为ALL
-    -c (Counter      :SUCC_COMBINED_ATTACH)             # 无缺省值，参数必须提供
+    -c (Counter      :SUCC_COMBINED_ATTACH)             # 无缺省值，参数必须提供，多个指标以','分隔（','前后不要加空格）
     -p (Period       :15/60)                            # 缺省值为15
-    -u (Unittype     :Type NE/TAC/session)              # 缺省值为NE
+    -u (Unittype     :Type MME//TAC/session)            # 缺省值为MME
     -l (Localsave    :0/1 (Not/Yes)                     # 缺省值为1
-    -R (ReportName   :'Report_xxxx.json')               # 缺省值为NESta_[网元]_[开始日期时间]_[结束日期时间]_[时间间隔]_[统计类型].json
+    -R (ReportName   :'Report_xxxx.json')               # 缺省值为NESta_[网元]_[开始日期时间]_[结束日期时间]_[时间间隔]_[统计类型].json,存放目录在当前目录的Reports子目录内。
                                                         # 如：NESta_ALL_201607132351_201607140021_15_NE.json
+                                                        # 如果是查询ALARM数据库，则是：NEALARM_[网元]_[开始日期时间]_[结束日期时间]_[时间间隔]_[统计类型].json
 
 其中*Counter为必须提供的参数*。其他参数如果不提供，会自动提供缺省值。
+
+如果查询告警数据库，请参考以下指令：
+OSS_query_v2.py -D2016/07/19 -T1000 -d2016/07/19 -t1200 -eSHMME03BNK -cALARM,3604,2101 -p60 -uMME -l1 
+OSS_query_v2.py -D2016/07/19 -T1000 -d2016/07/19 -t1200 -eSHSAEGW03BNK -cALARM -p60 -uSAEGW -l1 
+如果查询SAEGW统计指标：
+OSS_query_v2.py -D2016/07/19 -T1000 -d2016/07/19 -t1200 -eSHSAEGW03BNK -c RADIUS_ACCT_REQ_START_SENT,RADIUS_AUTH_RESP_REC, RADIUS_AUTH_REJ_REC -p60 -uSAEGW 
 
 2. 执行exe文件
 
