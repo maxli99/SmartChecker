@@ -1,0 +1,3 @@
+database:
+- {db: oss, ip: 127.0.0.1, name: MME_database, password: omc, port: '51063', user: omc}
+- {db: oss, ip: 127.0.0.1, name: SAEGW_database, password: omc, port: '51063', user: omc}

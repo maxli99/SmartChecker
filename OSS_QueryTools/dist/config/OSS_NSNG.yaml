@@ -1,0 +1,19 @@
+NE:
+- {database: MME_database, name: SHMME03BNK}
+- {database: MME_database, name: SHMME04BNK}
+- {database: MME_database, name: SHMME05BNK}
+- {database: MME_database, name: SHMME06BNK}
+- {database: MME_database, name: SHMME07BNK}
+- {database: MME_database, name: SHMME08BNK}
+- {database: MME_database, name: SHMME09BNK}
+- {database: MME_database, name: SHMME10BNK}
+- {database: SAEGW_database, name: SHSAEGW03BNK}
+- {database: SAEGW_database, name: SHSAEGW04BNK}
+- {database: SAEGW_database, name: SHSAEGW05BNK}
+- {database: SAEGW_database, name: SHSAEGW06BNK}
+- {database: SAEGW_database, name: SHSAEGW07BNK}
+- {database: SAEGW_database, name: SHSAEGW08BNK}
+- {database: SAEGW_database, name: SHSAEGW09BNK}
+- {database: SAEGW_database, name: SHSAEGW10BNK}
+- {database: SAEGW_database, name: SHSAEGW11BNK}
+- {database: SAEGW_database, name: SHSAEGW12BNK}
