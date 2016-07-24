@@ -1,0 +1,15 @@
+Value Filldown SENSORSLOT ([\w\d]+)
+Value SENSORTEMPNAME ([\s\S]+)
+Value SENSORDATATYPE ([\S\s]+)
+Value SENSORTEMPVALUE ([\d\.\d]+)
+
+
+Start
+	^[\s\S]+clia sensordata -> SensorValues
+
+SensorValues
+	^${SENSORSLOT}: [\s\S]*\(\"${SENSORTEMPNAME}\"\) 
+	^\s+Type[\s\S]+\"${SENSORDATATYPE}\" 
+	^\s+Processed data: ${SENSORTEMPVALUE} degrees C -> Record
+
+EOF
