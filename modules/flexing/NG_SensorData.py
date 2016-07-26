@@ -26,7 +26,7 @@ desc      = __doc__
 criteria  = u"""
 （1）检查SAEGW/GGSN版本为 ['NG 3.15','NG 3.16'] 或者更高版本。
 （2）检查各板卡的Sensor数据，温度按大小排出Top 10。
-（3）如果Sensor数据中出现温度有超过60摄氏度，则显示为Error，建议报现场工程师或客户检修。
+（3）如果Sensor数据中出现温度有超过75摄氏度，则显示为Error，建议报现场工程师或客户检修。
 """
 result = ResultInfo(name,priority=priority)
 error = ''
@@ -72,6 +72,8 @@ slot_ipmb_adress = {
     '20':'active shelfmanager '
 }
 
+TEMPERATURE_THRESHOLD = 75
+
 def read_block(logfile,blkname):
     loglines = file(logfile).readlines()
 
@@ -116,7 +118,9 @@ def run(logfile):
             for fsminfo in fsminfos:
                 showdatas = showdatas - 1 
                 fsminfo[0] = slot_ipmb_adress[fsminfo[0]]
-                
+                # check the temperature with TEMPERATURE_THRESHOLD
+                if float(fsminfo[3]) > TEMPERATURE_THRESHOLD:
+                    status = CheckStatus.FAILED
                 # make every sensor data item not less than 20 chars
                 i = 0
                 while (i < len(fsminfo)):

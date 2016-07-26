@@ -1,0 +1,12 @@
+{
+	"columndesc": [
+		"NE_NAME",
+		"Date",
+		"Time",
+		"StatType",
+		"QOS_DL_DROP_QCI"
+	],
+	"columns": [
+
+	]
+}

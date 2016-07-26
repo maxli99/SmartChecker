@@ -8,10 +8,11 @@ import os
 import re
 from collections import defaultdict
 
-LOGFILE_POSTFIX = ['.log','.txt']
+LOGFILE_POSTFIX = ['.log','.txt','.json']
 
 log_patterns = {'FlexiNG' : re.compile("fsclish"),
-                'FlexiNS' : re.compile("COMMAND EXECUTED")}
+                'FlexiNS' : re.compile("COMMAND EXECUTED"),
+                'FlexiNSNG_OSS' : re.compile(".")}
 
 class LogFileError(Exception):
     pass

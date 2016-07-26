@@ -32,7 +32,11 @@ class QueryOptions(object):
         curdate=time.strftime('%Y/%m/%d',time.localtime(time.time()))
         curtime=time.strftime('%H%M',time.localtime(time.time()))
 
-        opts, args = getopt.getopt(info[1:], "e:c:D:T:d:t:p:u:l:") 
+        try:
+            opts, args = getopt.getopt(info[1:], "e:c:D:T:d:t:p:u:l:hH") 
+        except Exception, e:
+            result = 1
+            return result
         lenofargs=len(opts)
         #print lenofargs
         
@@ -61,6 +65,9 @@ class QueryOptions(object):
                 self.localsave = value
             elif op == "-R":
                 self.reportfilename = value
+            elif op == "-H" or op == "-h":
+                result = 2
+                return result
 
         if (self.selectelement == None or self.selectelement == ''):
 	        self.selectelement = 'ALL'
@@ -175,8 +182,7 @@ def getAlarmSQLstring(table_name,column_list,queryoptions):
 
     # Generate Select String
     SelectString = '''
-select objects.CO_GID ,
-objects.CO_NAME,
+select objects.CO_NAME,
 DN,alarm_number,alarm_time,cancel_time,alarm_status,
 alarm_type,severity,
 text,
@@ -186,9 +192,15 @@ fx_alarm.SUPPLEMENTARY_INFO
     FromString = '\nfrom ' + table_name + ' , UTP_COMMON_OBJECTS objects '
 
     # Generate Where String
-    WhereString = """
+    if (queryoptions.selectunittype == "MME" or queryoptions.selectunittype == "TA_ID"):
+        WhereString = """
 where 
-NE_GID = objects.CO_GID and ( NE_GID=objects.CO_GID and objects.CO_OC_ID=3766 )
+NE_GID = objects.CO_GID and objects.CO_OC_ID=3766
+"""
+    else:
+        WhereString = """
+where 
+NE_GID = objects.CO_GID and (objects.CO_OC_ID=3529) 
 """
     # Counters maybe contain alarm_number like 'ALARM,3604,2101'
     if (len(queryoptions.selectcounters.split(',')) > 1):
@@ -305,12 +317,25 @@ def GenerateReport(rowinfo , queryoptions):
 def GenerateReportData(rowinfo , queryoptions):
     queryresult = {}
     columndesc = []
-    columndesc.append("NE_NAME")
-    columndesc.append("Date")
-    columndesc.append("Time")
-    columndesc.append("StatType")
-    for column_name in queryoptions.selectcounters.split(':'):
-        columndesc.append(column_name)
+
+    if (queryoptions.selectcounters.find('ALARM')<0):
+        columndesc.append("NE_NAME")
+        columndesc.append("Date")
+        columndesc.append("Time")
+        columndesc.append("StatType")
+        for column_name in queryoptions.selectcounters.split(':'):
+            columndesc.append(column_name)
+    else:
+        columndesc.append("NE_NAME")
+        columndesc.append("DN")
+        columndesc.append("Alarm Number")
+        columndesc.append("Alarm Timer")
+        columndesc.append("Cancel Timer")
+        columndesc.append("Alarm Status")
+        columndesc.append("Alarm Type")
+        columndesc.append("Alarm Severity")
+        columndesc.append("Alarm Text")
+        columndesc.append("Alarm Supp Info")
     
     queryresult['columndesc'] = columndesc
 
@@ -320,7 +345,7 @@ def GenerateReportData(rowinfo , queryoptions):
         for y in x:
             column.append(str(y))
         columns.append(column)
-    queryresult['cloumns'] = columns
+    queryresult['columns'] = columns
 
     return queryresult , ''
 
@@ -334,17 +359,32 @@ def GenerateReportFile(rowinfo , queryoptions):
         result = 'Reportfile : ./Reports/' + queryoptions.reportfilename + ' can not create. '
         return None , result
     # json 'columndesc' is query result 's column name
-    reportfile.write('{\n')
-    reportfile.write('\t"columndesc": [\n')
-    reportfile.write('\t\t"NE_NAME",\n')
-    reportfile.write('\t\t"Date",\n')
-    reportfile.write('\t\t"Time",\n')
-    reportfile.write('\t\t"StatType"')
-    for column_name in queryoptions.selectcounters.split(':'):
-        reportfile.write(',\n')
-        reportfile.write('\t\t"' + column_name + '"\n')
-    reportfile.write('\t],\n')
-    
+    if (queryoptions.selectcounters.find('ALARM')<0):
+        reportfile.write('{\n')
+        reportfile.write('\t"columndesc": [\n')
+        reportfile.write('\t\t"NE_NAME",\n')
+        reportfile.write('\t\t"Date",\n')
+        reportfile.write('\t\t"Time",\n')
+        reportfile.write('\t\t"StatType"')
+        for column_name in queryoptions.selectcounters.split(':'):
+            reportfile.write(',\n')
+            reportfile.write('\t\t"' + column_name + '"\n')
+        reportfile.write('\t],\n')
+    else:
+        reportfile.write('{\n')
+        reportfile.write('\t"columndesc": [\n')
+        reportfile.write('\t\t"NE_NAME",\n')
+        reportfile.write('\t\t"DN",\n')
+        reportfile.write('\t\t"Alarm Number",\n')
+        reportfile.write('\t\t"Alarm Timer",\n')
+        reportfile.write('\t\t"Cancel Timer",\n')
+        reportfile.write('\t\t"Alarm Status",\n')
+        reportfile.write('\t\t"Alarm Type",\n')
+        reportfile.write('\t\t"Alarm Severity",\n')
+        reportfile.write('\t\t"Alarm Text",\n')
+        reportfile.write('\t\t"Alarm Supp Info"\n')
+        reportfile.write('\t],\n')
+
     # json 'columns' is query result 's column value
     firstrow = 1
     reportfile.write('\t"columns": [\n')
@@ -439,8 +479,11 @@ def GenerateQueryData(queryoptions):
     
 if __name__ == "__main__":
     queryoptioninfo , result = makeQueryoptions(sys.argv)
-    if (result != 0):
-        printusage('Error in argv:',sys.argv)
+    if (result > 0):
+        if (result == 1):
+            printusage('Error in argv:',sys.argv)
+        elif (result == 2):
+            printusage('The Usage should be as follows:',sys.argv)
         sys.exit(1)
     queryresult , result = GenerateQueryData(queryoptioninfo)
     if (result != ''):
