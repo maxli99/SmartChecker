@@ -1,0 +1,477 @@
+# ClusterRoot
+dn: fsClusterId=ClusterRoot
+objectClass: FSCluster
+objectClass: extensibleObject
+fsClusterId: ClusterRoot
+fsLayer: FlexiPlatformBase FlexiPlatformFull NG NGATCA NGNONHAATCA
+fsDeployment: create_ng.sh
+fsPostDeploymentPlugin: NG_plugin.py
+fsMOID: 1
+fsLogicalNetworkElemId: FZSAEGW07BNK
+fsStaticDataDelivery: R_NG16_r328502_AB4
+fsLastMOID: 1881
+fsLogicalNetworkElemType: FING
+[root@CLA-0(FZSAEGW07BNK) /root]
+# nginfo -s
+Status check started: Wed Aug  3 15:37:39 CST 2016
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Cluster status check:
+                               Status Admin    Oper     Usage    Alarm             Inert mode
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+/                              OK                                                  OFF 
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Node status check:
+                               Status Admin    Oper     Usage    Alarm             Inert mode
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+/CLA-0                         OK                                                  OFF 
+/CLA-1                         OK                                                  OFF 
+/AS3-0                         OK                                                  OFF 
+/AS3-1                         OK                                                  OFF 
+/AS4-0                         OK                                                  OFF 
+/AS4-1                         OK                                                  OFF 
+/AS5-0                         OK                                                  OFF 
+/AS5-1                         OK                                                  OFF 
+/AS12-0                        OK                                                  OFF 
+/AS12-1                        OK                                                  OFF 
+/AS13-0                        OK                                                  OFF 
+/AS13-1                        OK                                                  OFF 
+/AS14-0                        OK                                                  OFF 
+/AS14-1                        OK                                                  OFF 
+/IB7-0                         OK                                                  OFF 
+/IB7-1                         OK                                                  OFF 
+/IB10-0                        OK                                                  OFF 
+/IB10-1                        OK                                                  OFF 
+/IB11-0                        OK                                                  OFF 
+/IB11-1                        OK                                                  OFF 
+/SAB2-0                        OK                                                  OFF 
+/SAB2-1                        OK                                                  OFF 
+/SAB6-0                        OK                                                  OFF 
+/SAB6-1                        OK                                                  OFF 
+/SAB15-0                       OK                                                  OFF 
+/SAB15-1                       OK                                                  OFF 
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Recovery Group status check:
+                                      Admin    Oper     Usage    Alarm 
+Recovery Group                 Status Problematic Child                                           
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+/6WINDMonitor                  OK    
+/AHUBConfMgr                   OK    
+/AlarmSystemLight              OK    
+/BondManager                   OK    
+/BpFtp                         NOK    LOCKED   DISABLED IDLE     OK          
+                                      /CLA-0/NGBpFtpServer                                        
+                                       LOCKED   ENABLED  IDLE     OK 
+                                      /CLA-0/NGBpFtpServer/NgBpFtpProcess                         
+                                       LOCKED   ENABLED  IDLE     OK 
+                                      /CLA-1/NGBpFtpServer                                        
+                                       LOCKED   ENABLED  IDLE     OK 
+                                      /CLA-1/NGBpFtpServer/NgBpFtpProcess                         
+                                       LOCKED   ENABLED  IDLE     OK 
+/BpSftp                        NOK    LOCKED   DISABLED IDLE     OK          
+                                      /CLA-0/NGBpSftpServer                                       
+                                       LOCKED   ENABLED  IDLE     OK 
+                                      /CLA-0/NGBpSftpServer/NgBpSftpProcess                       
+                                       LOCKED   ENABLED  IDLE     OK 
+                                      /CLA-1/NGBpSftpServer                                       
+                                       LOCKED   ENABLED  IDLE     OK 
+                                      /CLA-1/NGBpSftpServer/NgBpSftpProcess                       
+                                       LOCKED   ENABLED  IDLE     OK 
+/CDAfs                         OK    
+/CdrCollector                  OK    
+/CentralPoolMgr                OK    
+/CertMan                       OK    
+/Clied                         OK    
+/CLM                           OK    
+/ClusterDNS                    OK    
+/ClusterHA                     OK    
+/ClusterNTP                    OK    
+/ClusterState                  OK    
+/ConfCtrl-3-0                  OK    
+/ConfCtrl-3-1                  OK    
+/ConfCtrl-4-0                  OK    
+/ConfCtrl-4-1                  OK    
+/ConfCtrl-5-0                  OK    
+/ConfCtrl-5-1                  OK    
+/ConfCtrl-12-0                 OK    
+/ConfCtrl-12-1                 OK    
+/ConfCtrl-13-0                 OK    
+/ConfCtrl-13-1                 OK    
+/ConfCtrl-14-0                 OK    
+/ConfCtrl-14-1                 OK    
+/ConfCtrlCla-0                 OK    
+/ConfCtrlCla-1                 OK    
+/ConfCtrlIb-7-0                OK    
+/ConfCtrlIb-7-1                OK    
+/ConfCtrlIb-10-0               OK    
+/ConfCtrlIb-10-1               OK    
+/ConfCtrlIb-11-0               OK    
+/ConfCtrlIb-11-1               OK    
+/ConfCtrlSab-2-0               OK    
+/ConfCtrlSab-2-1               OK    
+/ConfCtrlSab-6-0               OK    
+/ConfCtrlSab-6-1               OK    
+/ConfCtrlSab-15-0              OK    
+/ConfCtrlSab-15-1              OK    
+/ConfLockServer                OK    
+/ConfMgmtActivator             OK    
+/ConfProxy                     OK    
+/ConsoleMonitor                OK    
+/DHCPD                         OK    
+/Directory                     OK    
+/EdgeRouting                   OK    
+/EdgeRoutingAgent              OK    
+/EswMan                        OK    
+/FabricMonitorCla              OK    
+/FabricMonitorIb-7-0           OK    
+/FabricMonitorIb-7-1           OK    
+/FabricMonitorIb-10-0          OK    
+/FabricMonitorIb-10-1          OK    
+/FabricMonitorIb-11-0          OK    
+/FabricMonitorIb-11-1          OK    
+/FabricMonitorSab-2-0          OK    
+/FabricMonitorSab-2-1          OK    
+/FabricMonitorSab-6-0          OK    
+/FabricMonitorSab-6-1          OK    
+/FabricMonitorSab-15-0         OK    
+/FabricMonitorSab-15-1         OK    
+/FeatureMem-3-0                OK    
+/FeatureMem-3-1                OK    
+/FeatureMem-4-0                OK    
+/FeatureMem-4-1                OK    
+/FeatureMem-5-0                OK    
+/FeatureMem-5-1                OK    
+/FeatureMem-12-0               OK    
+/FeatureMem-12-1               OK    
+/FeatureMem-13-0               OK    
+/FeatureMem-13-1               OK    
+/FeatureMem-14-0               OK    
+/FeatureMem-14-1               OK    
+/FeatureMemCla-0               OK    
+/FeatureMemCla-1               OK    
+/FeatureMemIb-7-0              OK    
+/FeatureMemIb-7-1              OK    
+/FeatureMemIb-10-0             OK    
+/FeatureMemIb-10-1             OK    
+/FeatureMemIb-11-0             OK    
+/FeatureMemIb-11-1             OK    
+/FeatureMemSab-2-0             OK    
+/FeatureMemSab-2-1             OK    
+/FeatureMemSab-6-0             OK    
+/FeatureMemSab-6-1             OK    
+/FeatureMemSab-15-0            OK    
+/FeatureMemSab-15-1            OK    
+/FpCoreFileHandler             OK    
+/Ftclient-3-0                  OK    
+/Ftclient-3-1                  OK    
+/Ftclient-4-0                  OK    
+/Ftclient-4-1                  OK    
+/Ftclient-5-0                  OK    
+/Ftclient-5-1                  OK    
+/Ftclient-12-0                 OK    
+/Ftclient-12-1                 OK    
+/Ftclient-13-0                 OK    
+/Ftclient-13-1                 OK    
+/Ftclient-14-0                 OK    
+/Ftclient-14-1                 OK    
+/FtclientSab-2-0               OK    
+/FtclientSab-2-1               OK    
+/FtclientSab-6-0               OK    
+/FtclientSab-6-1               OK    
+/FtclientSab-15-0              OK    
+/FtclientSab-15-1              OK    
+/FTP                           OK    
+/GatewayService-3-0            OK    
+/GatewayService-3-1            OK    
+/GatewayService-4-0            OK    
+/GatewayService-4-1            OK    
+/GatewayService-5-0            OK    
+/GatewayService-5-1            OK    
+/GatewayService-12-0           OK    
+/GatewayService-12-1           OK    
+/GatewayService-13-0           OK    
+/GatewayService-13-1           OK    
+/GatewayService-14-0           OK    
+/GatewayService-14-1           OK    
+/GtpPrime-3-0                  OK    
+/GtpPrime-3-1                  OK    
+/GtpPrime-4-0                  OK    
+/GtpPrime-4-1                  OK    
+/GtpPrime-5-0                  OK    
+/GtpPrime-5-1                  OK    
+/GtpPrime-12-0                 OK    
+/GtpPrime-12-1                 OK    
+/GtpPrime-13-0                 OK    
+/GtpPrime-13-1                 OK    
+/GtpPrime-14-0                 OK    
+/GtpPrime-14-1                 OK    
+/GwupProxy-3-0                 OK    
+/GwupProxy-3-1                 OK    
+/GwupProxy-4-0                 OK    
+/GwupProxy-4-1                 OK    
+/GwupProxy-5-0                 OK    
+/GwupProxy-5-1                 OK    
+/GwupProxy-12-0                OK    
+/GwupProxy-12-1                OK    
+/GwupProxy-13-0                OK    
+/GwupProxy-13-1                OK    
+/GwupProxy-14-0                OK    
+/GwupProxy-14-1                OK    
+/GwupProxyIb-7-0               OK    
+/GwupProxyIb-7-1               OK    
+/GwupProxyIb-10-0              OK    
+/GwupProxyIb-10-1              OK    
+/GwupProxyIb-11-0              OK    
+/GwupProxyIb-11-1              OK    
+/GwupProxySab-2-0              OK    
+/GwupProxySab-2-1              OK    
+/GwupProxySab-6-0              OK    
+/GwupProxySab-6-1              OK    
+/GwupProxySab-15-0             OK    
+/GwupProxySab-15-1             OK    
+/HaCtrl                        OK    
+/HotSwapMonitor                OK    
+/HPIHWMana                     OK    
+/HPIMonitor                    OK    
+/HWDiagMan                     OK    
+/HWIServer                     OK    
+/IPSec                         OK    
+/LbCtrl-3-0                    OK    
+/LbCtrl-3-1                    OK    
+/LbCtrl-4-0                    OK    
+/LbCtrl-4-1                    OK    
+/LbCtrl-5-0                    OK    
+/LbCtrl-5-1                    OK    
+/LbCtrl-12-0                   OK    
+/LbCtrl-12-1                   OK    
+/LbCtrl-13-0                   OK    
+/LbCtrl-13-1                   OK    
+/LbCtrl-14-0                   OK    
+/LbCtrl-14-1                   OK    
+/LbMgr                         OK    
+/LicClient                     OK    
+/LoadBalancingAddr             OK    
+/Log                           OK    
+/MasterSnmpAgentFMPM           OK    
+/Ne3sAgent                     OK    
+/NetworkManager                OK    
+/NGInfoDataCollector-3-0       OK    
+/NGInfoDataCollector-3-1       OK    
+/NGInfoDataCollector-4-0       OK    
+/NGInfoDataCollector-4-1       OK    
+/NGInfoDataCollector-5-0       OK    
+/NGInfoDataCollector-5-1       OK    
+/NGInfoDataCollector-12-0      OK    
+/NGInfoDataCollector-12-1      OK    
+/NGInfoDataCollector-13-0      OK    
+/NGInfoDataCollector-13-1      OK    
+/NGInfoDataCollector-14-0      OK    
+/NGInfoDataCollector-14-1      OK    
+/NGInfoDataCollectorIb-7-0     OK    
+/NGInfoDataCollectorIb-7-1     OK    
+/NGInfoDataCollectorIb-10-0    OK    
+/NGInfoDataCollectorIb-10-1    OK    
+/NGInfoDataCollectorIb-11-0    OK    
+/NGInfoDataCollectorIb-11-1    OK    
+/NGInfoDataCollectorSab-2-0    OK    
+/NGInfoDataCollectorSab-2-1    OK    
+/NGInfoDataCollectorSab-6-0    OK    
+/NGInfoDataCollectorSab-6-1    OK    
+/NGInfoDataCollectorSab-15-0   OK    
+/NGInfoDataCollectorSab-15-1   OK    
+/NGInfoOmDataCollector-CLA-0   OK    
+/NGInfoOmDataCollector-CLA-1   OK    
+/NodeDNS                       OK    
+/NodeHA                        OK    
+/NodeNTP                       OK    
+/NodeOS                        OK    
+/PAP                           OK    
+/PemCtrlIb-7-0                 OK    
+/PemCtrlIb-7-1                 OK    
+/PemCtrlIb-10-0                OK    
+/PemCtrlIb-10-1                OK    
+/PemCtrlIb-11-0                OK    
+/PemCtrlIb-11-1                OK    
+/PersistentStorage             OK    
+/PM9andNE3SFTP                 OK    
+/PM9Fuse                       OK    
+/Reporter-3-0                  OK    
+/Reporter-3-1                  OK    
+/Reporter-4-0                  OK    
+/Reporter-4-1                  OK    
+/Reporter-5-0                  OK    
+/Reporter-5-1                  OK    
+/Reporter-12-0                 OK    
+/Reporter-12-1                 OK    
+/Reporter-13-0                 OK    
+/Reporter-13-1                 OK    
+/Reporter-14-0                 OK    
+/Reporter-14-1                 OK    
+/ReporterSab-2-0               OK    
+/ReporterSab-2-1               OK    
+/ReporterSab-6-0               OK    
+/ReporterSab-6-1               OK    
+/ReporterSab-15-0              OK    
+/ReporterSab-15-1              OK    
+/ResourceMeas                  OK    
+/RuimReplicator                OK    
+/SCLIFwkServer                 OK    
+/SingleDiameterIb0-6-11-0      OK    
+/SingleDiameterIb0-6-11-1      OK    
+/SingleDiameterIb0-7-10-0      OK    
+/SingleDiameterIb0-7-10-1      OK    
+/SingleDiameterIb1-6-11-0      OK    
+/SingleDiameterIb1-6-11-1      OK    
+/SingleDiameterIb1-7-10-0      OK    
+/SingleDiameterIb1-7-10-1      OK    
+/SMMonitor                     OK    
+/SNMPMediator                  OK    
+/SSH                           OK    
+/StatProxy-3-0                 OK    
+/StatProxy-3-1                 OK    
+/StatProxy-4-0                 OK    
+/StatProxy-4-1                 OK    
+/StatProxy-5-0                 OK    
+/StatProxy-5-1                 OK    
+/StatProxy-12-0                OK    
+/StatProxy-12-1                OK    
+/StatProxy-13-0                OK    
+/StatProxy-13-1                OK    
+/StatProxy-14-0                OK    
+/StatProxy-14-1                OK    
+/StatProxyIb-7-0               OK    
+/StatProxyIb-7-1               OK    
+/StatProxyIb-10-0              OK    
+/StatProxyIb-10-1              OK    
+/StatProxyIb-11-0              OK    
+/StatProxyIb-11-1              OK    
+/StatProxySab-2-0              OK    
+/StatProxySab-2-1              OK    
+/StatProxySab-6-0              OK    
+/StatProxySab-6-1              OK    
+/StatProxySab-15-0             OK    
+/StatProxySab-15-1             OK    
+/SubSnmpAgent                  OK    
+/SwitchManager                 OK    
+/SWMServer                     OK    
+/SysCtrl                       OK    
+/Telnet                        OK    
+/TraceCtrl                     OK    
+/TraceProxy-3-0                OK    
+/TraceProxy-3-1                OK    
+/TraceProxy-4-0                OK    
+/TraceProxy-4-1                OK    
+/TraceProxy-5-0                OK    
+/TraceProxy-5-1                OK    
+/TraceProxy-12-0               OK    
+/TraceProxy-12-1               OK    
+/TraceProxy-13-0               OK    
+/TraceProxy-13-1               OK    
+/TraceProxy-14-0               OK    
+/TraceProxy-14-1               OK    
+/TraceProxyIb-7-0              OK    
+/TraceProxyIb-7-1              OK    
+/TraceProxyIb-10-0             OK    
+/TraceProxyIb-10-1             OK    
+/TraceProxyIb-11-0             OK    
+/TraceProxyIb-11-1             OK    
+/TraceProxySab-2-0             OK    
+/TraceProxySab-2-1             OK    
+/TraceProxySab-6-0             OK    
+/TraceProxySab-6-1             OK    
+/TraceProxySab-15-0            OK    
+/TraceProxySab-15-1            OK    
+/Tracing                       OK    
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Status check finished: Wed Aug  3 15:39:07 CST 2016
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+[FJPSMON@CLA-1(FZSAEGW07BNK) /home/FJPSMON]
+# fsclish -c "show sw-manage current all"
+SE2-0 R_NG16_r328502_AB4
+SE2-1 R_NG16_r328502_AB4
+AS3-1 R_NG16_r328502_AB4
+SAB15-1 R_NG16_r328502_AB4
+SE3-1 R_NG16_r328502_AB4
+SE3-0 R_NG16_r328502_AB4
+CLA-0 R_NG16_r328502_AB4
+CLA-1 R_NG16_r328502_AB4
+SE14-0 R_NG16_r328502_AB4
+SE14-1 R_NG16_r328502_AB4
+SAB6-1 R_NG16_r328502_AB4
+SAB6-0 R_NG16_r328502_AB4
+SAB2-1 R_NG16_r328502_AB4
+SAB2-0 R_NG16_r328502_AB4
+SE11-1 R_NG16_r328502_AB4
+SE11-0 R_NG16_r328502_AB4
+SE6-0 R_NG16_r328502_AB4
+SE6-1 R_NG16_r328502_AB4
+SE12-0 R_NG16_r328502_AB4
+SE12-1 R_NG16_r328502_AB4
+SE4-0 R_NG16_r328502_AB4
+SE13-1 R_NG16_r328502_AB4
+SE13-0 R_NG16_r328502_AB4
+SE5-1 R_NG16_r328502_AB4
+SE5-0 R_NG16_r328502_AB4
+AS13-1 R_NG16_r328502_AB4
+AS13-0 R_NG16_r328502_AB4
+SE10-0 R_NG16_r328502_AB4
+SE10-1 R_NG16_r328502_AB4
+SE7-0 R_NG16_r328502_AB4
+AS12-0 R_NG16_r328502_AB4
+AS12-1 R_NG16_r328502_AB4
+IB10-1 R_NG16_r328502_AB4
+IB10-0 R_NG16_r328502_AB4
+AS4-0 R_NG16_r328502_AB4
+AS4-1 R_NG16_r328502_AB4
+SAB15-0 R_NG16_r328502_AB4
+AS3-0 R_NG16_r328502_AB4
+SE7-1 R_NG16_r328502_AB4
+IB11-0 R_NG16_r328502_AB4
+IB11-1 R_NG16_r328502_AB4
+AS5-1 R_NG16_r328502_AB4
+AS14-0 R_NG16_r328502_AB4
+AS14-1 R_NG16_r328502_AB4
+SE4-1 R_NG16_r328502_AB4
+AS5-0 R_NG16_r328502_AB4
+SE15-1 R_NG16_r328502_AB4
+SE15-0 R_NG16_r328502_AB4
+IB7-0 R_NG16_r328502_AB4
+IB7-1 R_NG16_r328502_AB4
+[FJPSMON@CLA-1(FZSAEGW07BNK) /home/FJPSMON]
+# fsclish -c "show sw-manage list"
+R_NG15_r291939_AB4
+R_NG16_r328502_AB4
+[root@CLA-0(FZSAEGW07BNK) /root]
+# 
+[FJPSMON@CLA-1(FZSAEGW07BNK) /home/FJPSMON]
+# date +%s
+1470566683
+[FJPSMON@CLA-1(FZSAEGW07BNK) /home/FJPSMON]
+# ntpq -p
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
++10.209.78.4     10.209.78.27     3 u    9   64  377    0.329   -2.653   0.275
+*10.209.78.5     10.209.78.27     3 u    2   64  377    0.343    2.463   0.235
+ LOCAL(2)        .LOCL.          10 u   9h   16    0    0.000    0.000   0.000
+[FJPSMON@CLA-1(FZSAEGW07BNK) /home/FJPSMON]
+# 
+[FJPSMON@CLA-1(FZSAEGW07BNK) /home/FJPSMON]
+# ssh AS3-0 "date +%s"
+1470566694
+[FJPSMON@CLA-1(FZSAEGW07BNK) /home/FJPSMON]
+# ssh AS3-1 "date +%s"
+1470566696
+[FJPSMON@CLA-1(FZSAEGW07BNK) /home/FJPSMON]
+# ssh AS4-0 "date +%s"
+1470566697
+[FJPSMON@CLA-1(FZSAEGW07BNK) /home/FJPSMON]
+# ssh AS4-1 "date +%s"
+1470566698
+[FJPSMON@CLA-1(FZSAEGW07BNK) /home/FJPSMON]
+# ssh AS5-0 "date +%s"
+1470566699
+[FJPSMON@CLA-1(FZSAEGW07BNK) /home/FJPSMON]
+# ssh AS5-1 "date +%s"
+1470566699
+[FJPSMON@CLA-1(FZSAEGW07BNK) /home/FJPSMON]
+# exit
+
