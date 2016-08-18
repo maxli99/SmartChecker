@@ -22,7 +22,7 @@ class QueryOptions(object):
         self.stoptimemm = ''                # 查询的结束时间（'30'(分钟)）
         self.stoptimeall = ''               # 查询的开始时间（'1030'(小时+分钟)）
         self.selectperiod = '15'            # 查询的时间间隔（'15'/'60'(15分钟/每小时))
-        self.selectunittype = 'MME'         # 查询的统计粒度（'MME/TA_ID/SAEGW/SSPROF_ID')
+        self.selectunittype = 'MME'         # 查询的统计粒度（'MME/TA_ID/UNIT_ID/SAEGW/SSPROF_ID')
         self.selectcounters = ''            # 查询的Counters（'EPS_EME_ATTACH_FAIL',填入网管数据库里的对应Counter的列名）
         self.reportfilename = ''            # 查询后输出的文件名 ('xxxx.json')
         self.localsave = '1'                # 查询数据是否需要输出到本地文件('0'/'1')
@@ -130,7 +130,7 @@ class QueryOptions(object):
 
 def printusage(UsageString,info):
     print UsageString
-    print "Usage:	" + info[0] + " -D2015/04/03 -T0400 -d2015/04/03 -t0500 -eSHMME03BNK -cSUCC_COMBINED_ATTACH -p60 -uNE -l1 -RReport_20160701.json"
+    print "Usage:	" + info[0] + " -D2015/04/03 -T0400 -d2015/04/03 -t0500 -eSHMME03BNK -cSUCC_COMBINED_ATTACH -p60 -uMME -l1 -RReport_20160701.json"
     print "-D (Start Date   :2015/04/02)"
     print "-T (Start Time   :0500)"
     print "-d (Stop Date    :2015/04/02)"
@@ -138,7 +138,7 @@ def printusage(UsageString,info):
     print "-e (Element      :SHMME03BNK/ALL)"
     print "-c (Counter      :SUCC_COMBINED_ATTACH/ALARM)"
     print "-p (Period       :15/60)"
-    print "-u (Unittype     :Type MME/TA_ID/SAEGW/SSPROF_ID)"
+    print "-u (Unittype     :Type MME/TA_ID/UNIT_ID/SAEGW/SSPROF_ID)"
     print "-l (Localsave    :0/1 (Not/Yes)"
     print "-R (ReportName   :'Report_xxxx.json')"
 
@@ -247,7 +247,7 @@ to_char(period_start_time,'yyyy/mm/dd') Sdate,
 
     # Generate Where String
     # if unit type is MME or TAC, the stat table should use fins_id as id, otherwise use fing_id
-    if (queryoptions.selectunittype == 'MME' or queryoptions.selectunittype == 'TAC'):
+    if (queryoptions.selectunittype == 'MME' or queryoptions.selectunittype == 'TAC' or queryoptions.selectunittype == 'UNIT_ID'):
         WhereString = """
 where 
 g.FINS_ID=objects.CO_GID 
@@ -488,4 +488,6 @@ if __name__ == "__main__":
     queryresult , result = GenerateQueryData(queryoptioninfo)
     if (result != ''):
         print '\n' + result + ' , please check parameter or contact the code developer.'  
+    else:
+        print '\n' + 'The report generated is ' + queryoptioninfo.reportfilename
 

@@ -18,7 +18,7 @@ from libs.flexing import FlexiNG
 
 ## Mandatory variables 
 ##--------------------------------------------
-module_id = 'NG_Sensordata'
+module_id = 'NG_droppacketdata'
 tag       = ['flexing','china']
 priority  = 'major'
 name      = u"NG 丢包数据检查"

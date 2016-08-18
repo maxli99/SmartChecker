@@ -1,0 +1,12 @@
+{
+	"columndesc": [
+		"NE_NAME",
+		"Date",
+		"Time",
+		"StatType",
+		"TCPIP_IPS_TOTAL,TCPIP_IPS_DELIVERED,TCPIP_TCPS_SNDTOTAL,TCPIP_TCPS_SNDPACK"
+	],
+	"columns": [
+
+	]
+}
