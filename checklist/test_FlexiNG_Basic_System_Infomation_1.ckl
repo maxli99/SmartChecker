@@ -1,0 +1,29 @@
+## Checklist注释
+## 本checklist数据使用YAML标记语言来描述
+## 本checklist仅用作测试及示例
+
+#本checklist适用网元类型
+netype: FlexiNG
+
+#简要说明，可选字段
+description: 本checklist用于对FlexiNG进行部分系统状态检查
+
+#模板变量，包含模块信息模板和检查报告模板。缺省
+templates:
+   module_info: module_info.md
+   report: common_report2.html
+
+#相关路径信息
+paths: 
+    #显示检查模块信息的模板
+    modules: modules/flexing
+    #生成检查结果报告的模板
+    reports: reports
+    
+## 指定需要运行的检查模块名 
+modules_name:
+    - nginfo.py
+    - FlexiNG_Basic_System_UnitState.py
+    - FlexiNG_Basic_System_ClsterState.py
+    - FlexiNG_Basic_System_NtpState.py
+    - FlexiNG_Basic_System_TimeState.py
