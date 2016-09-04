@@ -29,6 +29,7 @@ criteria  = u"""
 （1）检查MME CPU 负荷是否超过70%。
 
 """
+
 LIMIT=70
 
 result = ResultInfo(name,module_id=module_id,priority=priority)

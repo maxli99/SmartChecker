@@ -13,6 +13,7 @@ from libs.checker import CheckStatus
 from libs.infocache import shareinfo
 from libs.log_spliter import LogSpliter,LOG_TYPE_FLEXI_NG
 
+
 __author__ = 'liming.wang'
 __email__  = 'liming.wang@nokia.com'
 __date__   = '2016-08-29'

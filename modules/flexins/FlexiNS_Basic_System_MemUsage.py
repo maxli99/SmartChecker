@@ -29,6 +29,7 @@ criteria  = u"""
 （1）检查MME内存利用率是否超过70%。
 
 """
+
 LIMIT=80
 
 result = ResultInfo(name,module_id=module_id,priority=priority)
