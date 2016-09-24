@@ -1,0 +1,29 @@
+## Checklist注释
+## 本checklist数据使用YAML标记语言来描述
+## 本checklist仅用作测试及示例
+
+#本checklist适用网元类型
+netype: FlexiNG
+
+#简要说明，可选字段
+description: 本checklist用于对NG进行基本的健康检查
+
+#模板变量，包含以下变量：
+#module_info    模板主要用于显示文本话的模块相关信息
+#report         报告模板主要用于生产检查报告
+templates:
+   module_info: module_info.md
+   report: healthcheck.xlsx
+
+
+#相关路径信息
+paths: 
+    #显示检查模块信息的模板
+    modules: modules/flexing
+    #生成检查结果报告的模板
+    reports: reports
+    
+## 指定需要运行的检查模块名 
+modules_name:
+    - nginfo.py
+    - dumydata.py
