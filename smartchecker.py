@@ -21,7 +21,7 @@ import sys,os, argparse,time
 import setsitenv
 from libs.configobject import ConfigObject
 from libs.checker import ImportCheckModules,ResultList,CheckList
-from libs.reportor import CheckReport, JinjaTemplate
+from libs.reportor import CheckReport, get_builder
 from libs.tools import MessageBuffer
 from libs.infocache import shareinfo
 from libs.logfile import LogFile, istextfile
@@ -96,9 +96,16 @@ def args_parse():
 
     return parser, args
 
-def save_output_to_file(msgbuf,filename,path=None):
+def save_output_to_file(report,filename,path=None):
     output_path = path or CONFIG.reports_path
-    msgbuf.output('file',os.path.join(output_path,filename))
+    output_filename = os.path.join(output_path,filename)
+    msgbuf = MessageBuffer()
+
+    if isinstance(report,(str,unicode)):
+        msgbuf.append(report)
+        msgbuf.output('file',output_filename)
+    else:
+        report.save(output_filename)
 
 def show_module_info(checklist,args):
     """show the information of given modules. if CONFIG.module_info_file is set,
@@ -148,45 +155,41 @@ def check_logfile(checklist,logfile, report_name_tmpl=None):
     results = ResultList()
     output_format = CONFIG.output_format
     errmsg = ""
-    template = JinjaTemplate(CONFIG.template_path)
+    msgbuf = MessageBuffer()    
 
     template_file = REPORT_TEMPLATE or checklist.templates['report']
-    template_type = template_file.split('.')[-1]
-    template.load(filename=template_file)
-    msgbuf = MessageBuffer()
+    report_type = template_file.split('.')[-1]
+    results.template_type = report_type
 
-    report = CheckReport()
-    report.template_path = CONFIG.template_path
-    report.template_name = checklist.templates['report']
+    report = CheckReport(template_path=CONFIG.template_path,
+                         template_name=template_file,
+                         )
 
-    results.template_type = template_type
-    
+    report.get_builder(report_type)
+
     #print("Running check modules...")
     for idx,m in enumerate(checklist.modules):
         _result = m.run(logfile)
         _result.loadinfo(m)
         results.append(_result)
         
-    timestamp=time.strftime("%Y-%m-%d %H:%M")
     element = shareinfo.get('ELEMENT')
     if not element:
         errmsg="No hostname and version info found in the log. quit."
         return None,errmsg
-
+    
     hostname = element.hostname
-    label_state = {'critical':'danger','major':'warning','normal':'info','default':'default'}  
-    _report = template.render(**locals())
-    msgbuf.append(_report)
-
-    if not SILENT and template_type =='md':
-        msgbuf.output(CONFIG.runmode)
+    timestamp = time.strftime("%Y-%m-%d %H:%M")    
 
     if not report_name_tmpl:
-        report_name_tmpl = "report_%(hostname)s.%(template_type)s"
+        report_name_tmpl = "report_%(hostname)s.%(report_type)s"
 
     report_filename = report_name_tmpl % locals()
-    logger.info("Save report to: %s" % os.path.join(SAVE_OUTPUT,report_filename))
-    save_output_to_file(msgbuf,report_filename,path=SAVE_OUTPUT)
+    save_filename = os.path.join(SAVE_OUTPUT,report_filename)
+    report.fill_data(**locals())
+    report.save(filename=save_filename)
+    logger.info("Save report to: %s" % save_filename)
+
 
     results.hostname = hostname
     results.report_filename = report_filename

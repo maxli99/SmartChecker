@@ -108,5 +108,5 @@ def run(logfile):
         line = line + 1
         
         
-    result.load(status=status,info=check_info,error=error)
+    result.update(status=status,info=check_info,error=error)
     return result
