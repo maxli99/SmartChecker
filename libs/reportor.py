@@ -47,6 +47,14 @@ Usage:
     def stream(self,**kwargs):
         return self.template.stream(**kwargs)
 
+class VariableDict(dict):
+    """A class store the variables for report template"""
+    def add(self,**kwargs):
+        self.update(kwargs)
+
+    def remove(self,key):
+        self.pop(key)
+
 class HTMLReportBuilder(object):
     """A builder for HTML report"""
     def __init__(self, filename=None,path='./'):
@@ -79,13 +87,18 @@ class CheckReport(object):
     html,   html
     
     """
-    def __init__(self,template_path='templates/',template_name=None,builder=None):
+    def __init__(self,
+                 template_path='templates/',
+                 template_name=None,
+                 builder=None,
+                 output_path='',):
+
         self.config = {}
         self.data = {}
         self.template_path = template_path
         self.template_name = template_name
         self.output_filename = "report.%s"
-        self.output_path = ''
+        self.output_path = output_path
 
         self.builder = builder        
     
@@ -93,12 +106,24 @@ class CheckReport(object):
         self.builder = get_builder(_type, path=self.template_path, filename=self.template_name)
 
     def fill_data(self, **kwargs):
-        self.builder.fill_data(**kwargs)
+        self.add_data(**kwargs)
+        self.builder.fill_data(**self.data)
         
     def save(self,filename=None):
         _filename = filename or self.output_filename
-        self.builder.save(filename)
+        saved_filename = os.path.join(self.output_path,_filename)
+        try:
+            self.builder.save(saved_filename)
+        except Exception as err:
+            return None
 
+        return saved_filename
+
+    def add_data(self,**kwargs):
+        self.data.update(kwargs)
+
+    def remove_data(self,key):
+        self.data.pop(key)
 
 def get_builder(builder_type,**kwargs):
     """return the report builder according the builder type

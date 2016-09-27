@@ -15,13 +15,13 @@ examples:
    smartchecker -r checklist.ckl logfile  --template bootstrap.html
 """
 __programname__ = 'Smartchecker'
-__version__     = '0.92'
+__version__     = '0.93'
 
 import sys,os, argparse,time
 import setsitenv
 from libs.configobject import ConfigObject
 from libs.checker import ImportCheckModules,ResultList,CheckList
-from libs.reportor import CheckReport, get_builder
+from libs.reportor import CheckReport, VariableDict, get_builder
 from libs.tools import MessageBuffer
 from libs.infocache import shareinfo
 from libs.logfile import LogFile, istextfile
@@ -43,7 +43,7 @@ if os.path.exists(config_file):  #read the config file if it's exists.
 
 SILENT          = False
 REPORT_TEMPLATE = None
-SAVE_OUTPUT     = None
+
 
 #initilize the logging.
 logfile = CONFIG.get('checker_logfile','/tmp/smartchecker.log')
@@ -55,7 +55,7 @@ logger = MessageLogger('SmartChecker')
 
 
 def args_parse():
-    global SILENT,REPORT_TEMPLATE,SAVE_OUTPUT
+    global SILENT,REPORT_TEMPLATE
     parser = argparse.ArgumentParser(version=" v".join([__programname__,__version__]))
     
     parser.usage = __doc__
@@ -92,7 +92,6 @@ def args_parse():
     DEBUG   = args.debug
     SILENT  = args.silent
     REPORT_TEMPLATE = args.template
-    SAVE_OUTPUT     = args.saveto or ""
 
     return parser, args
 
@@ -156,6 +155,7 @@ def check_logfile(checklist,logfile, report_name_tmpl=None):
     output_format = CONFIG.output_format
     errmsg = ""
     msgbuf = MessageBuffer()    
+    
 
     template_file = REPORT_TEMPLATE or checklist.templates['report']
     report_type = template_file.split('.')[-1]
@@ -163,6 +163,7 @@ def check_logfile(checklist,logfile, report_name_tmpl=None):
 
     report = CheckReport(template_path=CONFIG.template_path,
                          template_name=template_file,
+                         output_path = CONFIG.get('report_path') or checklist.paths['reports'],
                          )
 
     report.get_builder(report_type)
@@ -172,7 +173,8 @@ def check_logfile(checklist,logfile, report_name_tmpl=None):
         _result = m.run(logfile)
         _result.loadinfo(m)
         results.append(_result)
-        
+    
+      
     element = shareinfo.get('ELEMENT')
     if not element:
         errmsg="No hostname and version info found in the log. quit."
@@ -184,15 +186,15 @@ def check_logfile(checklist,logfile, report_name_tmpl=None):
     if not report_name_tmpl:
         report_name_tmpl = "report_%(hostname)s.%(report_type)s"
 
-    report_filename = report_name_tmpl % locals()
-    save_filename = os.path.join(SAVE_OUTPUT,report_filename)
+    _filename = CONFIG.get('report_filename')
+    report.output_filename = _filename or report_name_tmpl % locals()
     report.fill_data(**locals())
-    report.save(filename=save_filename)
-    logger.info("Save report to: %s" % save_filename)
+    saved_filename=report.save()
+    logger.info("Save report to: %s" % saved_filename)
 
 
     results.hostname = hostname
-    results.report_filename = report_filename
+    results.report_filename = report.output_filename
 
     logger.info("Result: %s, Failed:%s, Unknow:%s, Passed:%s" % 
                 (results.hostname,
@@ -233,8 +235,7 @@ def check_log(checklist,logname):
     resultlist = []
 
     _reportpath =  checklist.paths['reports'] 
-    if SAVE_OUTPUT:
-        _reportpath = SAVE_OUTPUT
+
     logger.debug("The _reportpath is: %s" % _reportpath)
 
     #the given logname is a dir name.
@@ -282,6 +283,13 @@ if __name__ == "__main__":
     if not cklpath:
         cklpath = CONFIG.checklist_path
     checklist = CheckList(os.path.join(cklpath,cklfile))
+
+    #determinate the output path and filename.
+    if args.saveto:
+        _path,_filename = os.path.split(args.saveto)
+        CONFIG.report_filename = _filename
+        CONFIG.report_path = _path or checklist.paths['reports']
+
 
     #import the modules and save to checklist.modules 
     checklist.modules = ImportCheckModules(checklist)
