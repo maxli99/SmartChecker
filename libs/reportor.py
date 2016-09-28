@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-
+"""This module handle the Report
+"""
 import re
 import os
 import codecs
@@ -7,10 +8,13 @@ from jinja2 import Environment, FileSystemLoader,Template
 from jinja2.exceptions import TemplateNotFound
 from jinja2._compat import string_types
 from excelreport import ExcelReport, Table
+from messagelogger import MessageLogger
+
+logger=MessageLogger('reportor')
 
 class JinjaTemplate(object):
     """A generator of Jinja Template
-Usage:
+  Usage:
     tmpl = JinjiaTemplate()
     tmpl.load(filename=template_filename)
     tmpl.load('template_str')
@@ -56,7 +60,8 @@ class VariableDict(dict):
         self.pop(key)
 
 class HTMLReportBuilder(object):
-    """A builder for HTML report"""
+    """A builder for HTML report
+    """
     def __init__(self, filename=None,path='./'):
         self.template_path = path
         self.template_name = filename
@@ -67,8 +72,7 @@ class HTMLReportBuilder(object):
 
     def fill_data(self,**kwargs):
         self.stream = self.template.render(**kwargs)
-        print "stream:",type(self.stream),len(self.stream)
-        #print [self.stream]
+        logger.debug("HTMLReportBuilder.stream: %s, %s" % (type(self.stream),len(self.stream)))
 
     def save(self,filename):
         with codecs.open(filename,'wb','utf-8') as fp:
@@ -78,6 +82,10 @@ class HTMLReportBuilder(object):
 
 class ExcelReportBuilder(object):
     """A builder for Excel report"""
+    pass
+
+class MarkdownReportBuilder(object):
+    """A builder for Marddown report"""
     pass
 
 class CheckReport(object):
@@ -122,6 +130,9 @@ class CheckReport(object):
     def add_data(self,**kwargs):
         self.data.update(kwargs)
 
+    def get_data(self,key):
+        return self.data.get(key)
+        
     def remove_data(self,key):
         self.data.pop(key)
 
@@ -135,12 +146,15 @@ def get_builder(builder_type,**kwargs):
     builders = {'html': HTMLReportBuilder,
                 'xlsx': ExcelReportBuilder,
                 'xls' : ExcelReportBuilder,
+                'md'  : MarkdownReportBuilder,
                 }
 
     builder = builders.get(builder_type,HTMLReportBuilder)
     return builder(**kwargs)
 
 if __name__ == "__main__":
-    rpt = Reportor()
-    rpt.generate()
+    report = CheckReport()
+    results = {}
+    report.add_data(results=results)
+    report.get_builder('html')
     

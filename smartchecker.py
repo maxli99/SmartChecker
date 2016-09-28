@@ -21,7 +21,7 @@ import sys,os, argparse,time
 import setsitenv
 from libs.configobject import ConfigObject
 from libs.checker import ImportCheckModules,ResultList,CheckList
-from libs.reportor import CheckReport, VariableDict, get_builder
+from libs.reportor import CheckReport, get_builder
 from libs.tools import MessageBuffer
 from libs.infocache import shareinfo
 from libs.logfile import LogFile, istextfile
@@ -154,7 +154,7 @@ def check_logfile(checklist,logfile, report_name_tmpl=None):
     results = ResultList()
     output_format = CONFIG.output_format
     errmsg = ""
-    msgbuf = MessageBuffer()    
+    #msgbuf = MessageBuffer()    
     
 
     template_file = REPORT_TEMPLATE or checklist.templates['report']
@@ -166,34 +166,37 @@ def check_logfile(checklist,logfile, report_name_tmpl=None):
                          output_path = CONFIG.get('report_path') or checklist.paths['reports'],
                          )
 
+    report.add_data(checklist=checklist)
     report.get_builder(report_type)
 
     #print("Running check modules...")
     for idx,m in enumerate(checklist.modules):
+        logger.info("Running the module: %s:%s" % (m.module_id,m.name))
         _result = m.run(logfile)
         _result.loadinfo(m)
         results.append(_result)
-    
-      
+
+    report.add_data(results=results)
     element = shareinfo.get('ELEMENT')
     if not element:
         errmsg="No hostname and version info found in the log. quit."
         return None,errmsg
-    
-    hostname = element.hostname
-    timestamp = time.strftime("%Y-%m-%d %H:%M")    
+    report.add_data(element=element)
+
+    report.add_data(hostname = element.hostname)
+    report.add_data(timestamp = time.strftime("%Y-%m-%d %H:%M"))    
 
     if not report_name_tmpl:
         report_name_tmpl = "report_%(hostname)s.%(report_type)s"
 
     _filename = CONFIG.get('report_filename')
     report.output_filename = _filename or report_name_tmpl % locals()
-    report.fill_data(**locals())
+    report.fill_data()
     saved_filename=report.save()
     logger.info("Save report to: %s" % saved_filename)
 
 
-    results.hostname = hostname
+    results.hostname = report.get_data('hostname')
     results.report_filename = report.output_filename
 
     logger.info("Result: %s, Failed:%s, Unknow:%s, Passed:%s" % 
@@ -254,9 +257,9 @@ def check_log(checklist,logname):
             reports_counter = len(resultlist)
         else:
             reports_counter = 1
-        logger.info("Save the %s success report to path '%s'" % (reports_counter, _reportpath))
+        logger.info("Total %s reports were saved to path '%s'" % (reports_counter, _reportpath))
 
-    logger.info("Finished the checking.")
+    logger.info("Checking finished.")
 
 if __name__ == "__main__":   
     #parse the arguments and options.

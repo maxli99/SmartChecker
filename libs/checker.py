@@ -4,13 +4,14 @@ from subprocess import check_output,PIPE,CalledProcessError
 from collections import Counter
 from importlib import import_module
 from checkstatus import CheckStatus
-
-#from libs.tools import to_unicode
+from messagelogger import MessageLogger
 
 __version__ = "v1.0"
 MODULE_PATH = 'modules'
 IGNORE_FILES = ['^_', '^\.', '\.pyc$']
 _filefilters = [re.compile(pat) for pat in IGNORE_FILES]
+
+logger = MessageLogger('checker')
 
 ###############################################################
 # Common Functions
@@ -74,7 +75,7 @@ class ShellModule(object):
         try:
             out = check_output(cmdline,shell=True,stderr=PIPE)
             result.data.update(json.loads(out.strip().split('\n')[-1]))
-            #print 'result status:',result.data['status']
+            logger.debug('result status:' % result.data['status'])
         ## if return code is non-zero. error happens.
         except CalledProcessError,err:
             error = "  errmsg: <<%s>> " % err
